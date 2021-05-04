@@ -1,78 +1,109 @@
-const url = require('url');
-const express = require('express');
-const bodyParser = require('body-parser');
+const url = require("url");
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const { ObjectId } = require('mongodb');
-const { mongoose } = require('./db/mongoose.js');
-const { Resources } = require('./models/resources.js');
-const { Users } = require('./models/users.js');
+//const { ObjectId } = require("mongodb");
+//const { mongoose } = require("./db/mongoose.js");
+//const { Resources } = require("./models/resources.js");
+//const { Users } = require("./models/users.js");
 
-const PORT = process.env.PORT || 3000;
+const MongoClient = require("mongodb").MongoClient;
+
+const PORT = process.env.PORT || 3004;
 const app = express();
 
-// Wspracie dla obsługi danych w formacie JSON
-app.use(bodyParser.json());
+const credentials = require("./credentials");
 
+MongoClient.connect(credentials.dbLink, { useUnifiedTopology: true })
+  .then((client) => {
+    console.log("Connected to Database");
+    const db = client.db("users-test");
+    const usersCollection = db.collection("users");
 
-app.post('/registration', (req,res) => {
-    // rejestracja użytkownika
-    // instrukcja
-    res.header('Authorization',user.token);
-});
+    // Wspracie dla obsługi danych w formacie JSON
+    app.use(
+      bodyParser.urlencoded({
+        extended: true,
+      })
+    );
 
-app.post('/login', (req, res) => {
-    // logowanie użytkownika
-    // instrukcja
-    res.header('Authorization',user.token);
-});
+    app.get("/", (req, res) => {
+      res.sendFile(__dirname + "/index.html");
+    });
 
-app.delete('/logout', (req, res) => {
-    // wylogowanie użytkownika
-    // instrukcja
-});
+    app.post("/users", (req, res) => {
+      console.log(req.body);
+      usersCollection
+        .insertOne(req.body)
+        .then((result) => {
+          console.log(req.body);
+        })
+        .catch((error) => console.error(error));
+    });
 
-app.get('/users', (req,res) => {
-    // lista użytkowników
-    // instrukcja
-});
+    ////
 
-app.get('/users/:id', (req,res) => {
-    // informacje o użytkowniku o określnym id
-    // instrukcja
-});
+    app.post("/registration", (req, res) => {
+      // rejestracja użytkownika
+      // instrukcja
+      res.header("Authorization", user.token);
+    });
 
-app.get('/resources', (req,res) => {
-    const createdBy = req.header('Authorization');
-    // wyciąganie danych z bazy.
-    // instrukcja
-});
+    app.post("/login", (req, res) => {
+      // logowanie użytkownika
+      // instrukcja
+      res.header("Authorization", user.token);
+    });
 
-app.get('/resources/:id', (req,res) => {
-    const createdBy = req.header('Authorization');
-    // wyciąganie elementu id z bazy. 
-    // instrukcja
-});
+    app.delete("/logout", (req, res) => {
+      // wylogowanie użytkownika
+      // instrukcja
+    });
 
-app.post('/resources', (req,res) => {
-    const createdBy = req.header('Authorization');
-    // dodawanie elementu do bazy.
-    // instrukcja
-});
+    app.get("/users", (req, res) => {
+      // lista użytkowników
+      // instrukcja
+    });
 
-app.delete('/resources/:id', (req,res) => {
-    const createdBy = req.header('Authorization');
-    // usuwanie elementu id z bazy.
-    // instrukcja
-});
+    app.get("/users/:id", (req, res) => {
+      // informacje o użytkowniku o określnym id
+      // instrukcja
+    });
 
-app.put('/resources/:id', (req,res) => {
-    const createdBy = req.header('Authorization');
-    // aktualizacja elementu id
-    // intrukcja
-});
+    app.get("/resources", (req, res) => {
+      const createdBy = req.header("Authorization");
+      // wyciąganie danych z bazy.
+      // instrukcja
+    });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+    app.get("/resources/:id", (req, res) => {
+      const createdBy = req.header("Authorization");
+      // wyciąganie elementu id z bazy.
+      // instrukcja
+    });
 
-module.exports = {app};
+    app.post("/resources", (req, res) => {
+      const createdBy = req.header("Authorization");
+      // dodawanie elementu do bazy.
+      // instrukcja
+    });
+
+    app.delete("/resources/:id", (req, res) => {
+      const createdBy = req.header("Authorization");
+      // usuwanie elementu id z bazy.
+      // instrukcja
+    });
+
+    app.put("/resources/:id", (req, res) => {
+      const createdBy = req.header("Authorization");
+      // aktualizacja elementu id
+      // intrukcja
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => console.error(error));
+
+module.exports = { app };
