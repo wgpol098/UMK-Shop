@@ -1,32 +1,46 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressHbs = require('express-handlebars');
 var mongoose = require('mongoose');
+var session = require('express-session');
+var router = express.Router();
+var MongoClient = require('mongodb').MongoClient;
+var MongoStore = require('connect-mongodb-session')(session);
+
+var store = new MongoStore({
+  uri: 'mongodb://localhost:27017/umkshop',
+  collection: 'mySessions'
+});
+
+var routes = require('./routes/main');
 
 const PORT = process.env.PORT || 3000;
 var app = express();
 
-
-mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true }).then((client) => 
+mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true, useNewUrlParser: true }).then((client) => 
 {
-    console.log("Connected to Database");
+  console.log("Connected to Database");
 }).catch((err) => console.error(err));
 
-// view engine setup
-app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
-app.set('view engine', '.hbs');
 
 app.use(logger('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: 'secret', 
+  resave:false, 
+  saveUninitialized: false, 
+  store: store,
+  cookie: { maxAge: 180 * 60 * 1000 }
+}));
 
+app.use('/', routes);
 
+app.use(express.static(__dirname + "/public"));
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -38,24 +52,20 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
+    res.send('error');
   });
 }
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  res.status('error');
 });
 
-app.listen(PORT, () => {
+
+app.listen(PORT, () => 
+{
     console.log(`server is running on port http://localhost:${PORT}`);
-  });
+});
 
 
 module.exports = app;
