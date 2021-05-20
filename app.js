@@ -15,7 +15,7 @@ var store = new MongoStore({
   collection: 'mySessions'
 });
 
-var routes = require('./routes/main');
+var routes = require('./routes/products');
 
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -38,7 +38,7 @@ app.use(session({
   cookie: { maxAge: 180 * 60 * 1000 }
 }));
 
-app.use('/', routes);
+app.use('/products', routes);
 
 app.use(express.static(__dirname + "/public"));
 
