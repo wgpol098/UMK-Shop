@@ -9,6 +9,8 @@ var session = require('express-session');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var MongoStore = require('connect-mongodb-session')(session);
+var jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 var store = new MongoStore({
   uri: 'mongodb://localhost:27017/umkshop',
@@ -16,6 +18,7 @@ var store = new MongoStore({
 });
 
 var routes = require('./routes/products');
+var userRoutes = require('./routes/user');
 
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -38,6 +41,7 @@ app.use(session({
   cookie: { maxAge: 180 * 60 * 1000 }
 }));
 
+app.use('/user', userRoutes);
 app.use('/products', routes);
 
 app.use(express.static(__dirname + "/public"));
@@ -47,7 +51,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
 
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
