@@ -19,7 +19,6 @@ router.get('/login', function(req, res, next)
             console.log("error");
         }
         console.log(user);
-        var elo = JSON.parse(user);
 
         //Do tokenu możliwe jest wrzucenie wielu informacji
         const userModel = { name: email, role: 'admin'};
