@@ -12,10 +12,10 @@ router.get('/getallproducts', function (req, res, next)
     });
 });
 
-//Metoda do poprawy - nie implementować we front-end
-router.get('/add-to-card/:id', function(req, res, next)
+//Metoda do przetestowania - nie implementować we front-end
+router.get('/add-to-card', function(req, res, next)
 {
-    var productId = req.params.id;
+    var productId = req.body.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
 
     Product.findById(productId, function(err, product)
@@ -31,10 +31,10 @@ router.get('/add-to-card/:id', function(req, res, next)
     });
 });
 
-//Metoda do poprawy - nie implementować we front-end
-router.get('/remove/:id', function(req, res, next)
+//Metoda do przetestowania - nie implementować we front-end
+router.get('/remove', function(req, res, next)
 {
-    var productId = req.params.id;
+    var productId = req.body.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
 
     cart.removeItem(productId);
