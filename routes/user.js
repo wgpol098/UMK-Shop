@@ -14,7 +14,7 @@ router.post('/register', function(req, res, next)
         password: req.body.password,
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
-        role: 'U'
+        role: 'user'
     });
 
     //Trzeba sprwadzać czy user nie istnieje już w bazie danych
