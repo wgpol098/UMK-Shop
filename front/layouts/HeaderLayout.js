@@ -9,35 +9,84 @@ import {
 
 export default function HeaderLayout(props) {
   return (
-    <Navbar bg="" expand="lg">
-      <Navbar.Brand href="/">Sklep internetowy UMK</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link href="/">Strona główna</Nav.Link>
-          <Nav.Link href="/">Regulamin</Nav.Link>
-          <Nav.Link href="/">Kontakt</Nav.Link>
-          {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              Another action
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">
-              Separated link
-            </NavDropdown.Item>
-          </NavDropdown> */}
-        </Nav>
-        <Form inline>
-          <FormControl
-            type="text"
-            placeholder="Podaj nazwę artykułu..."
-            className="mr-sm-2"
-          />
-          <Button variant="outline-success">Szukaj</Button>
-        </Form>
-      </Navbar.Collapse>
-    </Navbar>
+    <div className="navbar-wrapper">
+      <div style={{ display: "flex", margin: "0 10px 0 10px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            flex: 1,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <img
+              alt=""
+              src="img/logo-umk-big.png"
+              width="350px"
+              className="d-inline-block align-top"
+            />{" "}
+            <span style={{ fontSize: "25px", color: "#034ea1" }}>
+              Sklep internetowy
+            </span>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            flex: 1,
+          }}
+        >
+          <div className="header-contact">
+            <span>ul. Gagarina 11, 87-100 Toruń</span>
+            <span>
+              Informacja o aktualnie dostępnej ofercie: tel. (56) 611 46 57.
+            </span>
+          </div>
+        </div>
+      </div>
+      <Navbar
+        bg=""
+        expand="lg"
+        style={{
+          padding: ".5rem 0 .5rem 0",
+          alignItems: "stretch",
+        }}
+      >
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          style={{ backgroundColor: "#034ea1" }}
+        >
+          <Nav className="mr-auto">
+            <Nav.Link href="/">Strona główna</Nav.Link>
+            <Nav.Link href="/">Regulamin</Nav.Link>
+            <Nav.Link href="/">Kontakt</Nav.Link>
+          </Nav>
+          {/* <Form inline style={{ margin: "0 10px 0 0" }}>
+            <FormControl
+              type="text"
+              placeholder="Podaj nazwę artykułu..."
+              className="mr-sm-2"
+            />
+            <Button variant="outline-light">Szukaj</Button>
+          </Form> */}
+          <Button
+            variant="outline-light"
+            style={{ margin: "0 10px 0 0" }}
+            href="/login"
+          >
+            Zaloguj się
+          </Button>
+        </Navbar.Collapse>
+      </Navbar>
+    </div>
   );
 }

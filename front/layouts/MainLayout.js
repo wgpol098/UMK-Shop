@@ -1,5 +1,6 @@
 import HeaderLayout from "./HeaderLayout";
 import BodyIndexLayout from "./BodyIndexLayout";
+import BodyLoginLayout from "./BodyLoginLayout";
 
 import Head from "next/head";
 import { useEffect } from "react";
@@ -15,6 +16,8 @@ function renderBody(props) {
       return <BodyIndexLayout {...props} />;
     // case 1:
     //   return <BodyProduct />;
+    case 2:
+      return <BodyLoginLayout {...props} />;
     default:
       return <BodyIndexLayout />;
   }
@@ -33,9 +36,9 @@ export default function MainLayout(props) {
         {renderBody(props)}
       </div>
 
-      <div class="footer">
+      {/* <div class="footer">
         <span>footer</span>
-      </div>
+      </div> */}
     </div>
   );
 }

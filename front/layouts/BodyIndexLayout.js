@@ -13,46 +13,55 @@ export default function BodyIndexLayout(props) {
 
   return (
     <div>
-      <Carousel>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="/img/testimg.png"
-            alt="First slide"
-          />
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="/img/testimg.png"
-            alt="Second slide"
-          />
-
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="/img/testimg.png"
-            alt="Third slide"
-          />
-
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-      </Carousel>
-      {/* <div
+      <div
         style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          marginVertical: "10px",
+          borderBottom: "5px solid #ffd537",
+          borderTop: "5px solid #ffd537",
         }}
-      > */}
-      <CardGroup style={{ justifyContent: "space-around" }}>
-        {productsArray}
-      </CardGroup>
-      {/* </div> */}
+      >
+        <Carousel fade>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="/img/maseczka.jpg"
+              alt="First slide"
+            />
+            <Carousel.Caption className="carousel-title-wrapper">
+              <div className="carousel-title">
+                <span>Maska ochronna UMK</span>
+              </div>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="/img/kubek-logo-UMK-2.jpg"
+              alt="Second slide"
+            />
+            <Carousel.Caption className="carousel-title-wrapper">
+              <div className="carousel-title">
+                <span>Kubek z logo UMK</span>
+              </div>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="/img/koszulka-uniwersytecka.jpg"
+              alt="Third slide"
+            />
+            <Carousel.Caption className="carousel-title-wrapper">
+              <div className="carousel-title">
+                <span>Koszulka uniwersytecka</span>
+              </div>
+            </Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
+      </div>
+      <div className="products-title">
+        <span className="products-title-text">Dostępne produkty</span>
+      </div>
+      <CardGroup className="card-products">{productsArray}</CardGroup>
     </div>
   );
 }
