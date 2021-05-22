@@ -2,11 +2,10 @@ import MainLayout from "../layouts/MainLayout";
 
 export async function getStaticProps() {
   const res = await fetch(
-    `${process.env.API_ENTRYPOINT}/products/getallproducts`
+    `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products/getallproducts`
   );
   const products = res && (await res.json());
 
-  console.log(process.env.API_ENTRYPOINT);
   return {
     props: {
       products: products,

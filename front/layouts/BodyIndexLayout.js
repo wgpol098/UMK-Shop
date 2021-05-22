@@ -9,7 +9,7 @@ export default function BodyIndexLayout(props) {
       productsArray.push(<SmallProductLayout title={x.title} />);
     });
 
-  console.log(props);
+  //console.log(props);
 
   return (
     <div>

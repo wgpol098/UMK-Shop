@@ -6,6 +6,8 @@ import Head from "next/head";
 import { useEffect } from "react";
 import React from "react";
 
+import { useCookies } from "react-cookie";
+
 function renderBody(props) {
   switch (props.type) {
     // case -1:
@@ -24,6 +26,9 @@ function renderBody(props) {
 }
 
 export default function MainLayout(props) {
+  const [cookies] = useCookies("user");
+  console.log(cookies.userToken);
+
   return (
     <div className="main-container">
       <Head>
@@ -32,7 +37,7 @@ export default function MainLayout(props) {
       </Head>
 
       <div className="container">
-        <HeaderLayout />
+        <HeaderLayout isLogged={cookies.userToken ? true : false} />
         {renderBody(props)}
       </div>
 

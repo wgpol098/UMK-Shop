@@ -10,6 +10,7 @@ var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var MongoStore = require('connect-mongodb-session')(session);
 var jwt = require('jsonwebtoken');
+var cors = require('cors');
 require('dotenv').config();
 
 var store = new MongoStore({
@@ -28,7 +29,7 @@ mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true
   console.log("Connected to Database");
 }).catch((err) => console.error(err));
 
-
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

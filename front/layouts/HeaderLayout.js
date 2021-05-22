@@ -6,8 +6,16 @@ import {
   Button,
   Nav,
 } from "react-bootstrap";
+import { useCookies } from "react-cookie";
 
 export default function HeaderLayout(props) {
+  const [cookies, setCookie, removeCookie] = useCookies(["userToken"]);
+
+  const handleLogout = () => {
+    removeCookie("userToken");
+    window.location.reload();
+  };
+
   return (
     <div className="navbar-wrapper">
       <div style={{ display: "flex", margin: "0 10px 0 10px" }}>
@@ -56,14 +64,14 @@ export default function HeaderLayout(props) {
         bg=""
         expand="lg"
         style={{
-          padding: ".5rem 0 .5rem 0",
+          padding: ".5rem 0 0 0",
           alignItems: "stretch",
         }}
       >
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse
           id="basic-navbar-nav"
-          style={{ backgroundColor: "#034ea1" }}
+          style={{ backgroundColor: "#034ea1", padding: "5px 0 5px 0" }}
         >
           <Nav className="mr-auto">
             <Nav.Link href="/">Strona główna</Nav.Link>
@@ -78,13 +86,23 @@ export default function HeaderLayout(props) {
             />
             <Button variant="outline-light">Szukaj</Button>
           </Form> */}
-          <Button
-            variant="outline-light"
-            style={{ margin: "0 10px 0 0" }}
-            href="/login"
-          >
-            Zaloguj się
-          </Button>
+          {!props.isLogged ? (
+            <Button
+              variant="outline-light"
+              style={{ margin: "0 10px 0 0" }}
+              href="/login"
+            >
+              Zaloguj się
+            </Button>
+          ) : (
+            <Button
+              variant="outline-light"
+              style={{ margin: "0 10px 0 0" }}
+              onClick={handleLogout}
+            >
+              Wyloguj się
+            </Button>
+          )}
         </Navbar.Collapse>
       </Navbar>
     </div>
