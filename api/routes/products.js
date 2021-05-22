@@ -37,7 +37,7 @@ router.get('/:id',function(req, res)
 //Dodawanie nowych przedmiotów, ale tylko dla usera, który jest adminem
 //Wymagana jest rola admina
 //Wypada zrobić metodę, która na podstawie tokena bada rolę usera
-router.put('/', authenticateToken, function (req, res, next)
+router.post('/', authenticateToken, function (req, res, next)
 {
     const authHeader = req.headers['authorization'];
     var decoded = jwt.decode(authHeader);
