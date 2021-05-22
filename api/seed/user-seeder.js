@@ -1,5 +1,5 @@
-var User = require('../models/user');
-var mongoose = require('mongoose');
+const User = require('../models/user');
+const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true, useNewUrlParser: true });
 

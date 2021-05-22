@@ -1,17 +1,17 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressHbs = require('express-handlebars');
-var mongoose = require('mongoose');
-var session = require('express-session');
-var router = express.Router();
-var MongoClient = require('mongodb').MongoClient;
-var MongoStore = require('connect-mongodb-session')(session);
-var jwt = require('jsonwebtoken');
-var cors = require('cors');
-require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const expressHbs = require('express-handlebars');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const router = express.Router();
+const MongoClient = require('mongodb').MongoClient;
+const MongoStore = require('connect-mongodb-session')(session);
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const dotenv = require('dotenv').config();
 
 var store = new MongoStore({
   uri: 'mongodb://localhost:27017/umkshop',
@@ -45,7 +45,6 @@ app.use(session({
 app.use('/user', userRoutes);
 app.use('/products', routes);
 
-app.use(express.static(__dirname + "/public"));
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

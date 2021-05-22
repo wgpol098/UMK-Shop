@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
-var Shema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Shema = mongoose.Schema;
 
 var schema = new mongoose.Schema(
     {
-        //imagePath: {type: String, required: true},
+        imagePath: {type: String, required: false},
         title: {type: String, required: true},
         description: {type: String, required: true},
         price: {type: Number, required: true},
