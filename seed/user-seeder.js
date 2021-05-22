@@ -9,12 +9,16 @@ var users =
     ({
         email: 'admin',
         password: 'admin',
+        FirstName: 'Andrzej',
+        LastName: 'Gołota',
         role: 'A'
     }),
     new User
     ({
         email: 'user',
         password: 'user',
+        FirstName: 'Andrii',
+        LastName: 'Taki',
         role: 'U'
     })
 ];
