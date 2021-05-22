@@ -2,13 +2,13 @@
   "name": "third",
   "version": "1.0.0",
   "description": "Zbudowanie REST API na potrzeby społeczności akademickiej UMK. Metody API mają\r być tak dobrane, aby umożliwiały dostęp do danych publicznych oraz\r prywatnych. API składa się z implementacji serwera wraz z bazą danych\r [MongoDB](https://mongodb.github.io/node-mongodb-native/) i [testów\r jednostkowych](https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#JavaScript)\r np. Mocha, Jasmine, Jest itp. Do tych testów należy dołączyć testy żądań HTTP\r np. za pomocą pakietu _supertest_.",
-  "main": "server.js",
+  "main": "app.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
