@@ -11,9 +11,29 @@ import { useCookies } from "react-cookie";
 export default function HeaderLayout(props) {
   const [cookies, setCookie, removeCookie] = useCookies(["userToken"]);
 
-  const handleLogout = () => {
-    removeCookie("userToken");
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      // const res = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/logout`,
+      //   {
+      //     body: JSON.stringify({}),
+      //     headers: {
+      //       "Content-Type": "application/x-www-form-urlencoded",
+      //       "Access-Control-Allow-Origin": "localhost:3000",
+      //       authorization: cookies.userToken,
+      //     },
+      //     method: "POST",
+      //   }
+      // );
+
+      // const result = await res.json();
+      // console.log(result);
+      removeCookie("userToken");
+      window.location.reload();
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
