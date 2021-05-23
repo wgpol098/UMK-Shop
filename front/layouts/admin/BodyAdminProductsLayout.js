@@ -1,4 +1,4 @@
-import { Carousel, CardDeck, CardColumns, CardGroup } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Image from "next/image";
 
 export default function BodyAdminProductsLayout(props) {
@@ -22,6 +22,9 @@ export default function BodyAdminProductsLayout(props) {
         <span className="products-title-text">Lista produktów</span>
       </div>
       <ul>{productsArray}</ul>
+      <Button variant="blue-umk" href="/admin/products/create">
+        Dodaj
+      </Button>
     </div>
   );
 }
