@@ -28,7 +28,7 @@ export default function BodyProductLayout(props) {
     }
   };
 
-  return (
+  return product ? (
     <div className="single-product-wrapper">
       <Card
         style={{
@@ -91,5 +91,5 @@ export default function BodyProductLayout(props) {
         </Card>
       </div>
     </div>
-  );
+  ) : null;
 }
