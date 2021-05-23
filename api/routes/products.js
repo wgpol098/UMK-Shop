@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Product = require("../models/product");
 const Cart = require("../models/cart");
+const { json } = require("express");
 
 //Usuwanie jednego przedmiotu
 router.delete("/:id", authenticateToken, function (req, res) {
@@ -69,26 +70,43 @@ router.post("/", authenticateToken, function (req, res, next) {
 // Obsłgiwane jest również filtrowanie
 // Obsługiwane jest również stronicowanie
 router.get("/", function (req, res, next) {
+  var range = req.query.range
+    ? JSON.parse(req.query.range) || [0, 10]
+    : [0, 10];
+
   var filter = req.query.filter;
-  var page = parseInt(req.query.page, 10) || 0;
-  var limit = parseInt(req.query.limit, 10) || 10;
+
+  let total = 0;
+
+  var query = Product.find().skip(5).limit(10);//TODO skip/limit doesnt work
+  console.log(query);
+  query.exec(function (err, result) {
+    console.log(result.length);
+  });
 
   if (!filter) {
+    Product.find().exec(function (err, result) {
+      if (err) return res.sendStatus(500);
+      total = result && result.length;
+    });
     Product.find()
-      .skip(page * limit)
-      .limit(limit)
+      .skip(range[0])
+      .limit(range[1])
       .exec(function (err, result) {
-        console.log("dziala");
         if (err) return res.sendStatus(500);
-        res.send(result);
+        res.send({ data: result, total: total });
       });
   } else {
-    Product.find(JSON.parse(filter))
-      .skip(page * limit)
-      .limit(limit)
+    Product.find().exec(function (err, result) {
+      if (err) return res.sendStatus(500);
+      total = result && result.length;
+    });
+    Product.find()
+      .skip(range[0])
+      .limit(range[1])
       .exec(function (err, result) {
         if (err) return res.sendStatus(500);
-        res.send(result);
+        res.send({ data: result, total: total });
       });
   }
 });
