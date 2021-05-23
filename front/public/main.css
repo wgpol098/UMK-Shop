@@ -158,3 +158,15 @@ body {
   flex: unset !important;
   background-color: #ffd537;
 }
+
+.admin-edit-form {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0 40px 0;
+}
+
+.admin-edit-form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+

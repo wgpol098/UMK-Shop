@@ -1,4 +1,7 @@
-import MainLayout from "../../layouts/front/MainLayout";
+import MainAdminLayout from "../../../layouts/admin/MainAdminLayout";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export async function getStaticProps(context) {
   let id = context.params.id;
@@ -25,7 +28,7 @@ export async function getStaticPaths() {
   let paths = [];
   products &&
     products.map((x) => {
-      paths.push(`/products/${x._id}`);
+      paths.push(`/admin/products/${x._id}`);
     });
 
   return {
@@ -35,5 +38,15 @@ export async function getStaticPaths() {
 }
 
 export default function Product({ product }) {
-  return <MainLayout type={1} product={product} />;
+  const [cookies] = useCookies("user");
+  const router = useRouter();
+  console.log(cookies.userToken);
+
+  let isLogged = cookies.userToken ? true : false;
+
+  useEffect(() => {
+    if (!isLogged) router.push("/"); //TODO only admin
+  });
+
+  return isLogged ? <MainAdminLayout type={1} product={product} /> : null;
 }
