@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   let id = context.params.id;
 
   const res = await fetch(
@@ -15,27 +15,27 @@ export async function getStaticProps(context) {
     props: {
       product: product,
     },
-    revalidate: 10,
+    //revalidate: 10,
   };
 }
 
-export async function getStaticPaths() {
-  const res1 = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products`
-  );
-  const products = res1 && (await res1.json());
+// export async function getStaticPaths() {
+//   const res1 = await fetch(
+//     `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products`
+//   );
+//   const products = res1 && (await res1.json());
 
-  let paths = [];
-  products &&
-    products.map((x) => {
-      paths.push(`/admin/products/${x._id}`);
-    });
+//   let paths = [];
+//   products &&
+//     products.map((x) => {
+//       paths.push(`/admin/products/${x._id}`);
+//     });
 
-  return {
-    paths: paths,
-    fallback: true,
-  };
-}
+//   return {
+//     paths: paths,
+//     fallback: true,
+//   };
+// }
 
 export default function Product({ product }) {
   const [cookies] = useCookies("user");
