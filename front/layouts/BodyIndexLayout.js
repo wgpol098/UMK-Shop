@@ -6,7 +6,7 @@ export default function BodyIndexLayout(props) {
   let productsArray = [];
   props.products &&
     props.products.map((x) => {
-      productsArray.push(<SmallProductLayout title={x.title} />);
+      productsArray.push(<SmallProductLayout title={x.title} id={x._id} />);
     });
 
   //console.log(props);

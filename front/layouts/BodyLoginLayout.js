@@ -27,8 +27,7 @@ export default function BodyLoginLayout(props) {
             password: e.target.password.value,
           }),
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Access-Control-Allow-Origin": "localhost:3000",
+            "Content-Type": "application/json",
           },
           method: "POST",
         }
@@ -62,13 +61,14 @@ export default function BodyLoginLayout(props) {
       <Form style={{ width: "250px" }} onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>E-mail adres</Form.Label>
-          <Form.Control type="email" name="email" placeholder="Email" />
+          {/* type="email" */}
+          <Form.Control name="email" placeholder="Email" />
         </Form.Group>
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Hasło</Form.Label>
           <Form.Control type="password" name="password" placeholder="Hasło" />
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button variant="blue-umk" type="submit" block>
           Zaloguj
         </Button>
       </Form>

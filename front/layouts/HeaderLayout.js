@@ -7,6 +7,7 @@ import {
   Nav,
 } from "react-bootstrap";
 import { useCookies } from "react-cookie";
+import { Basket2Fill } from "react-bootstrap-icons";
 
 export default function HeaderLayout(props) {
   const [cookies, setCookie, removeCookie] = useCookies(["userToken"]);
@@ -18,8 +19,7 @@ export default function HeaderLayout(props) {
       //   {
       //     body: JSON.stringify({}),
       //     headers: {
-      //       "Content-Type": "application/x-www-form-urlencoded",
-      //       "Access-Control-Allow-Origin": "localhost:3000",
+      //       "Content-Type": "application/json",
       //       authorization: cookies.userToken,
       //     },
       //     method: "POST",
@@ -30,7 +30,6 @@ export default function HeaderLayout(props) {
       // console.log(result);
       removeCookie("userToken");
       window.location.reload();
-
     } catch (err) {
       console.log(err);
     }
@@ -55,7 +54,7 @@ export default function HeaderLayout(props) {
           >
             <img
               alt=""
-              src="img/logo-umk-big.png"
+              src="/img/logo-umk-big.png"
               width="350px"
               className="d-inline-block align-top"
             />{" "}
@@ -106,6 +105,11 @@ export default function HeaderLayout(props) {
             />
             <Button variant="outline-light">Szukaj</Button>
           </Form> */}
+
+          <Nav.Link href="/koszyk" className="basket-icon">
+            <Basket2Fill />
+          </Nav.Link>
+
           {!props.isLogged ? (
             <Button
               variant="outline-light"
@@ -117,7 +121,7 @@ export default function HeaderLayout(props) {
           ) : (
             <Button
               variant="outline-light"
-              style={{ margin: "0 10px 0 0" }}
+              style={{ margin: "0 10px 0 0", textTransform: "uppercase" }}
               onClick={handleLogout}
             >
               Wyloguj się

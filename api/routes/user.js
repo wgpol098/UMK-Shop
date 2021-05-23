@@ -28,11 +28,11 @@ router.post("/register", function (req, res, next) {
 router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
-
   User.find({ email: email, password: password }, function (err, user) {
     if (err) return res.sendStatus(500);
-
-    if (user == null) console.log("error");
+    console.log(user, email);
+    if (user == null) return res.sendStatus(500);
+    if (user.length == 0) return res.sendStatus(404);
 
     // trzeba wyciągać id danego usera
     // Trzeba kontrolować czy zwrócony został jeden wynik
@@ -42,7 +42,7 @@ router.post("/login", function (req, res, next) {
     const userModel = {
       email: email,
       id: user[0]._id,
-      role: "admin"
+      role: "admin",
     };
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));

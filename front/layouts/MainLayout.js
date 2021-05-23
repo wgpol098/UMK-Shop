@@ -1,6 +1,7 @@
 import HeaderLayout from "./HeaderLayout";
 import BodyIndexLayout from "./BodyIndexLayout";
 import BodyLoginLayout from "./BodyLoginLayout";
+import BodyProductLayout from "./BodyProductLayout";
 
 import Head from "next/head";
 import { useEffect } from "react";
@@ -16,8 +17,8 @@ function renderBody(props) {
     //   return <BodyNotFound />;
     case 0:
       return <BodyIndexLayout {...props} />;
-    // case 1:
-    //   return <BodyProduct />;
+    case 1:
+      return <BodyProductLayout {...props} />;
     case 2:
       return <BodyLoginLayout {...props} />;
     default:
