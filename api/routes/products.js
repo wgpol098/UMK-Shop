@@ -34,9 +34,25 @@ router.get('/:id',function(req, res)
     });
 });
 
+//TODO: Edytowanie istniejących przedmiotów
+router.put('/:id', authenticateToken, function (req, res, next)
+{
+    const authHeader = req.headers['authorization'];
+    var decoded = jwt.decode(authHeader);
+    var role = decoded.role;
+
+    if(role == process.env.ADMIN_ROLE)
+    {
+        res.send('updating');
+        Product.findOneAndUpdate()
+    }
+});
+
+
 //Dodawanie nowych przedmiotów, ale tylko dla usera, który jest adminem
 //Wymagana jest rola admina
 //Wypada zrobić metodę, która na podstawie tokena bada rolę usera
+//TODO: Przetestować co się stanie jak nie podamy wszystkich wymaganych danych
 router.post('/', authenticateToken, function (req, res, next)
 {
     const authHeader = req.headers['authorization'];
@@ -65,20 +81,27 @@ router.post('/', authenticateToken, function (req, res, next)
 
 // Pobieranie wszystkich produktów
 // Obsłgiwane jest również filtrowanie
+// Obsługiwane jest również stronicowanie
 router.get('/', function (req, res, next)
 {
     var filter = req.query.filter;
+    var page = parseInt(req.query.page, 10) || 0;
+    var limit = parseInt(req.query.limit, 10) || 10;
+
     if(!filter)
     {
-        Product.find(function(err, result)
+        Product.find().skip(page*limit).limit(limit).exec(function(err, result)
         {
+            console.log('dziala');
+            if(err) return res.sendStatus(500);
             res.send(result);
         });
     }
     else
     {
-        Product.find(JSON.parse(filter), function(err, result)
+        Product.find(JSON.parse(filter)).skip(page*limit).limit(limit).exec(function(err, result)
         {
+            if(err) return res.sendStatus(500);
             res.send(result);
         });
     }
@@ -95,7 +118,6 @@ router.post('/addtocard', function(req, res, next)
         if (err) return res.sendStatus(500);
         cart.add(product, product.id);
         req.session.cart = cart;
-        console.log(req.session.cart);
         return sendStatus(200);
     });
 });
