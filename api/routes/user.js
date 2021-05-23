@@ -29,16 +29,20 @@ router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  User.find({ email: email }, function (err, user) {
+  User.find({ email: email, password: password }, function (err, user) {
     if (err) return res.sendStatus(500);
 
     if (user == null) console.log("error");
-    console.log(user);
+
+    // trzeba wyciągać id danego usera
+    // Trzeba kontrolować czy zwrócony został jeden wynik
+    console.log(user[0]._id);
 
     //Do tokenu możliwe jest wrzucenie wielu informacji
     const userModel = {
       email: email,
-      role: "admin",
+      id: user[0]._id,
+      role: "admin"
     };
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
