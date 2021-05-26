@@ -26,10 +26,7 @@ module.exports = function Cart(oldCart)
         this.totalQuantity--;
         this.totalPrice -= this.items[id].item.price;
 
-        if (this.items[id].qty <= 0) 
-        {
-            delete this.items[id];
-        }
+        if (this.items[id].qty <= 0) delete this.items[id];
     };
 
     //usuwanie przedmiotów
