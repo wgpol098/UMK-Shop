@@ -75,7 +75,8 @@ router.post("/logout", authenticateToken, function (req, res, next) {
   return res.sendStatus(200);
 });
 
-function authenticateToken(req, res, next) {
+function authenticateToken(req, res, next) 
+{
   const authHeader = req.headers["authorization"];
   if (authHeader == null) return res.sendStatus(401);
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -83,6 +84,6 @@ function authenticateToken(req, res, next) {
     req.user = user;
     next();
   });
-}
+};
 
 module.exports = router;

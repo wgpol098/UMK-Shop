@@ -3,7 +3,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Product = require("../models/product");
-const Cart = require("../models/cart");
+//const Cart = require("../models/cart");
 
 //Usuwanie jednego przedmiotu
 router.delete("/:id", authenticateToken, function (req, res) {
@@ -73,51 +73,35 @@ router.get("/", function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 0;
   var limit = parseInt(req.query.limit, 10) || 10;
 
-  if (!filter) {
+  if (!filter) 
+  {
     Product.find()
       .skip(page * limit)
       .limit(limit)
-      .exec(function (err, result) {
+      .exec(function (err, result) 
+      {
         console.log("dziala");
         if (err) return res.sendStatus(500);
         res.send(result);
       });
-  } else {
+  } 
+  else 
+  {
     Product.find(JSON.parse(filter))
       .skip(page * limit)
       .limit(limit)
-      .exec(function (err, result) {
+      .exec(function (err, result) 
+      {
         if (err) return res.sendStatus(500);
         res.send(result);
       });
   }
 });
 
-//Metoda do przetestowania
-router.post("/addtocard", function (req, res, next) {
-  var productId = req.body.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-  Product.findById(productId, function (err, product) {
-    if (err) return res.sendStatus(500);
-    cart.add(product, product.id);
-    req.session.cart = cart;
-    return sendStatus(200);
-  });
-});
-
-//Metoda do przetestowania
-router.post("/removefromcard", function (req, res, next) {
-  var productId = req.body.id;
-  var cart = new Cart(req.session.cart ? req.session.cart : {});
-  cart.removeItem(productId);
-  req.session.cart = cart;
-  res.send(200);
-});
-
 function authenticateToken(req, res, next) {
   // tylko do testów -- później należy to usunąć
   //-----------
-  //next();
+  next();
   //-----------
   const authHeader = req.headers["authorization"];
   if (authHeader == null) return res.sendStatus(401);

@@ -20,6 +20,7 @@ var store = new MongoStore({
 
 var routes = require('./routes/products');
 var userRoutes = require('./routes/user');
+var cartRoutes = require('./routes/carts');
 
 const PORT = process.env.PORT || 3000;
 var app = express();
@@ -43,6 +44,7 @@ app.use(session({
 }));
 
 app.use('/user', userRoutes);
+app.use('/carts', cartRoutes);
 app.use('/products', routes);
 
 
