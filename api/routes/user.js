@@ -25,10 +25,13 @@ router.post("/register", function (req, res, next) {
 });
 
 //Na razie login zwraca zawsze token, niezależnie od email i password
-router.post("/login", function (req, res, next) {
+//Tutaj trzeba ogarnąć te kody błędu
+router.post("/login", function (req, res, next) 
+{
   const email = req.body.email;
   const password = req.body.password;
-  User.find({ email: email, password: password }, function (err, user) {
+  User.find({ email: email, password: password }, function (err, user) 
+  {
     if (err) return res.sendStatus(500);
     console.log(user, email);
     if (user == null) return res.sendStatus(500);
@@ -39,14 +42,17 @@ router.post("/login", function (req, res, next) {
     console.log(user[0]._id);
 
     //Do tokenu możliwe jest wrzucenie wielu informacji
-    const userModel = {
+    //Tutaj nie zawsze jest adminem
+    const userModel = 
+    {
       email: email,
       id: user[0]._id,
       role: "admin",
     };
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
-    const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, {
+    const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, 
+    {
       expiresIn: "20m",
     });
     res.json({ accessToken: accessToken });

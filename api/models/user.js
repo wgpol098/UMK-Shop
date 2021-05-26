@@ -9,6 +9,12 @@ var userSchema = new Schema
     FirstName: {type: String, required: true},
     LastName: {type: String, required: true},
     role: {type: String, required: true}
+    //TODO:
+    //Data urodzenia
+    //Numer telefonu
+    //Zapasowy email
+    //Adres do faktury
+    //Lista adresów do wysyłki
 });
 
 userSchema.methods.encryptPassword = function(password)
