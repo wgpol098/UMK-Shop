@@ -5,10 +5,9 @@ var schema = new Schema
 ({
     user: {type: Schema.Types.ObjectId, ref:'User'},
     cart: {type: Object, required: true},
-    //To będzie odnośnik do adresu -- referencja -- to inaczej te tabele będą się bardzo mocno powiększać
-    address: {type, String,required: true},
+    address: {type: Schema.Types.ObjectId, ref:'Address'},
     name: {type: String, required: true},
-    //Albo zrobić to inaczej, albo zrobić do tego jakąś sensowną tabelę
+    //Trzeba zrobić słownikowy dokument z tymi płatnościami -- będzie wygodniej
     paymentId: {type: String, required: true},
     status: {type: String, required: true}
 });

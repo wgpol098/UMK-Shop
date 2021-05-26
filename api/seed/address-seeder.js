@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true, useNewUrlParser: true });
 
 
-//TODO: Dodanie seed adresów
 var addresses =
 [
     new Address
@@ -37,6 +36,7 @@ var addresses =
     })
 ];
 
+
 //Zapisywanie adresów
 var done = 0;
 for(var i = 0; i < products.length; i++)
@@ -50,7 +50,6 @@ for(var i = 0; i < products.length; i++)
         }
     });
 }
-
 
 function exit()
 {
