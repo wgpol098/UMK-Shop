@@ -1,9 +1,9 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const product = require("../models/product");
 const router = express.Router();
 const Product = require("../models/product");
-//const Cart = require("../models/cart");
 
 //Usuwanie jednego przedmiotu
 router.delete("/:id", authenticateToken, function (req, res) {
@@ -27,16 +27,29 @@ router.get("/:id", function (req, res) {
   });
 });
 
-//TODO: Edytowanie istniejących przedmiotów
+//Edytowanie istniejących przedmiotów
 router.put("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) {
-    res.send("updating");
-    Product.findOneAndUpdate();
+  if (role == process.env.ADMIN_ROLE) 
+  {
+    Product.findById(req.params.id, function (err, result) {
+      if (err) return res.sendStatus(500);
+      result.title = req.query.title || result.title;
+      result.description = req.query.description || result.description;
+      result.price = req.query.price || result.price;
+      result.count = req.query.count || result.count;
+
+      result.save(function (err, result)
+      {
+        if(err) return res.sendStatus(500);
+        return res.sendStatus(200);
+      });
+    });
   }
+  else return res.sendStatus(500);
 });
 
 //Dodawanie nowych przedmiotów, ale tylko dla usera, który jest adminem
@@ -101,7 +114,7 @@ router.get("/", function (req, res, next) {
 function authenticateToken(req, res, next) {
   // tylko do testów -- później należy to usunąć
   //-----------
-  next();
+  //next();
   //-----------
   const authHeader = req.headers["authorization"];
   if (authHeader == null) return res.sendStatus(401);
