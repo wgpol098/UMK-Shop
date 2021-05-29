@@ -28,4 +28,9 @@ router.post("/removefromcard", function (req, res, next)
   res.send(200);
 });
 
+router.get("/", function (req, res, next)
+{
+  res.send(req.session.cart);
+});
+
 module.exports = router;
