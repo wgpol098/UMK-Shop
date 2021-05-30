@@ -10,7 +10,7 @@ import { useCookies } from "react-cookie";
 import { Basket2Fill } from "react-bootstrap-icons";
 
 export default function HeaderLayout(props) {
-  const [cookies, setCookie, removeCookie] = useCookies(["userToken"]);
+  const [cookies, setCookie, removeCookie] = useCookies("user");
 
   const handleLogout = async () => {
     try {
@@ -109,6 +109,16 @@ export default function HeaderLayout(props) {
           <Nav.Link href="/koszyk" className="basket-icon">
             <Basket2Fill />
           </Nav.Link>
+
+          {props.isLoggedAdmin && (
+            <Button
+              variant="outline-light"
+              style={{ margin: "0 10px 0 0" }}
+              href="/admin"
+            >
+              Panel Admina
+            </Button>
+          )}
 
           {!props.isLogged ? (
             <Button

@@ -7,13 +7,15 @@ export default function BodyProductLayout(props) {
   const handleAddToBasket = async (e) => {
     e.preventDefault();
 
+    //console.log(product._id);
+
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products/addtocard`,
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/addtocard?id=${product._id}`,
         {
-          body: JSON.stringify({
-            id: product.id,
-          }),
+          // body: JSON.stringify({
+          //   id: product._id,
+          // }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -21,7 +23,18 @@ export default function BodyProductLayout(props) {
         }
       );
 
-      const result = await res.json();
+      //const result = await res.json();
+      //console.log(result);
+      const res1 = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        }
+      );
+      const result = await res1.text();
       console.log(result);
     } catch (err) {
       console.log(err);

@@ -30,6 +30,7 @@ router.post("/removefromcard", function (req, res, next)
 
 router.get("/", function (req, res, next)
 {
+  console.log(req.session.cart);//TODO doesnt work?
   res.send(req.session.cart);
 });
 

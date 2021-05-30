@@ -33,23 +33,20 @@ router.put("/:id", authenticateToken, function (req, res, next) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) 
-  {
+  if (role == process.env.ADMIN_ROLE) {
     Product.findById(req.params.id, function (err, result) {
       if (err) return res.sendStatus(500);
-      result.title = req.query.title || result.title;
-      result.description = req.query.description || result.description;
-      result.price = req.query.price || result.price;
-      result.count = req.query.count || result.count;
+      result.title = req.body.title || result.title;
+      result.description = req.body.description || result.description;
+      result.price = req.body.price || result.price;
+      result.count = req.body.count || result.count;
 
-      result.save(function (err, result)
-      {
-        if(err) return res.sendStatus(500);
+      result.save(function (err, result) {
+        if (err) return res.sendStatus(500);
         return res.sendStatus(200);
       });
     });
-  }
-  else return res.sendStatus(500);
+  } else return res.sendStatus(500);
 });
 
 //Dodawanie nowych przedmiotów, ale tylko dla usera, który jest adminem
@@ -86,25 +83,20 @@ router.get("/", function (req, res, next) {
   var page = parseInt(req.query.page, 10) || 0;
   var limit = parseInt(req.query.limit, 10) || 10;
 
-  if (!filter) 
-  {
+  if (!filter) {
     Product.find()
       .skip(page * limit)
       .limit(limit)
-      .exec(function (err, result) 
-      {
+      .exec(function (err, result) {
         console.log("dziala");
         if (err) return res.sendStatus(500);
         res.send(result);
       });
-  } 
-  else 
-  {
+  } else {
     Product.find(JSON.parse(filter))
       .skip(page * limit)
       .limit(limit)
-      .exec(function (err, result) 
-      {
+      .exec(function (err, result) {
         if (err) return res.sendStatus(500);
         res.send(result);
       });

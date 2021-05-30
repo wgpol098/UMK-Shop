@@ -2,33 +2,26 @@ import MainLayout from "../../../layouts/admin/MainAdminLayout";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-
-// export async function getStaticProps(context) {
-//   let id = context.params.id;
-
-//   const res = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products/${id}`
-//   );
-//   const product = res && (await res.json());
-
-//   return {
-//     props: {
-//       product: product,
-//     },
-//     revalidate: 10,
-//   };
-// }
+import jwt_decode from "jwt-decode";
 
 export default function Product() {
   const [cookies] = useCookies("user");
   const router = useRouter();
   console.log(cookies.userToken);
 
-  let isLogged = cookies.userToken ? true : false;
+  let decoded = null;
+
+  try {
+    decoded = jwt_decode(cookies.userToken);
+  } catch (err) {
+    console.log(err);
+  }
+
+  let isLoggedAdmin = decoded?.role == "admin" ? true : false;
 
   useEffect(() => {
-    if (!isLogged) router.push("/"); //TODO only admin
+    if (!isLoggedAdmin) router.push("/");
   });
 
-  return isLogged ? <MainLayout type={2} /> : null;
+  return isLoggedAdmin ? <MainLayout type={2} /> : null;
 }

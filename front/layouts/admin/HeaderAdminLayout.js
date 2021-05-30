@@ -95,6 +95,20 @@ export default function HeaderLayout(props) {
             <Nav.Link href="/admin">Produkty</Nav.Link>
             <Nav.Link href="/admin">Użytkownicy</Nav.Link>
           </Nav>
+          <Button
+            variant="outline-light"
+            style={{ margin: "0 10px 0 0" }}
+            href="/"
+          >
+            Strona główna
+          </Button>
+          <Button
+            variant="outline-light"
+            style={{ margin: "0 10px 0 0", textTransform: "uppercase" }}
+            onClick={handleLogout}
+          >
+            Wyloguj się
+          </Button>
         </Navbar.Collapse>
       </Navbar>
     </div>

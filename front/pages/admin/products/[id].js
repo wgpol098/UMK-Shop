@@ -2,6 +2,7 @@ import MainAdminLayout from "../../../layouts/admin/MainAdminLayout";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import jwt_decode from "jwt-decode";
 
 export async function getServerSideProps(context) {
   let id = context.params.id;
@@ -42,11 +43,19 @@ export default function Product({ product }) {
   const router = useRouter();
   console.log(cookies.userToken);
 
-  let isLogged = cookies.userToken ? true : false;
+  let decoded = null;
+
+  try {
+    decoded = jwt_decode(cookies.userToken);
+  } catch (err) {
+    console.log(err);
+  }
+
+  let isLoggedAdmin = decoded?.role == "admin" ? true : false;
 
   useEffect(() => {
-    if (!isLogged) router.push("/"); //TODO only admin
+    if (!isLoggedAdmin) router.push("/");
   });
 
-  return isLogged ? <MainAdminLayout type={1} product={product} /> : null;
+  return isLoggedAdmin ? <MainAdminLayout type={1} product={product} /> : null;
 }

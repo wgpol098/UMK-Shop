@@ -24,7 +24,7 @@ export default function MainLayout(props) {
   return (
     <div className="main-container">
       <Head>
-        <title>Sklep internetowy UMK Panel Admina</title>
+        <title>Sklep internetowy UMK - Panel Admina</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
