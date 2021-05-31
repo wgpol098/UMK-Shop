@@ -8,9 +8,28 @@ import {
 } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { Basket2Fill } from "react-bootstrap-icons";
+import { useEffect, useState } from "react";
 
 export default function HeaderLayout(props) {
+  const [cartEmpty, setCartEmpty] = useState(true);
   const [cookies, setCookie, removeCookie] = useCookies("user");
+
+  useEffect(async () => {
+    const res1 = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        method: "GET",
+      }
+    )
+      .then(async (data) => await data.json())
+      .then((prods) => setCartEmpty(prods?.totalQuantity > 0 ? false : true));
+  });
+
+  console.log(cartEmpty);
 
   const handleLogout = async () => {
     try {
@@ -77,6 +96,15 @@ export default function HeaderLayout(props) {
               Informacja o aktualnie dostępnej ofercie: tel. (56) 611 46 57.
             </span>
           </div>
+          {props.isLoggedAdmin && (
+            <Button
+              style={{ margin: "auto 0 0 0" }}
+              className="btn btn-blue-umk"
+              href="/admin"
+            >
+              Panel Admina
+            </Button>
+          )}
         </div>
       </div>
       <Navbar
@@ -106,19 +134,12 @@ export default function HeaderLayout(props) {
             <Button variant="outline-light">Szukaj</Button>
           </Form> */}
 
-          <Nav.Link href="/koszyk" className="basket-icon">
+          <Nav.Link
+            href="/koszyk"
+            className={cartEmpty ? "basket-icon" : "basket-icon-prods"}
+          >
             <Basket2Fill />
           </Nav.Link>
-
-          {props.isLoggedAdmin && (
-            <Button
-              variant="outline-light"
-              style={{ margin: "0 10px 0 0" }}
-              href="/admin"
-            >
-              Panel Admina
-            </Button>
-          )}
 
           {!props.isLogged ? (
             <Button

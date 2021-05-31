@@ -21,16 +21,25 @@ router.post("/addtocard", function (req, res, next)
 //Metoda do przetestowania
 router.post("/removefromcard", function (req, res, next) 
 {
-  var productId = req.body.id;
+  var productId = req.query.id;
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   cart.removeItem(productId);
   req.session.cart = cart;
   res.send(200);
 });
 
+//Metoda do przetestowania
+router.post("/removeonefromcard", function (req, res, next) 
+{
+  var productId = req.query.id;
+  var cart = new Cart(req.session.cart ? req.session.cart : {});
+  cart.reduce(productId);
+  req.session.cart = cart;
+  res.send(200);
+});
+
 router.get("/", function (req, res, next)
 {
-  console.log(req.session.cart);//TODO doesnt work?
   res.send(req.session.cart);
 });
 
