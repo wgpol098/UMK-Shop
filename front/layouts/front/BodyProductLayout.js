@@ -8,7 +8,6 @@ export default function BodyProductLayout(props) {
     e.preventDefault();
 
     //console.log(product._id);
-
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/addtocard?id=${product._id}`,
@@ -19,6 +18,7 @@ export default function BodyProductLayout(props) {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           method: "POST",
         }
       );
@@ -31,10 +31,11 @@ export default function BodyProductLayout(props) {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           method: "GET",
         }
       );
-      const result = await res1.text();
+      const result = await res1.json();
       console.log(result);
     } catch (err) {
       console.log(err);
