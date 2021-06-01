@@ -107,21 +107,21 @@ body {
   color: #fff;
   font-size: 34px;
   line-height: 0;
-}
-
-.basket-icon-prods {
-  margin: 0 10px 0 0;
-  color: #ffd537;
-  font-size: 34px;
-  line-height: 0;
+  position: relative;
 }
 
 .basket-icon:hover {
   color: #ffd537 !important;
 }
 
-.basket-icon-prods:hover {
-  color: #fff !important;
+.basket-prods{
+  width: 15px;
+  height: 15px;
+  background-color: #db5663;
+  top: 10px;
+  left: 10px;
+  position: absolute;
+  border-radius: 50%;
 }
 
 .single-product-wrapper {

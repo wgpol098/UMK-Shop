@@ -1,10 +1,16 @@
-import { Carousel, CardDeck, CardColumns, CardGroup } from "react-bootstrap";
+import {
+  Carousel,
+  CardDeck,
+  CardColumns,
+  CardGroup,
+  Button,
+} from "react-bootstrap";
 import Image from "next/image";
 import SmallProductLayout from "./subLayouts/SmallProductLayout";
 
 export default function BodyIndexLayout(props) {
   let productsArray = [];
-  props.products &&
+  props.products?.length > 0 &&
     props.products.map((x) => {
       productsArray.push(<SmallProductLayout title={x.title} id={x._id} />);
     });
@@ -59,9 +65,14 @@ export default function BodyIndexLayout(props) {
         </Carousel>
       </div>
       <div className="products-title">
-        <span className="products-title-text">Dostępne produkty</span>
+        <span className="products-title-text">Najpopularnejsze</span>
       </div>
       <CardGroup className="card-products">{productsArray}</CardGroup>
+      <div style={{ margin: "10px 25px 25px 25px" }}>
+        <Button className="btn btn-blue-umk" block>
+          Więcej productów
+        </Button>
+      </div>
     </div>
   );
 }
