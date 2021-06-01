@@ -11,6 +11,8 @@ router.post("/register", function (req, res, next) {
     first_name: req.body.FirstName,
     last_name: req.body.LastName,
     role: "user",
+    birthdate: req.body.birthdate,
+    phone_number: req.body.phone_number
   });
   user.password = user.encryptPassword(req.body.password);
 
