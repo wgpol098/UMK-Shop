@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true, useNewUrlParser: true });
 
-
 var addresses =
 [
     new Address
@@ -38,13 +37,14 @@ var addresses =
 
 
 //Zapisywanie adresów
+//db.addresses
 var done = 0;
-for(var i = 0; i < products.length; i++)
+for(var i = 0; i < addresses.length; i++)
 {
     addresses[i].save(function(err, result)
     {
         done++;
-        if(done === products.lenght)
+        if(done === addresses.lenght)
         {
             exit();
         }
@@ -53,5 +53,6 @@ for(var i = 0; i < products.length; i++)
 
 function exit()
 {
+    consol.log('exit');
     mongoose.disconnect();
 };

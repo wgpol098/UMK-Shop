@@ -1,25 +1,32 @@
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/umkshop', { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
+
+var tmp = new User();
+var password = tmp.encryptPassword('admin');
 
 var users =
 [
     new User
     ({
         email: 'admin',
-        password: 'admin',
-        FirstName: 'Andrzej',
-        LastName: 'Gołota',
-        role: 'A'
+        password: password,
+        first_name: 'Andrzej',
+        last_name: 'Gołota',
+        role: 'A',
+        birthdate: '2000-12-12',
+        phone_number: '123-123-123'
     }),
     new User
     ({
         email: 'user',
-        password: 'user',
-        FirstName: 'Andrii',
-        LastName: 'Taki',
-        role: 'U'
+        password: password,
+        first_name: 'Andrii',
+        last_name: 'Taki',
+        role: 'U',
+        birthdate: '2000-12-12',
+        phone_number: '123-123-123'
     })
 ];
 

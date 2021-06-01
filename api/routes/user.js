@@ -5,49 +5,43 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 //Rejestraca nowego usera -- zwykłego śmiertelnika
-// nie admina
 router.post("/register", function (req, res, next) {
   var user = new User({
     email: req.body.email,
-    password: req.body.password,
-    FirstName: req.body.FirstName,
-    LastName: req.body.LastName,
+    first_name: req.body.FirstName,
+    last_name: req.body.LastName,
     role: "user",
   });
+  user.password = user.encryptPassword(req.body.password);
 
-  //Trzeba sprwadzać czy user nie istnieje już w bazie danych
-  //Nie można dodawać emaila, który istnieje w bazie danych
-
+  //email musi być unikalny -- jest to uwzględnione w modelu
   user.save(function (err, result) {
     if (err) return res.sendStatus(500);
     return res.sendStatus(200);
   });
 });
 
-//Na razie login zwraca zawsze token, niezależnie od email i password
-//Tutaj trzeba ogarnąć te kody błędu
+//TODO: Zwracanie odpowiednich kodów błedów
 router.post("/login", function (req, res, next) 
 {
   const email = req.body.email;
   const password = req.body.password;
-  User.find({ email: email, password: password }, function (err, user) 
+
+  if(email == undefined || password == undefined) return res.sendStatus(500);
+
+  //Email w bazie danych jest unikalny  
+  User.find({ email: email}, function (err, result) 
   {
     if (err) return res.sendStatus(500);
-    console.log(user, email);
-    if (user == null) return res.sendStatus(500);
-    if (user.length == 0) return res.sendStatus(404);
+    if (result == null) return res.sendStatus(500);
+    if (result.length == 0) return res.sendStatus(500);
+    if(!result[0].validPassword(password)) return res.sendStatus(500);
 
-    // trzeba wyciągać id danego usera
-    // Trzeba kontrolować czy zwrócony został jeden wynik
-    console.log(user[0]._id);
-
-    //Do tokenu możliwe jest wrzucenie wielu informacji
-    //Tutaj nie zawsze jest adminem
     const userModel = 
     {
       email: email,
-      id: user[0]._id,
-      role: "admin",
+      id: result._id,
+      role: result.role,
     };
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
@@ -65,6 +59,7 @@ router.get("/profile", authenticateToken, function (req, res, next) {
   var decoded = jwt.decode(authHeader);
   var email = decoded.email;
 
+  //TODO: Tutaj nie powinnien być zwracany ciąg z hasłem
   User.find({ email: email }, function (err, user) {
     if (err) return res.sendStatus(500);
     res.send(user);

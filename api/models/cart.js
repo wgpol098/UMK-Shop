@@ -1,3 +1,4 @@
+//TODO: Przy usuwaniu przedmiotów w podsumowaniu jest błędna cena całkowita - trzeba znaleźć bug
 module.exports = function Cart(oldCart)
 {
     this.items = oldCart.items || {};

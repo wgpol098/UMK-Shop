@@ -18,9 +18,13 @@ var store = new MongoStore({
   collection: "mySessions",
 });
 
-var routes = require("./routes/products");
-var userRoutes = require("./routes/user");
-var cartRoutes = require("./routes/carts");
+const routes = require("./routes/products");
+const userRoutes = require("./routes/user");
+const cartRoutes = require("./routes/carts");
+const addressRoutes = require("./routes/address");
+const deliveryRoutes = require("./routes/delivery");
+const paymentRoutes = require("./routes/payment");
+const orderRoutes = require("./routes/order");
 
 const PORT = process.env.PORT || 3010;
 var app = express();
@@ -53,6 +57,10 @@ app.use(
 app.use("/user", userRoutes);
 app.use("/carts", cartRoutes);
 app.use("/products", routes);
+app.use("/address", addressRoutes);
+app.use("/payment", paymentRoutes);
+app.use("/delivery", deliveryRoutes);
+app.use("/order", orderRoutes);
 
 app.use(function (req, res, next) {
   var err = new Error("Not Found");
