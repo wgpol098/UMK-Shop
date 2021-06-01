@@ -134,11 +134,9 @@ export default function HeaderLayout(props) {
             <Button variant="outline-light">Szukaj</Button>
           </Form> */}
 
-          <Nav.Link
-            href="/koszyk"
-            className={cartEmpty ? "basket-icon" : "basket-icon-prods"}
-          >
+          <Nav.Link href="/koszyk" className="basket-icon">
             <Basket2Fill />
+            {!cartEmpty && <div className="basket-prods" />}
           </Nav.Link>
 
           {!props.isLogged ? (

@@ -84,10 +84,10 @@ export default function BodyCartLayout(props) {
       cartElements.push(
         <Row className="justify-content-md-center cart-element">
           <Col sm={6}>
-            <span className="cart-title">{value.item.title}</span>{" "}
+            <span className="cart-title">{value.item.title}</span>
           </Col>
           <Col sm={2}>
-            <span className="cart-quantity">{value.qty}</span>{" "}
+            <span className="cart-quantity">{value.qty}</span>
           </Col>
           <Col sm={2}>
             <span className="cart-price">{value.price} Zł</span>
@@ -128,19 +128,26 @@ export default function BodyCartLayout(props) {
       {cartData?.totalQuantity > 0 ? (
         <>
           <Container className="cart-container">
-            {" "}
             <Row className="cart-header">
               <Col sm={6}>
-                <span className="cart-title">Nazwa produktu</span>{" "}
+                <span className="cart-title">Nazwa produktu</span>
               </Col>
               <Col sm={2}>
-                <span className="cart-quantity">Ilość</span>{" "}
+                <span className="cart-quantity">Ilość</span>
               </Col>
               <Col sm={2}>
                 <span className="cart-price">Cena</span>
               </Col>
             </Row>
             {cartElements}
+            <Row className="cart-header">
+              <Col sm={8}>
+                <span className="cart-title">Podsumowanie: </span>
+              </Col>
+              <Col sm={2}>
+                <span className="cart-price">{cartData.totalPrice} Zł</span>
+              </Col>
+            </Row>
           </Container>
           <Button className="btn btn-blue-umk">Złóż zamówienie</Button>
         </>
