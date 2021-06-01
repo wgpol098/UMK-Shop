@@ -3,6 +3,7 @@ import BodyIndexLayout from "./BodyIndexLayout";
 import BodyLoginLayout from "./BodyLoginLayout";
 import BodyProductLayout from "./BodyProductLayout";
 import BodyCartLayout from "./BodyCartLayout";
+import BodyRegisterLayout from "./BodyRegisterLayout";
 
 import Head from "next/head";
 import { useEffect } from "react";
@@ -25,6 +26,8 @@ function renderBody(props) {
       return <BodyLoginLayout {...props} />;
     case 3:
       return <BodyCartLayout {...props} />;
+    case 4:
+      return <BodyRegisterLayout {...props} />;
     default:
       return <BodyIndexLayout />;
   }

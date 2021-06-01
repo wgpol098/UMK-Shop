@@ -140,13 +140,22 @@ export default function HeaderLayout(props) {
           </Nav.Link>
 
           {!props.isLogged ? (
-            <Button
-              variant="outline-light"
-              style={{ margin: "0 10px 0 0" }}
-              href="/login"
-            >
-              Zaloguj się
-            </Button>
+            <>
+              <Button
+                variant="outline-light"
+                style={{ margin: "0 10px 0 0" }}
+                href="/login"
+              >
+                Zaloguj się
+              </Button>
+              <Button
+                variant="outline-light"
+                style={{ margin: "0 10px 0 0" }}
+                href="/register"
+              >
+                Zarejestruj się
+              </Button>
+            </>
           ) : (
             <Button
               variant="outline-light"
