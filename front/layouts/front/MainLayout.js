@@ -11,6 +11,7 @@ import React from "react";
 
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
+import BodyProductsLayout from "./BodyProductsLayout";
 
 function renderBody(props) {
   switch (props.type) {
@@ -28,6 +29,8 @@ function renderBody(props) {
       return <BodyCartLayout {...props} />;
     case 4:
       return <BodyRegisterLayout {...props} />;
+    case 5:
+      return <BodyProductsLayout {...props} />;
     default:
       return <BodyIndexLayout />;
   }
@@ -40,7 +43,7 @@ export default function MainLayout(props) {
   let decoded = null;
 
   try {
-    decoded = jwt_decode(cookies.userToken);
+    if (cookies.userToken) decoded = jwt_decode(cookies.userToken);
   } catch (err) {
     console.log(err);
   }
@@ -61,7 +64,6 @@ export default function MainLayout(props) {
         />
         {renderBody(props)}
       </div>
-
       {/* <div class="footer">
         <span>footer</span>
       </div> */}

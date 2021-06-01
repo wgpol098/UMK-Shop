@@ -122,18 +122,10 @@ export default function HeaderLayout(props) {
         >
           <Nav className="mr-auto">
             <Nav.Link href="/">Strona główna</Nav.Link>
+            <Nav.Link href="/products">Lista produktów</Nav.Link>
             <Nav.Link href="/">Regulamin</Nav.Link>
             <Nav.Link href="/">Kontakt</Nav.Link>
           </Nav>
-          {/* <Form inline style={{ margin: "0 10px 0 0" }}>
-            <FormControl
-              type="text"
-              placeholder="Podaj nazwę artykułu..."
-              className="mr-sm-2"
-            />
-            <Button variant="outline-light">Szukaj</Button>
-          </Form> */}
-
           <Nav.Link href="/koszyk" className="basket-icon">
             <Basket2Fill />
             {!cartEmpty && <div className="basket-prods" />}
