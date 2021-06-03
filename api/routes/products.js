@@ -1,7 +1,6 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const product = require("../models/product");
 const router = express.Router();
 const Product = require("../models/product");
 
@@ -11,12 +10,15 @@ router.delete("/:id", authenticateToken, function (req, res) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) {
-    Product.findById(req.params.id).remove(function (err, result) {
+  if (role == process.env.ADMIN_ROLE) 
+  {
+    Product.findById(req.params.id).remove(function (err, result) 
+    {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(200);
+      return res.sendStatus(201);
     });
-  } else res.sendStatus(500);
+  } 
+  else res.sendStatus(403);
 });
 
 //Pobieranie jedngo przedmiotu
@@ -78,6 +80,7 @@ router.post("/", authenticateToken, function (req, res, next) {
 // Pobieranie wszystkich produktów
 // Obsłgiwane jest również filtrowanie
 // Obsługiwane jest również stronicowanie
+// TODO: Zrobić na końcu zwracanie ile jest wszystkich produktów
 router.get("/", function (req, res, next) {
   var filter = req.query.filter;
   var page = parseInt(req.query.page, 10) || 0;

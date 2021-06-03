@@ -34,7 +34,7 @@ router.get('/:id', function(req, res, next)
         res.send(result);
     });
 });
-
+//TODO: Powinien modyfikować, a jak nie ma to dodawać
 router.put('/:id', function(req, res, next)
 {
     res.send('putID');

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Payment = require('../models/product');
+const Payment = require('../models/payment');
 
 //Do przetestowania
 router.get('/', function(req, res, next)

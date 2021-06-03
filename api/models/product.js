@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-var schema = new mongoose.Schema(
+//TODO: Dodanie flagi odpowiedzialnej za to, czy produkt jest na promocji/dostępny/niedostępny
+var schema = new mongoose.Schema
+(
     {
         imagePath: {type: String, required: false},
         title: {type: String, required: true},
