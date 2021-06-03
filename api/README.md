@@ -1,6 +1,10 @@
 # Dokumentacja API
-### /products
-#### - DELETE - Metoda usuwająca produkt z bazy danych.
+## /products
+### DELETE - Metoda usuwająca produkt z bazy danych.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
@@ -10,9 +14,17 @@ Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
 
 Kody błędów:
-- 200 - Działanie zakończone sukcesem.
-- 500 - Błąd wewnętrzny serwera
-#### - PUT - Metoda odpowiedzialna za modyfikowanie danych o produkcie.
+- 201 - Działanie zakończone sukcesem.
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
+- 500 - Błąd wewnętrzny serwera.
+
+---
+### PUT - Metoda odpowiedzialna za modyfikowanie danych o produkcie.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
@@ -21,7 +33,20 @@ Kody błędów:
 | description | opcjonalny | Opis produktu |
 | price | opcjonalny | Cena produktu |
 | count | opcjonalny | Ilość dostępnych produktów |
-- POST - Metoda odpowiedzialna za dodawanie nowego produktu.
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości.
+
+Kody błędów:
+- 200 - Działanie zakończone sukcesem.
+- 500 - Wewnętrzny błąd serwera.
+
+---
+### POST - Metoda odpowiedzialna za dodawanie nowego produktu.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
@@ -29,13 +54,41 @@ Kody błędów:
 | description | wymagany | Opis produktu |
 | price | wymagany | Cena produktu |
 | count | wymagany | Ilość dostępnych produktów |
-- GET - Metoda odpowiedzialna za pobieranie informacji o produktach.
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości.
+
+Kody błędów:
+- 201 - Działanie zakończone sukcesem.
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
+- 500 - Wewnętrzny błąd serwera.
+
+---
+### GET - Metoda odpowiedzialna za pobieranie informacji o produktach.
+
+Wymagane uprawnienia:
+- Metoda nie wymaga żadnych uprawnień.
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
+| id | opcjonalny | Id produktu dla którego powinny zostać zwrócone dane |
 | filter | opcjonalny | Filtr po którym będą filtrowane dane |
 | page | opcjonalny | Odpowiada za zwracanie odpowiedniej strony z produktami. Domyślna wartość: 0 |
 | limit | opcjonalny | Ilość produktów zwracanych na daną stronę. Domyślna wartość: 10 |
+
+Zwracane wartości:
+- imagePath - adres obraz przedmiotu
+- title - tytuł przedmiotu
+- description - opis przedmiotu
+- price - cena przedmiotu
+- count - ilość sztuk na magazynie
+
+Kody błędów:
+- 200 - Działanie zakończone sukcesem.
+- 500 - Wewnętrzny błąd serwera.
+
+---
 ### /user
 - POST
 - GET
