@@ -69,7 +69,7 @@ export default function BodyIndexLayout(props) {
       </div>
       <CardGroup className="card-products">{productsArray}</CardGroup>
       <div style={{ margin: "10px 25px 25px 25px" }}>
-        <Button className="btn btn-blue-umk" block>
+        <Button href="/products" className="btn btn-blue-umk" block>
           Więcej productów
         </Button>
       </div>

@@ -8,11 +8,11 @@ const User = require("../models/user");
 router.post("/register", function (req, res, next) {
   var user = new User({
     email: req.body.email,
-    first_name: req.body.FirstName,
-    last_name: req.body.LastName,
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
     role: "user",
     birthdate: req.body.birthdate,
-    phone_number: req.body.phone_number
+    phone_number: req.body.phone_number,
   });
   user.password = user.encryptPassword(req.body.password);
 
@@ -24,31 +24,27 @@ router.post("/register", function (req, res, next) {
 });
 
 //TODO: Zwracanie odpowiednich kodów błedów
-router.post("/login", function (req, res, next) 
-{
+router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  if(email == undefined || password == undefined) return res.sendStatus(500);
+  if (email == undefined || password == undefined) return res.sendStatus(500);
 
-  //Email w bazie danych jest unikalny  
-  User.find({ email: email}, function (err, result) 
-  {
+  //Email w bazie danych jest unikalny
+  User.find({ email: email }, function (err, result) {
     if (err) return res.sendStatus(500);
     if (result == null) return res.sendStatus(500);
     if (result.length == 0) return res.sendStatus(500);
-    if(!result[0].validPassword(password)) return res.sendStatus(500);
+    if (!result[0].validPassword(password)) return res.sendStatus(500);
 
-    const userModel = 
-    {
+    const userModel = {
       email: email,
       id: result._id,
       role: result.role,
     };
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
-    const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, 
-    {
+    const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "20m",
     });
     res.json({ accessToken: accessToken });
@@ -78,8 +74,7 @@ router.post("/logout", authenticateToken, function (req, res, next) {
   return res.sendStatus(200);
 });
 
-function authenticateToken(req, res, next) 
-{
+function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   if (authHeader == null) return res.sendStatus(401);
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -87,6 +82,6 @@ function authenticateToken(req, res, next)
     req.user = user;
     next();
   });
-};
+}
 
 module.exports = router;

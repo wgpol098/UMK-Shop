@@ -28,6 +28,10 @@ export default function BodyRegisterLayout(props) {
           body: JSON.stringify({
             email: e.target.email.value,
             password: e.target.password.value,
+            first_name: e.target.FirstName.value,
+            last_name: e.target.LastName.value,
+            phone_number: e.target.phone_number.value,
+            birthdate: e.target.birthdate.value,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -79,7 +83,7 @@ export default function BodyRegisterLayout(props) {
           <Form.Label>Data urodzenia</Form.Label>
           <Form.Control
             type="date"
-            name="date"
+            name="birthdate"
             //required
           />
         </Form.Group>
@@ -96,7 +100,7 @@ export default function BodyRegisterLayout(props) {
           <Form.Label>Numer telefonu</Form.Label>
           <Form.Control
             type="tel"
-            name="phone"
+            name="phone_number"
             placeholder="Nr. telefonu"
             //required
           />
@@ -105,7 +109,7 @@ export default function BodyRegisterLayout(props) {
           <Form.Label>Adres do korespondencji</Form.Label>
           <Form.Control
             type="text"
-            name="address1"
+            //name="address1"
             placeholder="Adres do korespondencji"
             //required
           />
@@ -114,7 +118,7 @@ export default function BodyRegisterLayout(props) {
           <Form.Label>Adres do wysyłki</Form.Label>
           <Form.Control
             type="text"
-            name="address2"
+            //name="address2"
             placeholder="Adres do wysyłki"
             //required
           />
@@ -131,7 +135,7 @@ export default function BodyRegisterLayout(props) {
         <Form.Group>
           <Form.Check
             type="checkbox"
-            name="agreements[]"
+            //name="agreements[]"
             value="1"
             label="Zgadzam się na przetwarzanie danych"
             //required
@@ -140,7 +144,7 @@ export default function BodyRegisterLayout(props) {
         <Form.Group>
           <Form.Check
             type="checkbox"
-            name="agreements[]"
+            //name="agreements[]"
             value="2"
             label="Zgadzam się że ten projekt jest najlepszy i mam wstawić ocenę bardzo dobrą"
             //required
