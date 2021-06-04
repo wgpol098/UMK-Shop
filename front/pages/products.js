@@ -1,6 +1,6 @@
 import MainLayout from "../layouts/front/MainLayout";
 
-Products.getInitialProps = async ({ query: { page = 1, title } }) => {
+Products.getInitialProps = async ({ query: { page = 0, title } }) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products?limit=9&page=${page}&title=${title}`
   );
