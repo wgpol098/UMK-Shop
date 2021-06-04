@@ -71,6 +71,17 @@ export default function BodyCartLayout(props) {
     }
   };
 
+  const handleOrder = (e) => {
+    try {
+      e.preventDefault();
+      if (cookie.userToken) {
+        router.push("/order");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   //console.log(props); //czy pobiera /carts?
   //console.log(Object.entries(cartData?.items));
 
@@ -149,7 +160,9 @@ export default function BodyCartLayout(props) {
               </Col>
             </Row>
           </Container>
-          <Button className="btn btn-blue-umk">Złóż zamówienie</Button>
+          <Button className="btn btn-blue-umk" onClick={handleOrder}>
+            Złóż zamówienie
+          </Button>
         </>
       ) : (
         <div

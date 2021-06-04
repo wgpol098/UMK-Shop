@@ -4,6 +4,9 @@ import BodyLoginLayout from "./BodyLoginLayout";
 import BodyProductLayout from "./BodyProductLayout";
 import BodyCartLayout from "./BodyCartLayout";
 import BodyRegisterLayout from "./BodyRegisterLayout";
+import BodyProductsLayout from "./BodyProductsLayout";
+import BodyOrderLayout from "./BodyOrderLayout";
+import BodyOrderSuccessLayout from "./BodyOrderSuccessLayout";
 
 import Head from "next/head";
 import { useEffect } from "react";
@@ -11,7 +14,6 @@ import React from "react";
 
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
-import BodyProductsLayout from "./BodyProductsLayout";
 
 function renderBody(props) {
   switch (props.type) {
@@ -31,6 +33,10 @@ function renderBody(props) {
       return <BodyRegisterLayout {...props} />;
     case 5:
       return <BodyProductsLayout {...props} />;
+    case 6:
+      return <BodyOrderLayout {...props} />;
+    case 7:
+      return <BodyOrderSuccessLayout {...props} />;
     default:
       return <BodyIndexLayout />;
   }
