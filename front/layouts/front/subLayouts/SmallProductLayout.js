@@ -7,7 +7,7 @@ export default function SmallProductLayout(props) {
     <Link href={`/products/${props.id}`}>
       <a style={{ textDecoration: "none" }}>
         <Card className="small-product-wrapper">
-          <Card.Img variant="top" src="/img/maseczka.jpg" />
+          <Card.Img variant="top" src="/img/maseczka.jpg" alt={props.title} />
           <Card.Body>
             <Card.Title style={{ textAlign: "center" }}>
               {props.title}

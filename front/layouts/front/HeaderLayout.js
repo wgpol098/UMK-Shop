@@ -55,110 +55,113 @@ export default function HeaderLayout(props) {
   };
 
   return (
-    <div className="navbar-wrapper">
-      <div style={{ display: "flex", margin: "0 10px 0 10px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            flex: 1,
-          }}
-        >
+    <header>
+      <div className="navbar-wrapper">
+        <div style={{ display: "flex", margin: "0 10px 0 10px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              flex: 1,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <img
+                alt=""
+                src="/img/logo-umk-big.png"
+                width="350px"
+                className="d-inline-block align-top"
+                alt="umk"
+              />
+              <span style={{ fontSize: "25px", color: "#034ea1" }}>
+                Sklep internetowy
+              </span>
+            </div>
+          </div>
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
+              alignItems: "flex-end",
+              flex: 1,
             }}
           >
-            <img
-              alt=""
-              src="/img/logo-umk-big.png"
-              width="350px"
-              className="d-inline-block align-top"
-            />{" "}
-            <span style={{ fontSize: "25px", color: "#034ea1" }}>
-              Sklep internetowy
-            </span>
+            <div className="header-contact">
+              <span>ul. Gagarina 11, 87-100 Toruń</span>
+              <span>
+                Informacja o aktualnie dostępnej ofercie: tel. (56) 611 46 57.
+              </span>
+            </div>
+            {props.isLoggedAdmin && (
+              <Button
+                style={{ margin: "auto 0 0 0" }}
+                className="btn btn-blue-umk"
+                href="/admin"
+              >
+                Panel Admina
+              </Button>
+            )}
           </div>
         </div>
-        <div
+        <Navbar
+          bg=""
+          expand="lg"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-            flex: 1,
+            padding: ".5rem 0 0 0",
+            alignItems: "stretch",
           }}
         >
-          <div className="header-contact">
-            <span>ul. Gagarina 11, 87-100 Toruń</span>
-            <span>
-              Informacja o aktualnie dostępnej ofercie: tel. (56) 611 46 57.
-            </span>
-          </div>
-          {props.isLoggedAdmin && (
-            <Button
-              style={{ margin: "auto 0 0 0" }}
-              className="btn btn-blue-umk"
-              href="/admin"
-            >
-              Panel Admina
-            </Button>
-          )}
-        </div>
-      </div>
-      <Navbar
-        bg=""
-        expand="lg"
-        style={{
-          padding: ".5rem 0 0 0",
-          alignItems: "stretch",
-        }}
-      >
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse
-          id="basic-navbar-nav"
-          style={{ backgroundColor: "#034ea1", padding: "5px 0 5px 0" }}
-        >
-          <Nav className="mr-auto">
-            <Nav.Link href="/">Strona główna</Nav.Link>
-            <Nav.Link href="/products">Lista produktów</Nav.Link>
-            <Nav.Link href="/">Regulamin</Nav.Link>
-            <Nav.Link href="/">Kontakt</Nav.Link>
-          </Nav>
-          <Nav.Link href="/koszyk" className="basket-icon">
-            <Basket2Fill />
-            {!cartEmpty && <div className="basket-prods" />}
-          </Nav.Link>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse
+            id="basic-navbar-nav"
+            style={{ backgroundColor: "#034ea1", padding: "5px 0 5px 0" }}
+          >
+            <Nav className="mr-auto">
+              <Nav.Link href="/">Strona główna</Nav.Link>
+              <Nav.Link href="/products">Lista produktów</Nav.Link>
+              <Nav.Link href="/">Regulamin</Nav.Link>
+              <Nav.Link href="/">Kontakt</Nav.Link>
+            </Nav>
+            <Nav.Link href="/koszyk" className="basket-icon">
+              <Basket2Fill />
+              {!cartEmpty && <div className="basket-prods" />}
+            </Nav.Link>
 
-          {!props.isLogged ? (
-            <>
+            {!props.isLogged ? (
+              <>
+                <Button
+                  variant="outline-light"
+                  style={{ margin: "0 10px 0 0" }}
+                  href="/login"
+                >
+                  Zaloguj się
+                </Button>
+                <Button
+                  variant="outline-light"
+                  style={{ margin: "0 10px 0 0" }}
+                  href="/register"
+                >
+                  Zarejestruj się
+                </Button>
+              </>
+            ) : (
               <Button
                 variant="outline-light"
-                style={{ margin: "0 10px 0 0" }}
-                href="/login"
+                style={{ margin: "0 10px 0 0", textTransform: "uppercase" }}
+                onClick={handleLogout}
               >
-                Zaloguj się
+                Wyloguj się
               </Button>
-              <Button
-                variant="outline-light"
-                style={{ margin: "0 10px 0 0" }}
-                href="/register"
-              >
-                Zarejestruj się
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="outline-light"
-              style={{ margin: "0 10px 0 0", textTransform: "uppercase" }}
-              onClick={handleLogout}
-            >
-              Wyloguj się
-            </Button>
-          )}
-        </Navbar.Collapse>
-      </Navbar>
-    </div>
+            )}
+          </Navbar.Collapse>
+        </Navbar>
+      </div>
+    </header>
   );
 }

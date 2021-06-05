@@ -45,7 +45,7 @@ export default function BodyProductLayout(props) {
             fontFamily: "Lato-Light, Arial, sans-serif",
           }}
         >
-          <Card.Img variant="top" src="/img/maseczka.jpg" />
+          <Card.Img variant="top" src="/img/maseczka.jpg" alt={product.title} />
           <Card.Body
             style={{
               display: "flex",

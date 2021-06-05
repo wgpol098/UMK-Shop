@@ -60,6 +60,10 @@ export default function MainLayout(props) {
     <div className="main-container">
       <Head>
         <title>Sklep internetowy UMK</title>
+        <meta
+          name="description"
+          content="Sklep internetowy Uniwersytetu Mikołaja Kopernika (UMK)."
+        ></meta>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

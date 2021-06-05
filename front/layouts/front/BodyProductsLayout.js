@@ -7,11 +7,11 @@ import {
   Button,
   Form,
   FormControl,
-  Pagination,
 } from "react-bootstrap";
 import Image from "next/image";
 import SmallProductLayout from "./subLayouts/SmallProductLayout";
 import { useRouter } from "next/router";
+import Pagination from "rc-pagination";
 
 export default function BodyProductsLayout(props) {
   const [titleFilter, setTitleFilter] = useState("");
@@ -31,27 +31,14 @@ export default function BodyProductsLayout(props) {
     router.push(`/products?page=${props.page}&title=${title}`);
   };
 
-  const handleOnPageChange = (e) => {
-    e.preventDefault();
-    const page = e.target.getAttribute("page");
+  const handleOnPageChange = (page) => {
+    //e.preventDefault();
+    console.log(page - 1);
+    // const page = e.target.getAttribute("page");
     if (titleFilter !== "")
-      router.push(`/products?page=${page}&title=${titleFilter}`);
-    else router.push(`/products?page=${page}`);
+      router.push(`/products?page=${page - 1}&title=${titleFilter}`);
+    else router.push(`/products?page=${page - 1}`);
   };
-
-  let items = [];
-  for (let number = 1; number <= 5; number++) {
-    items.push(
-      <Pagination.Item
-        key={number}
-        page={number - 1}
-        active={number - 1 === props.page}
-        onClick={handleOnPageChange}
-      >
-        {number}
-      </Pagination.Item>
-    );
-  }
 
   return (
     <div>
@@ -71,19 +58,24 @@ export default function BodyProductsLayout(props) {
           </Button>
         </Form>
       </div>
+      <div style={{ margin: "25px 25px 10px 25px" }}>
+        <Pagination
+          onChange={handleOnPageChange}
+          current={props.page + 1}
+          total={30} //TODO change to totalItems
+          pageSize={9}
+          locale=""
+        />
+      </div>
       <CardGroup className="card-products">{productsArray}</CardGroup>
       <div style={{ margin: "10px 25px 25px 25px" }}>
-        <Pagination>
-          <Pagination.First />
-          <Pagination.Prev />
-          <Pagination.Item>{1}</Pagination.Item>
-          <Pagination.Ellipsis />
-          {items}
-          <Pagination.Ellipsis />
-          <Pagination.Item>{20}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination>
+        <Pagination
+          onChange={handleOnPageChange}
+          current={props.page + 1}
+          total={30} //TODO change to totalItems
+          pageSize={9}
+          locale=""
+        />
       </div>
     </div>
   );
