@@ -26,6 +26,16 @@ body {
   background: #fff;
 }
 
+.btn-yellow-umk {
+  color: #034ea1;
+  background-color: #ffd537;
+}
+
+.btn-yellow-umk:hover {
+  color: #ffd537;
+  background: #034ea1;
+}
+
 .products-title {
   margin: 40px 0 10px 0;
   padding: 0 0 20px 0;
@@ -114,7 +124,7 @@ body {
   color: #ffd537 !important;
 }
 
-.basket-prods{
+.basket-prods {
   width: 15px;
   height: 15px;
   background-color: #db5663;
@@ -201,6 +211,14 @@ body {
 
 .cart-title {
   color: #fff;
+}
+
+.cart-title a {
+  color: #fff;
+}
+
+.cart-title a:hover {
+  color: #ffd537 !important;
 }
 
 .cart-quantity {

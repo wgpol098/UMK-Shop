@@ -84,7 +84,9 @@ export default function BodyCartLayout(props) {
       cartElements.push(
         <Row className="justify-content-md-center cart-element">
           <Col sm={6}>
-            <span className="cart-title">{value.item.title}</span>
+            <span className="cart-title">
+              <a href={`/products/${value.item._id}`}>{value.item.title}</a>
+            </span>
           </Col>
           <Col sm={2}>
             <span className="cart-quantity">{value.qty}</span>

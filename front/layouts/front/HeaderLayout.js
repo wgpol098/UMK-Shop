@@ -132,11 +132,9 @@ export default function HeaderLayout(props) {
               <Basket2Fill />
               {!cartEmpty && <div className="basket-prods" />}
             </Nav.Link>
-            {cookies.userToken && (
-              <Nav.Link href="/user" className="header-icon">
-                <PersonSquare />
-              </Nav.Link>
-            )}
+            <Nav.Link href="/user" className="header-icon">
+              <PersonSquare />
+            </Nav.Link>
 
             {!props.isLogged ? (
               <>
