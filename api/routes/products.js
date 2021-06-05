@@ -10,15 +10,12 @@ router.delete("/:id", authenticateToken, function (req, res) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) 
-  {
-    Product.findById(req.params.id).remove(function (err, result) 
-    {
+  if (role == process.env.ADMIN_ROLE) {
+    Product.findById(req.params.id).remove(function (err, result) {
       if (err) return res.sendStatus(500);
       return res.sendStatus(201);
     });
-  } 
-  else res.sendStatus(403);
+  } else res.sendStatus(403);
 });
 
 //Pobieranie jedngo przedmiotu
