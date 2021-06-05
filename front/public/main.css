@@ -102,7 +102,7 @@ body {
   border-bottom: 5px solid #034ea1;
 }
 
-.basket-icon {
+.header-icon {
   margin: 0 10px 0 0;
   color: #fff;
   font-size: 34px;
@@ -110,7 +110,7 @@ body {
   position: relative;
 }
 
-.basket-icon:hover {
+.header-icon:hover {
   color: #ffd537 !important;
 }
 

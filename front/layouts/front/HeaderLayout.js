@@ -7,7 +7,7 @@ import {
   Nav,
 } from "react-bootstrap";
 import { useCookies } from "react-cookie";
-import { Basket2Fill } from "react-bootstrap-icons";
+import { Basket2Fill, PersonSquare } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 
 export default function HeaderLayout(props) {
@@ -128,10 +128,15 @@ export default function HeaderLayout(props) {
               <Nav.Link href="/">Regulamin</Nav.Link>
               <Nav.Link href="/">Kontakt</Nav.Link>
             </Nav>
-            <Nav.Link href="/koszyk" className="basket-icon">
+            <Nav.Link href="/koszyk" className="header-icon">
               <Basket2Fill />
               {!cartEmpty && <div className="basket-prods" />}
             </Nav.Link>
+            {cookies.userToken && (
+              <Nav.Link href="/user" className="header-icon">
+                <PersonSquare />
+              </Nav.Link>
+            )}
 
             {!props.isLogged ? (
               <>

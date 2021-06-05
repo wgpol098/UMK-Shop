@@ -7,6 +7,7 @@ import BodyRegisterLayout from "./BodyRegisterLayout";
 import BodyProductsLayout from "./BodyProductsLayout";
 import BodyOrderLayout from "./BodyOrderLayout";
 import BodyOrderSuccessLayout from "./BodyOrderSuccessLayout";
+import BodyUserLayout from "./BodyUserLayout";
 
 import Head from "next/head";
 import { useEffect } from "react";
@@ -37,6 +38,8 @@ function renderBody(props) {
       return <BodyOrderLayout {...props} />;
     case 7:
       return <BodyOrderSuccessLayout {...props} />;
+    case 8:
+      return <BodyUserLayout {...props} />;
     default:
       return <BodyIndexLayout />;
   }

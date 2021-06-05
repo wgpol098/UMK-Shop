@@ -50,39 +50,19 @@ export default function BodyOrderLayout(props) {
         onSubmit={handleSubmit}
       >       
         <Form.Group>
-          <Form.Label>Adres do korespondencji</Form.Label>
-          <Form.Control
-            type="text"
-            //name="address1"
-            placeholder="Adres do korespondencji"
-            //required
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Adres do wysyłki</Form.Label>
-          <Form.Control
-            type="text"
-            //name="address2"
-            placeholder="Adres do wysyłki"
-            //required
-          />
-        </Form.Group>
-        <Form.Group>
           <Form.Check
             type="checkbox"
-            //name="agreements[]"
             value="1"
-            label="Zgadzam się na przetwarzanie danych"
-            //required
+            label="Zgadzam się że moje dane, w tym adresy do wysyłki i do korespodencji są prawidłowe"
+            required
           />
         </Form.Group>
         <Form.Group>
           <Form.Check
             type="checkbox"
-            //name="agreements[]"
             value="2"
             label="Zgadzam się że ten projekt jest najlepszy i mam wstawić ocenę bardzo dobrą"
-            //required
+            required
           />
         </Form.Group>
         <Button

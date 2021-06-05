@@ -70,8 +70,8 @@ router.post("/", authenticateToken, function (req, res, next) {
       res.sendStatus(200);
     });
   }
-  //Tutaj powinien znaleźć się inny bład, mówiący, że śmiertelnik nie ma prawa do tej metody
-  else return res.sendStatus(500);
+  //Tutaj powinien znaleźć się inny bład, mówiący, że śmiertelnik nie ma prawa do tej metody // To chyba 401
+  else return res.sendStatus(401);
 });
 
 // Pobieranie wszystkich produktów

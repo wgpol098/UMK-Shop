@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const bcrypt = require("bcrypt-nodejs");
 
 //Rejestraca nowego usera -- zwykłego śmiertelnika
 router.post("/register", function (req, res, next) {
@@ -20,6 +21,35 @@ router.post("/register", function (req, res, next) {
   user.save(function (err, result) {
     if (err) return res.sendStatus(500);
     return res.sendStatus(200);
+  });
+});
+
+//PUT user 
+//TODO: to test
+router.put("/edit", function (req, res, next) {
+  const authHeader = req.headers["authorization"];
+  var decoded = jwt.decode(authHeader);
+  var email = decoded.email;
+
+  let new_password = req.body.password
+    ? bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(5), null)
+    : null;
+
+  console.log(new_password);
+
+  User.findOne({ email: email }, (err, result) => {
+    if (err) return res.sendStatus(500);
+    result.email = req.body.email || result.email;
+    result.first_name = req.body.first_name || result.first_name;
+    result.last_name = req.body.last_name || result.last_name;
+    result.birthdate = req.body.birthdate || result.birthdate;
+    result.phone_number = req.body.phone_number || result.phone_number;
+    result.password = new_password || result.password;
+
+    result.save(function (err, result) {
+      if (err) return res.sendStatus(500);
+      return res.sendStatus(200);
+    });
   });
 });
 
