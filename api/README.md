@@ -260,6 +260,44 @@ Kody błędów:
 - 500 - Wewnętrzny błąd serwera.
 
 ## /address
+
+#### PUT - Metoda odpowiedzialna za update adresów.
+
+Wymagane uprawnienia:
+- Metoda nie wymaga żadnych uprawnień
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id edytowanego adresu |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+Kody błędów:
+- 201 - Działanie zakończone sukcesem.
+- 500 - Wewnętrzny błąd serwera.
+
+---
+#### DELETE - Metoda odpowiedzialna za usuwanie adresu z bazy danych.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id usuwanego adresu |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+Kody błędów:
+- 201 - Działanie zakończone sukcesem.
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
+- 500 - Wewnętrzny błąd serwera.
+
+---
 ### POST - Metoda odpowiedzialna za dodawanie adresu do bazy danych. 
 
 Wymagane uprawnienia:
@@ -311,11 +349,12 @@ Kody błędów:
 - 200 - Działanie zakończone sukcesem
 - 500 - Wewnętrzny błąd serwera
 
+---
 ### POST - Metoda dodająca nowe płatności do bazy danych.
 
-## A POWINNA WYMAGAĆ ADMINA
 Wymagane uprawnienia:
-- Metoda nie wymaga żądnych uprawnień
+- Authorization Token
+- User musi mieć rolę administratora
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
@@ -326,6 +365,49 @@ Zwracane wartości:
 
 Kody błędów:
 - 201 - Działanie zakończone sukcesem
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
+- 500 - Wewnętrzny błąd serwera
+
+---
+### PUT - Metoda odpowiedzialna za aktualizację danych o metodzie płatności.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id sposobu płatności |
+| description | wymagany | Opis sposobu płatności |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+Kody błędów:
+- 201 - Działanie zakończone sukcesem
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
+- 500 - Wewnętrzny błąd serwera
+
+---
+### DELETE - Metoda służąca do usuwania metody płatności.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id sposobu płatności |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+Kody błędów:
+- 201 - Działanie zakończone sukcesem
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
 - 500 - Wewnętrzny błąd serwera
 
 ## /delivery
