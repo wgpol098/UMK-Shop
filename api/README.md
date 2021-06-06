@@ -38,7 +38,9 @@ Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
 Kody błędów:
-- 200 - Działanie zakończone sukcesem.
+- 201 - Działanie zakończone sukcesem.
+- 401 - Brak `authorization` w sekcji Header żądania.
+- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
 - 500 - Wewnętrzny błąd serwera.
 
 ---
