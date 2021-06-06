@@ -2,58 +2,103 @@ const dotenv = require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const Product = require("../models/product");
-const Cart = require("../models/cart");
 const Order = require("../models/order");
-const User = require("../models/user");
 
-//TODO: Do przemyślenia jaka powinna być dostępność tych metod
-//TODO: User powinien mieć dostęp tylko do swoich zamówień
-// Trzeba tutaj zrobić, żeby tylko zalogowana osoba miała dostęp do tej metody
 // TODO: Do przetesotwania
-router.get("/", authenticateToken, function (req, res, next) {
+// TODO: Zrobić dokumentację
+router.get('/', authenticateToken, function (req, res, next) 
+{
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
-
-  Order.find({ user: decoded.id }, function (err, result) {
-    if (err) return res.sendStatus(500);
-    res.send(result);
+  
+  var page = parseInt(req.query.page, 10) || 0;
+  var limit = parseInt(req.query.limit, 10) || 10;
+  
+  Order.countDocuments({user: decoded._id}, function(err, count)
+  {
+    if(err) return res.sendStatus(500);
+    
+    Order.find({user: decoded._id}).skip(page * limit).limit(limit).exec(function(err, result)
+    {
+      if (err) return res.sendStatus(500);
+      res.send({data: result, total: count});
+    });
   });
 });
 
 //TODO: Do przetesowania
-router.get("/:id", function (req, res, next) {
+router.get('/:id', function (req, res, next) {
   Order.findById(req.params.id, function (err, result) {
     if (err) return res.sendStatus(500);
     res.send(result);
   });
 });
-//TODO: Powinien modyfikować, a jak nie ma to dodawać
-router.put("/:id", function (req, res, next) {
-  res.send("putID");
+
+//Usuwanie zamówienia - tylko administrator
+//TODO: Zrobić do tego dokumentację
+router.delete('/:id', authenticateToken, function(req, res, next)
+{
+  const authHeader = req.headers["authorization"];
+  const decoded = jwt.decode(authHeader);
+  const role = decoded.role;
+
+  if (role == process.env.ADMIN_ROLE) 
+  {
+    Order.findById(req.params.id).remove(function(err, result)
+    {
+      if (err) return res.sendStatus(500);
+      return res.sendStatus(201);
+    });
+  }
+  else return res.sendStatus(403);
 });
 
-//TODO: Metoda prawdopodobnie będzie używana przy składaniu zamówienia, więc musi być autoryzacja
+//Update zamówień
+//TODO: Ustalić co może admin a co zwykłu user
+//TODO: Zrobić dokumentację
+router.put("/:id", authenticateToken, function (req, res, next) 
+{  
+  Order.findById(req.params.id, function(err, result)
+  {
+    if (err) return res.sendStatus(500);
+
+    result.date = req.body.date || result.date;
+    result.user = req.body.user || result.user;
+    result.cart = req.body.cart || result.cart;
+    result.address = req.body.address || result.address;
+    result.paymentId = req.body.payment_id || result.paymentId;
+    result.deliveryId = req.body.delivery_id || result.deliveryId;
+
+    result.save(function(err, result)
+    {
+      if (err) return res.sendStatus(500);
+      return res.sendStatus(201);
+    });
+  });
+});
+
 //TODO: Do dokończenia
-//TODO: Metodę może wywołać tylko zalogowany user
-router.post("/", function (req, res, next) {
-  //email jest unikalny więc w sumie można wyciągnąć z userów usera
+//TODO: Zmienić dokumentację
+//TODO: Przetestować jak działa dla tych nieobowiązkowych parametrów
+router.post("/", authenticateToken, function (req, res, next) 
+{
+  if(!req.session.cart) return res.sendStatus(500);
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
   var userID = decoded.id;
-  console.log(userID);
-
-  //TODO: Pobieranie nieobowiązkowych argumentów
-  //pobieranie PaymentId
 
   var order = new Order({
     user: userID,
     date: Date.now(),
     cart: req.session.cart,
     status: req.query.status,
+    address: req.query.address,
+    paymentId: req.query.payment_id,
+    deliveryId: req.query.delivery_id
   });
   order.save(function (err, result) {
     if (err) return res.sendStatus(500);
+    req.session.cart = {};
     return res.sendStatus(201);
   });
 });

@@ -1,7 +1,44 @@
 const express = require("express");
 const router = express.Router();
 const Address = require("../models/address");
-//TODO: Zrobienie metody PUT
+
+//TODO: Zrobienie dokumentacji
+//TODO: Przetestowanie metody
+router.delete('/id', authenticateToken, function(req, res, next)
+{
+    const authHeader = req.headers["authorization"];
+    var decoded = jwt.decode(authHeader);
+    var role = decoded.role;
+  
+    if (role == process.env.ADMIN_ROLE) 
+    {
+        Address.findById(req.params.id).remove(function(err, result)
+        {
+            if (err) return res.sendStatus(500);
+            return res.sendStatus(201);
+        });
+    }
+    else return res.sendStatus(403);
+});
+
+//TODO: Zrobienie dokumentacji
+//TODO: Przetestowanie metody
+router.put('/:id', function(req, res, next)
+{
+    Address.findById(req.params.id, function(err, result)
+    {
+        result.city = req.query.city || result.city;
+        result.street = req.query.street || result.street;
+        result.zip = req.query.zip || result.zip;
+        result.country = req.query.country || result.country;
+
+        result.save(function(err, result)
+        {
+            if (err) return res.sendStatus(500);
+            return res.sendStatus(201);
+        });
+    });
+});
 
 //Dodawanie adresu - do przetestowania
 //TODO: Najpierw powinno sprwadzać czy dany adres istnieje
@@ -43,5 +80,18 @@ router.get('/:id', function(req, res, next)
         res.send(result);
     });
 });
+
+function authenticateToken(req, res, next) 
+{
+  const authHeader = req.headers["authorization"];
+  if (authHeader == undefined) return res.sendStatus(401);
+  console.log(authHeader);
+  jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => 
+  {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
 
 module.exports = router;
