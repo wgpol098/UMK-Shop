@@ -6,7 +6,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt-nodejs");
 
 //Rejestraca nowego usera -- zwykłego śmiertelnika
-router.post("/register", function (req, res, next) {
+router.post("/", function (req, res, next) {
   var user = new User({
     email: req.body.email,
     first_name: req.body.first_name,
@@ -14,19 +14,23 @@ router.post("/register", function (req, res, next) {
     role: "user",
     birthdate: req.body.birthdate,
     phone_number: req.body.phone_number,
+    shipping_address_id: req.body.shipping_address_id,
+    invoice_address_id: req.body.invoice_address_id
   });
   user.password = user.encryptPassword(req.body.password);
 
   //email musi być unikalny -- jest to uwzględnione w modelu
   user.save(function (err, result) {
     if (err) return res.sendStatus(500);
-    return res.sendStatus(200);
+    return res.sendStatus(201);
   });
 });
 
 //PUT user
 //TODO: to test
-router.put("/edit", function (req, res, next) {
+//TODO: Dodanie możliwości, żeby administrator również mógł modyfikować te dane
+//TODO: Tylko user z hasłem powinien posiadać dostęp do swoich danych, a nie na podstawie emaila
+router.put("/edit", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
   var email = decoded.email;
@@ -45,15 +49,17 @@ router.put("/edit", function (req, res, next) {
     result.birthdate = req.body.birthdate || result.birthdate;
     result.phone_number = req.body.phone_number || result.phone_number;
     result.password = new_password || result.password;
+    result.shipping_address_id = req.body.shiping_address_id || result.shipping_address_id;
+    result.invoice_address_id = req.body.invoice_address_id || result.invoice_address_id;
 
     result.save(function (err, result) {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(200);
+      return res.sendStatus(201);
     });
   });
 });
 
-//TODO: Zwracanie odpowiednich kodów błedów
+//TODO: Opisać w dokumentacji
 router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
@@ -61,11 +67,11 @@ router.post("/login", function (req, res, next) {
   if (email == undefined || password == undefined) return res.sendStatus(500);
 
   //Email w bazie danych jest unikalny
-  User.find({ email: email }, function (err, result) {
+  User.findOne({ email: email }, function (err, result) 
+  {
     if (err) return res.sendStatus(500);
     if (result == null) return res.sendStatus(500);
-    if (result.length == 0) return res.sendStatus(500);
-    if (!result[0].validPassword(password)) return res.sendStatus(500);
+    if (!result.validPassword(password)) return res.sendStatus(500);
 
     const userModel = {
       email: email,
@@ -83,21 +89,41 @@ router.post("/login", function (req, res, next) {
   });
 });
 
-//Zwraca informacje o userze
-router.get("/profile", authenticateToken, function (req, res, next) {
-  const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var email = decoded.email;
 
-  //TODO: Tutaj nie powinnien być zwracany ciąg z hasłem
-  User.find({ email: email }, function (err, user) {
-    if (err) return res.sendStatus(500);
-    res.send(user);
-  });
+//Metoda zwracająca informacje o userze albo userach jeśli jesteś administratorem
+//Dostępna jedynie dla administarora
+router.get("/", authenticateToken, function(err, res, next)
+{
+  if (err) return res.sendStatus(500);
+  const authHeader = req.headers["authorization"];
+  const decoded = jwt.decode(authHeader);
+
+  const all = req.query.all;
+  if (all == undefined || all == 'F')
+  {
+    User.find({ email: decoded.email }, function (err, user) {
+      if (err) return res.sendStatus(500);
+      res.send(user);
+    });
+  }
+  else if(all == 'T')
+  {
+    if(decoded.role == process.env.ADMIN_ROLE)
+    {
+      User.find(function(err, result)
+      {
+        if (err) return res.sendStatus(500);
+        res.send(result);
+      });
+    }
+    else return res.sendStatus(403);
+  }
+  else return res.sendStatus(500);
 });
 
 //Wylogowywanie -- ale ono coś słabo działa - wystarczy czyścić ciasteczka usera
 //Albo dodawać token do blacklisty
+//TODO: Opisać w dokumentacji
 router.post("/logout", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   console.log(authHeader);
@@ -108,7 +134,7 @@ router.post("/logout", authenticateToken, function (req, res, next) {
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  if (authHeader == null) return res.sendStatus(401);
+  if (authHeader == undefined) return res.sendStatus(401);
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;

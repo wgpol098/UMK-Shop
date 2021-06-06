@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Payment = require('../models/payment');
 
+//TODO: Zrobić put
+
 //Do przetestowania
 router.get('/', function(req, res, next)
 {
@@ -13,6 +15,7 @@ router.get('/', function(req, res, next)
 });
 
 //Do przetestowania
+//TODO: Do post trzeba mieć uprawnienia administratora
 router.post('/', function(req, res, next)
 {
     var payment = new Payment
@@ -23,7 +26,7 @@ router.post('/', function(req, res, next)
     payment.save(function(err, result)
     {
         if(err) return res.sendStatus(500);
-        return res.sendStatus(200);
+        return res.sendStatus(201);
     })
 });
 

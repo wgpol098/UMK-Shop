@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Address = require("../models/address");
+//TODO: Zrobienie metody PUT
 
 //Dodawanie adresu - do przetestowania
 //TODO: Najpierw powinno sprwadzać czy dany adres istnieje
@@ -18,7 +19,7 @@ router.post('/', function(req, res, next)
     address.save(function(err, result)
     {
         if(err) return res.sendStatus(500);
-        return res.sendStatus(200);
+        return res.sendStatus(201);
     });
 });
 

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Delivery = require("../models/delivery");
 
+//TODO: Metoda put
+
 //TODO: Do przetesotwania
 router.get('/', function(req, res, next)
 {
@@ -13,6 +15,7 @@ router.get('/', function(req, res, next)
 });
 
 //TODO: Do przetestowania
+//TODO: powinno wymagać upranień administratora
 router.post('/', function(req, res, next)
 {
     var delivery = new Delivery
@@ -25,7 +28,7 @@ router.post('/', function(req, res, next)
     delivery.save(function(err, result)
     {
         if(err) return res.sendStatus(500);
-        return res.sendStatus(200);
+        return res.sendStatus(201);
     });
 });
 

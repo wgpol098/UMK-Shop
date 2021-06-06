@@ -11,13 +11,12 @@ const User = require("../models/user");
 //TODO: User powinien mieć dostęp tylko do swoich zamówień
 // Trzeba tutaj zrobić, żeby tylko zalogowana osoba miała dostęp do tej metody
 // TODO: Do przetesotwania
-router.get("/", function (req, res, next) {
+//TODO: Stronicowanie
+router.get("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var userID = decoded.id;
-  console.log(userID);
+  const decoded = jwt.decode(authHeader);
 
-  Order.find({ user: userID }, function (err, result) {
+  Order.find({ user: decoded.id }, function (err, result) {
     if (err) return res.sendStatus(500);
     res.send(result);
   });
@@ -56,8 +55,18 @@ router.post("/", function (req, res, next) {
   });
   order.save(function (err, result) {
     if (err) return res.sendStatus(500);
-    return res.sendStatus(200);
+    return res.sendStatus(201);
   });
 });
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  if (authHeader == undefined) return res.sendStatus(401);
+  jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
 
 module.exports = router;
