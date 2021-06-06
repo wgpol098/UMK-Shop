@@ -4,7 +4,7 @@ const Address = require("../models/address");
 
 //TODO: Zrobienie dokumentacji
 //TODO: Przetestowanie metody
-router.delete('/id', authenticateToken, function(req, res, next)
+router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
     var decoded = jwt.decode(authHeader);

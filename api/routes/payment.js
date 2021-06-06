@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Payment = require('../models/payment');
 
-//TODO: Dodać do dokuemntacji
 //TODO: Przetestować metody
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
@@ -21,7 +20,6 @@ router.delete('/:id', authenticateToken, function(req, res, next)
     else res.sendStatus(403);
 });
 
-//TODO: Dodać do dokumentacji
 //TODO: Przetestowanie metody
 router.put('/:id', authenticateToken, function(req, res, next)
 {
@@ -58,7 +56,6 @@ router.get('/', function(req, res, next)
 
 //Do przetestowania
 //TODO: Do post trzeba mieć uprawnienia administratora
-//TODO: Dokumentacja do mziany
 //TODO: Metoda do przetestowania
 router.post('/', authenticateToken, function(req, res, next)
 {
