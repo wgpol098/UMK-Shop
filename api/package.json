@@ -1,46 +1,27 @@
 {
-  "name": "third",
+  "name": "api",
   "version": "1.0.0",
-  "description": "Zbudowanie REST API na potrzeby społeczności akademickiej UMK. Metody API mają\r być tak dobrane, aby umożliwiały dostęp do danych publicznych oraz\r prywatnych. API składa się z implementacji serwera wraz z bazą danych\r [MongoDB](https://mongodb.github.io/node-mongodb-native/) i [testów\r jednostkowych](https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#JavaScript)\r np. Mocha, Jasmine, Jest itp. Do tych testów należy dołączyć testy żądań HTTP\r np. za pomocą pakietu _supertest_.",
+  "description": "Wymagane uprawnienia:\r - Authorization Token\r - User musi mieć rolę administratora",
   "main": "app.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BKotja/MP-2021-NODEJS-API.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/BKotja/MP-2021-NODEJS-API/issues"
-  },
-  "homepage": "https://github.com/BKotja/MP-2021-NODEJS-API#readme",
   "dependencies": {
-    "bcrypt": "^5.0.1",
-    "bcrypt-nodejs": "0.0.3",
-    "connect-mongo": "^4.4.1",
-    "connect-mongodb-session": "^2.4.1",
+    "bcrypt-nodejs": "^0.0.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "dotenv": "^9.0.2",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-handlebars": "^5.3.2",
+    "express-fileupload": "^1.2.1",
     "express-session": "^1.17.2",
-    "jade": "^1.11.0",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.6.6",
-    "mongoose": "^5.12.10",
-    "morgan": "^1.10.0",
-    "serve-favicon": "^2.5.0",
-    "session": "^0.1.0",
-    "validator": "^13.6.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
+    "mongoose": "^5.12.13",
+    "morgan": "^1.10.0"
   }
 }
