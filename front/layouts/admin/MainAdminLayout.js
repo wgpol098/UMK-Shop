@@ -9,11 +9,11 @@ import React from "react";
 
 function renderBody(props) {
   switch (props.type) {
-    case 0:
-      return <BodyAdminProductsLayout {...props} />;
     case 1:
+      return <BodyAdminProductsLayout {...props} />;
+    case 1.1:
       return <BodyAdminProductEdit {...props} />;
-    case 2:
+    case 1.2:
       return <BodyAdminProductCreate {...props} />;
     default:
       return <BodyAdminProductsLayout {...props} />;

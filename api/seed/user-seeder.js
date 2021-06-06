@@ -14,7 +14,7 @@ var users =
         password: password,
         first_name: 'Andrzej',
         last_name: 'Gołota',
-        role: 'A',
+        role: 'admin',
         birthdate: '2000-12-12',
         phone_number: '123-123-123'
     }),
@@ -24,7 +24,7 @@ var users =
         password: password,
         first_name: 'Andrii',
         last_name: 'Taki',
-        role: 'U',
+        role: 'user',
         birthdate: '2000-12-12',
         phone_number: '123-123-123'
     })

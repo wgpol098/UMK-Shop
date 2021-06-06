@@ -23,5 +23,5 @@ export default function Product() {
     if (!isLoggedAdmin) router.push("/");
   });
 
-  return isLoggedAdmin ? <MainLayout type={2} /> : null;
+  return isLoggedAdmin ? <MainLayout type={1.2} /> : null;
 }

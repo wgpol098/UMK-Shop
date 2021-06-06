@@ -54,6 +54,7 @@ export default function HeaderLayout(props) {
     }
   };
 
+
   return (
     <header>
       <div className="navbar-wrapper">

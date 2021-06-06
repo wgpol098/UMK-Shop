@@ -57,6 +57,8 @@ export default function MainLayout(props) {
     console.log(err);
   }
 
+  console.log(decoded);
+
   let isLoggedAdmin = decoded?.role == "admin" ? true : false;
 
   return (

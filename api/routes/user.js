@@ -24,7 +24,7 @@ router.post("/register", function (req, res, next) {
   });
 });
 
-//PUT user 
+//PUT user
 //TODO: to test
 router.put("/edit", function (req, res, next) {
   const authHeader = req.headers["authorization"];
@@ -69,9 +69,11 @@ router.post("/login", function (req, res, next) {
 
     const userModel = {
       email: email,
-      id: result._id,
-      role: result.role,
+      id: result[0]._id,
+      role: result[0].role,
     };
+
+    console.log(userModel);
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
     const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, {
