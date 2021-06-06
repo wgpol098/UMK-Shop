@@ -8,8 +8,10 @@ import {
 } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 import { Basket2Fill } from "react-bootstrap-icons";
+import { useRouter } from "next/router";
 
 export default function HeaderLayout(props) {
+  const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies(["userToken"]);
 
   const handleLogout = async () => {
@@ -25,11 +27,8 @@ export default function HeaderLayout(props) {
       //     method: "POST",
       //   }
       // );
-
-      // const result = await res.json();
-      // console.log(result);
       removeCookie("userToken");
-      window.location.reload();
+      router.push("/");
     } catch (err) {
       console.log(err);
     }
@@ -99,8 +98,10 @@ export default function HeaderLayout(props) {
           style={{ backgroundColor: "#034ea1", padding: "5px 0 5px 0" }}
         >
           <Nav className="mr-auto">
-            <Nav.Link href="/admin">Produkty</Nav.Link>
-            <Nav.Link href="/admin">Użytkownicy</Nav.Link>
+            <Nav.Link href="/admin">Pulpit</Nav.Link>
+            <Nav.Link href="/admin/products">Produkty</Nav.Link>
+            <Nav.Link href="/admin/users">Użytkownicy</Nav.Link>
+            <Nav.Link href="/admin/orders">Zamówienia</Nav.Link>
           </Nav>
           <Button
             variant="outline-light"

@@ -10,8 +10,8 @@ import SmallProductLayout from "./subLayouts/SmallProductLayout";
 
 export default function BodyIndexLayout(props) {
   let productsArray = [];
-  props.products?.length > 0 &&
-    props.products.map((x) => {
+  props.products?.data?.length > 0 &&
+    props.products?.data.map((x) => {
       productsArray.push(<SmallProductLayout title={x.title} id={x._id} />);
     });
 

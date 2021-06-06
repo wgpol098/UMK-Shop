@@ -1,10 +1,10 @@
-import MainAdminLayout from "../layouts/admin/MainAdminLayout";
+import MainLayout from "../../../layouts/admin/MainAdminLayout";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
-export default function Admin({ products }) {
+export default function Product() {
   const [cookies] = useCookies("user");
   const router = useRouter();
   console.log(cookies.userToken);
@@ -23,8 +23,5 @@ export default function Admin({ products }) {
     if (!isLoggedAdmin) router.push("/");
   });
 
-  console.log(products);
-  return isLoggedAdmin ? (
-    <MainAdminLayout type={0} />
-  ) : null;
+  return isLoggedAdmin ? <MainLayout type={2.2} /> : null;
 }

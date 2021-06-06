@@ -17,8 +17,8 @@ export default function BodyProductsLayout(props) {
   const [titleFilter, setTitleFilter] = useState("");
   const router = useRouter();
   let productsArray = [];
-  props.products?.length > 0 &&
-    props.products.map((x) => {
+  props.products?.data?.length > 0 &&
+    props.products?.data.map((x) => {
       productsArray.push(<SmallProductLayout title={x.title} id={x._id} />);
     });
 
@@ -62,7 +62,7 @@ export default function BodyProductsLayout(props) {
         <Pagination
           onChange={handleOnPageChange}
           current={props.page + 1}
-          total={30} //TODO change to totalItems
+          total={props?.products?.total} //TODO change to totalItems
           pageSize={9}
           locale=""
         />
@@ -72,7 +72,7 @@ export default function BodyProductsLayout(props) {
         <Pagination
           onChange={handleOnPageChange}
           current={props.page + 1}
-          total={30} //TODO change to totalItems
+          total={props?.products?.total} //TODO change to totalItems
           pageSize={9}
           locale=""
         />

@@ -33,8 +33,8 @@ export default function BodyAdminProductsLayout(props) {
   };
 
   let productsArray = [];
-  props.products &&
-    props.products.map((x) => {
+  props.products?.data &&
+    props.products?.data.map((x) => {
       productsArray.push(
         //href={`admin/products/${x._id}`}
         <tr>
@@ -43,7 +43,7 @@ export default function BodyAdminProductsLayout(props) {
           <td>{x?.image}</td>
           <td>
             <div style={{ display: "flex", justifyContent: "space-around" }}>
-              <Button className="btn-blue-umk" href={`admin/products/${x._id}`}>
+              <Button className="btn-blue-umk" href={`/admin/products/${x._id}`}>
                 Edytuj
               </Button>
               <Button
@@ -107,7 +107,7 @@ export default function BodyAdminProductsLayout(props) {
           <Pagination
             onChange={handleOnPageChange}
             current={props.page + 1}
-            total={30} //TODO change to totalItems
+            total={props?.products?.total} //TODO change to totalItems
             pageSize={9}
             locale=""
           />

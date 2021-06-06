@@ -40,7 +40,7 @@ export default function BodyAdminProductEdit(props) {
 
       //const result = await res.json();
 
-      router.push("/admin/");
+      router.push("/admin/products");
     } catch (err) {
       console.log(err);
     }
@@ -97,7 +97,7 @@ export default function BodyAdminProductEdit(props) {
             <Button
               variant="blue-umk"
               onClick={() => {
-                router.push("/admin/");
+                router.push("/admin/products");
               }}
             >
               Anuluj

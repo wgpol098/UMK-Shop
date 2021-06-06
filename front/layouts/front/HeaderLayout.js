@@ -36,7 +36,6 @@ export default function HeaderLayout(props) {
       // const res = await fetch(
       //   `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/logout`,
       //   {
-      //     body: JSON.stringify({}),
       //     headers: {
       //       "Content-Type": "application/json",
       //       authorization: cookies.userToken,
@@ -44,16 +43,12 @@ export default function HeaderLayout(props) {
       //     method: "POST",
       //   }
       // );
-
-      // const result = await res.json();
-      // console.log(result);
       removeCookie("userToken");
-      window.location.reload();
+      location.reload();
     } catch (err) {
       console.log(err);
     }
   };
-
 
   return (
     <header>
