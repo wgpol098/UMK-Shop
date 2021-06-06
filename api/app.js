@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const cors = require("cors");
-
+const fileUpload = require('express-fileupload');
 const routes = require("./routes/products");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/carts");
@@ -39,7 +39,10 @@ mongoose
         cookie: { maxAge: 180 * 60 * 1000 },
       })
     );
-
+    app.use(fileUpload({
+      useTempFiles : true,
+      tempFileDir : './img'
+  }));
     app.use("/user", userRoutes);
     app.use("/carts", cartRoutes);
     app.use("/products", routes);

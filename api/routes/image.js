@@ -9,13 +9,13 @@ router.post('/', function(req, res, next)
 {
     console.log(req.files.image);
     
-    const path = '../img/' + req.files.image.name;
+    const path = req.files.image.name;
 
-    fs.writeFile(path, req.files.image,function(err)
+    req.files.image.mv("./img/" + path, function(err)
     {
         if (err) return res.sendStatus(500);
-        res.send({filepath: path});
-    });
+        res.send(path);
+    })
 });
 
 module.exports = router;
