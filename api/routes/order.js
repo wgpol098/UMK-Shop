@@ -11,7 +11,6 @@ const User = require("../models/user");
 //TODO: User powinien mieć dostęp tylko do swoich zamówień
 // Trzeba tutaj zrobić, żeby tylko zalogowana osoba miała dostęp do tej metody
 // TODO: Do przetesotwania
-//TODO: Stronicowanie
 router.get("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);

@@ -28,7 +28,9 @@ export default function HeaderLayout(props) {
       //   }
       // );
       removeCookie("userToken");
-      router.push("/");
+      setTimeout(() => {
+        router.push("/");
+      }, 0);
     } catch (err) {
       console.log(err);
     }

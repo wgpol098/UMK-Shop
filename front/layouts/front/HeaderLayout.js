@@ -44,7 +44,9 @@ export default function HeaderLayout(props) {
       //   }
       // );
       removeCookie("userToken");
-      location.reload();
+      setTimeout(() => {
+        location.reload();
+      }, 0);
     } catch (err) {
       console.log(err);
     }
