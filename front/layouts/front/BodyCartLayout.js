@@ -20,7 +20,7 @@ export default function BodyCartLayout(props) {
 
   useEffect(async () => {
     const res1 = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/`,
+      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function BodyCartLayout(props) {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/addtocard?id=${key}`,
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/addtocart?id=${key}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function BodyCartLayout(props) {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/removeonefromcard?id=${key}`,
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/removeonefromcart?id=${key}`,
         {
           headers: {
             "Content-Type": "application/json",

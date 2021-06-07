@@ -1,7 +1,7 @@
 import MainLayout from "../layouts/front/MainLayout";
 
 // export async function getServerSideProps() {
-//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/`, {
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/`, {
 //     headers: {
 //       "Content-Type": "application/json",
 //     },

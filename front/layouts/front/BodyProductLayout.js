@@ -12,7 +12,7 @@ export default function BodyProductLayout(props) {
     //console.log(product._id);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/addtocard?id=${product._id}`,
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/addtocart?id=${product._id}`,
         {
           // body: JSON.stringify({
           //   id: product._id,

@@ -16,7 +16,7 @@ export default function HeaderLayout(props) {
 
   useEffect(async () => {
     const res1 = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/carts/`,
+      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/`,
       {
         headers: {
           "Content-Type": "application/json",
