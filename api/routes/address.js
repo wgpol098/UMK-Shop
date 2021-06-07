@@ -2,16 +2,15 @@ const express = require("express");
 const router = express.Router();
 const Address = require("../models/address");
 
-//TODO: Zrobienie dokumentacji
 //TODO: Przetestowanie metody
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
     var decoded = jwt.decode(authHeader);
     var role = decoded.role;
-  
     if (role == process.env.ADMIN_ROLE) 
     {
+        if(req.params.id == undefined) return res.sendStatus(400);
         Address.findById(req.params.id).remove(function(err, result)
         {
             if (err) return res.sendStatus(500);
@@ -21,7 +20,6 @@ router.delete('/:id', authenticateToken, function(req, res, next)
     else return res.sendStatus(403);
 });
 
-//TODO: Zrobienie dokumentacji
 //TODO: Przetestowanie metody
 router.put('/:id', function(req, res, next)
 {
@@ -43,8 +41,10 @@ router.put('/:id', function(req, res, next)
 //Dodawanie adresu - do przetestowania
 //TODO: Najpierw powinno sprwadzać czy dany adres istnieje
 //Jeśli istnieje to nie ma sensu dublować adresów
+//TODO: Dokumentacja - kod 400
 router.post('/', function(req, res, next)
 {
+    if (req.query.city == undefined || req.query.street == undefined || req.query.zip == undefined || req.query.country == undefined) return res.sendStatus(400);
     var address = new Address
     ({
         city: req.query.city,

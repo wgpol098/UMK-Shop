@@ -3,6 +3,7 @@ const router = express.Router();
 const Payment = require('../models/payment');
 
 //TODO: Przetestować metody
+//TODO: Dokumentacja - kod 400 
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -11,6 +12,7 @@ router.delete('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
+        if (req.params.id == undefined) return res.sendStatus(400);
         Payment.findById(req.params.id).remove(function(err, result)
         {
             if (err) return res.sendStatus(500);
@@ -21,6 +23,7 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 });
 
 //TODO: Przetestowanie metody
+//TODO: Dokumentacja - kod 400
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -29,6 +32,7 @@ router.put('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
+        if (req.params.id == undefined) return res.sendStatus(400);
         Payment.findById(req.params.id, function(err, result)
         {
             if (err) return res.sendStatus(500);
@@ -55,8 +59,8 @@ router.get('/', function(req, res, next)
 });
 
 //Do przetestowania
-//TODO: Do post trzeba mieć uprawnienia administratora
 //TODO: Metoda do przetestowania
+//TODO: Dokumentacja - kod 400
 router.post('/', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -65,6 +69,7 @@ router.post('/', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
+        if (req.query.description == undefined) return res.sendStatus(400);
         var payment = new Payment
         ({
             description: req.query.description

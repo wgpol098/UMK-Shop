@@ -5,6 +5,7 @@ const router = express.Router();
 const Product = require("../models/product");
 
 //Usuwanie jednego przedmiotu
+//TODO: Dokumentacja - kod 400
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -12,6 +13,7 @@ router.delete("/:id", authenticateToken, function (req, res) {
 
   if (role == process.env.ADMIN_ROLE) 
   {
+    if (req.params.id == undefined) res.sendStatus(400);
     Product.findById(req.params.id).remove(function (err, result) 
     {
       if (err) return res.sendStatus(500);
@@ -22,6 +24,7 @@ router.delete("/:id", authenticateToken, function (req, res) {
 });
 
 //Edytowanie istniejących przedmiotów
+//TODO: Dokumentacja - kod 400
 router.put("/:id", authenticateToken, function (req, res, next) 
 {
   const authHeader = req.headers["authorization"];
@@ -30,6 +33,7 @@ router.put("/:id", authenticateToken, function (req, res, next)
 
   if (role == process.env.ADMIN_ROLE) 
   {
+    if (req.params.id == undefined) return res.sendStatus(400);
     Product.findById(req.params.id, function (err, result) 
     {
       if (err) return res.sendStatus(500);
@@ -48,11 +52,13 @@ router.put("/:id", authenticateToken, function (req, res, next)
 
 //Dodawanie nowych przedmiotów
 //Wymagana jest rola admina
+//TODO: Dokuemntacja - kod 400
 router.post("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
+  if (req.body.title == undefined || req.body.description == undefined || req.body.price == undefined || req.body.count == undefined) return res.sendStatus(400);
   if (role == process.env.ADMIN_ROLE) {
     var product = new Product({
       title: req.body.title,
