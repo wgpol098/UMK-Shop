@@ -4,13 +4,13 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
-Orders.getInitialProps = async ({ req, res }) => {
-  const res1 = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/orders`
-  );
+export const getServerSideProps = async ({ req, res }) => {
+  const res1 = await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/order`);
   const orders = res1 && (await res1.json());
   return {
-    orders: orders,
+    props: {
+      orders: orders,
+    },
   };
 };
 
@@ -34,7 +34,5 @@ export default function Orders({ orders }) {
   });
 
   console.log(orders);
-  return isLoggedAdmin ? (
-    <MainAdminLayout type={3} orders={orders} />
-  ) : null;
+  return isLoggedAdmin ? <MainAdminLayout type={3} orders={orders} /> : null;
 }

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
-Products.getInitialProps = async ({ query: { page = 0, title } }) => {
+export const getServerSideProps = async ({ query: { page = 0, title } }) => {
   console.log(title);
   const filter = title
     ? JSON.stringify({ title: { $regex: `.*${title}.*`, $options: "i" } })
@@ -14,8 +14,10 @@ Products.getInitialProps = async ({ query: { page = 0, title } }) => {
   );
   const products = res && (await res.json());
   return {
-    products: products,
-    page: parseInt(page, 10),
+    props: {
+      products: products,
+      page: parseInt(page, 10),
+    },
   };
 };
 

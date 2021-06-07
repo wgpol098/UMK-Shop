@@ -5,14 +5,16 @@ import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import Cookies from "cookies";
 
-Users.getInitialProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ req, res }) => {
   const cookies = req && new Cookies(req, res);
+  const token = cookies.get("userToken");
+
   const res1 = await fetch(
     `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user?all=T`,
     {
       headers: {
         "Content-Type": "application/json",
-        authorization: cookies?.get("userToken"),
+        authorization: token,
       },
       credentials: "include",
       method: "GET",
@@ -20,7 +22,9 @@ Users.getInitialProps = async ({ req, res }) => {
   );
   const users = res1 && (await res1.json());
   return {
-    users: users,
+    props: {
+      users: users,
+    },
   };
 };
 
