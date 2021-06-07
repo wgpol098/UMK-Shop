@@ -3,7 +3,7 @@ const router = express.Router();
 const Payment = require('../models/payment');
 
 //TODO: Przetestować metody
-//TODO: Dokumentacja - kod 400 
+//TODO: 201 - 204
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -12,18 +12,17 @@ router.delete('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
-        if (req.params.id == undefined) return res.sendStatus(400);
         Payment.findById(req.params.id).remove(function(err, result)
         {
             if (err) return res.sendStatus(500);
-            return res.sendStatus(201);
+            return res.sendStatus(204);
         });
     }
     else res.sendStatus(403);
 });
 
 //TODO: Przetestowanie metody
-//TODO: Dokumentacja - kod 400
+//TODO: 201 - 204
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -32,7 +31,6 @@ router.put('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
-        if (req.params.id == undefined) return res.sendStatus(400);
         Payment.findById(req.params.id, function(err, result)
         {
             if (err) return res.sendStatus(500);
@@ -41,7 +39,7 @@ router.put('/:id', authenticateToken, function(req, res, next)
             result.save(function(err, result)
             {
                 if (err) return res.sendStatus(500);
-                return res.sendStatus(201);
+                return res.sendStatus(204);
             });
         });
     }
@@ -69,7 +67,7 @@ router.post('/', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
-        if (req.query.description == undefined) return res.sendStatus(400);
+        if (!req.query.description) return res.sendStatus(400);
         var payment = new Payment
         ({
             description: req.query.description

@@ -27,10 +27,8 @@ router.get('/', authenticateToken, function (req, res, next)
 });
 
 //TODO: Do przetesowania
-//TODO: Dokumentacja - kod 400
 router.get('/:id', function (req, res, next) 
 {
-  if (req.params.id == undefined) return res.sendStatus(400);
   Order.findById(req.params.id, function (err, result) {
     if (err) return res.sendStatus(500);
     res.send(result);
@@ -39,7 +37,7 @@ router.get('/:id', function (req, res, next)
 
 //Usuwanie zamówienia - tylko administrator
 //TODO: Zrobić do tego dokumentację
-//TODO: Dokumentacja - kod 400
+//TODO: 201 - 204
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
   const authHeader = req.headers["authorization"];
@@ -48,11 +46,10 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 
   if (role == process.env.ADMIN_ROLE) 
   {
-    if (req.params.id == undefined) return res.sendStatus(400);
     Order.findById(req.params.id).remove(function(err, result)
     {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(201);
+      return res.sendStatus(204);
     });
   }
   else return res.sendStatus(403);
@@ -61,10 +58,9 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 //Update zamówień
 //TODO: Ustalić co może admin a co zwykłu user
 //TODO: Zrobić dokumentację
-//TODO: Dokumentacja - kod 400
+//TODO: 201 -204
 router.put("/:id", authenticateToken, function (req, res, next) 
 {  
-  if (req.params.id == undefined) return res.sendStatus(400);
   Order.findById(req.params.id, function(err, result)
   {
     if (err) return res.sendStatus(500);
@@ -79,7 +75,7 @@ router.put("/:id", authenticateToken, function (req, res, next)
     result.save(function(err, result)
     {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(201);
+      return res.sendStatus(204);
     });
   });
 });
@@ -95,7 +91,7 @@ router.post("/", authenticateToken, function (req, res, next)
   var decoded = jwt.decode(authHeader);
   var userID = decoded.id;
 
-  if (userID == undefined || req.query.status == undefined || req.query.payment_id == undefined || req.query.delivery_id == undefined) return res.sendStatus(400);
+  if (!userID || !req.query.status || !req.query.payment_id || !req.query.delivery_id) return res.sendStatus(400);
   var order = new Order({
     user: userID,
     date: Date.now(),

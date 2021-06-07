@@ -44,7 +44,7 @@ mongoose
       tempFileDir : './img'
   }));
     app.use("/user", userRoutes);
-    app.use("/carts", cartRoutes);
+    app.use("/cart", cartRoutes);
     app.use("/products", routes);
     app.use("/address", addressRoutes);
     app.use("/payment", paymentRoutes);

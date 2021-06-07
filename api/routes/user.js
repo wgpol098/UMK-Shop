@@ -30,6 +30,7 @@ router.post("/register", function (req, res, next) {
 //TODO: to test
 //TODO: Dodanie możliwości, żeby administrator również mógł modyfikować te dane
 //TODO: Tylko user z hasłem powinien posiadać dostęp do swoich danych, a nie na podstawie emaila
+//TODO: 201 - 204
 router.put("/edit", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -54,7 +55,7 @@ router.put("/edit", authenticateToken, function (req, res, next) {
 
     result.save(function (err, result) {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(201);
+      return res.sendStatus(204);
     });
   });
 });
@@ -65,7 +66,7 @@ router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  if (email == undefined || password == undefined) return res.sendStatus(400);
+  if (!email || !password) return res.sendStatus(400);
 
   //Email w bazie danych jest unikalny
   User.findOne({ email: email }, function (err, result) 

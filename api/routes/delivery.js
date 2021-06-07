@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Delivery = require("../models/delivery");
 
-//TODO: Do przetestowania
+//Przetestowane
 //TODO: Do zrobienia dokumentacja
-//TODO: Dokumentacja - kod 400
+//TODO: Dokumentacja - kod 400, 201 - 204
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -21,21 +21,21 @@ router.put('/:id', authenticateToken, function(req, res, next)
             result.name = req.query.name || result.name;
             result.description = req.query.description || result.description;
             result.price = req.query.price || result.price;
-    
+
             result.save(function(err, result)
             {
                 if (err) return res.sendStatus(500);
-                return res.sendStatus(201);
+                return res.sendStatus(204);
             });
         });
     }
     else return res.sendStatus(403);
 });
 
-//TODO: Przetestować
+//Przetestowane
 //TODO: Zrobić dokumentację
-//TODO: Dokumentacja - kod 400
-router.delete('/:id', authenticateToken, function(req, res, next)
+//TODO: Dokumentacja - kod 400, 201 - 204
+router.delete('/:id', function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
     var decoded = jwt.decode(authHeader);
@@ -47,13 +47,13 @@ router.delete('/:id', authenticateToken, function(req, res, next)
         Delivery.findById(req.params.id).remove(function(err, result)
         {
             if (err) return res.sendStatus(500);
-            return res.sendStatus(201);
+            return res.sendStatus(204);
         });
     }
     else return res.sendStatus(403);
 });
 
-//TODO: Do przetesotwania
+//Przetestowane
 router.get('/', function(req, res, next)
 {
     Delivery.find(function(err, result)
@@ -74,7 +74,7 @@ router.post('/', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE) 
     {
-        if (req.query.name == undefined || req.query.description == undefined || req.query.price == undefined) return res.sendStatus(400);
+        if (!req.query.name || !req.query.description || !req.query.price) return res.sendStatus(400);
         var delivery = new Delivery
         ({
             name: req.query.name,

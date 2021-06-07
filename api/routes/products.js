@@ -5,7 +5,7 @@ const router = express.Router();
 const Product = require("../models/product");
 
 //Usuwanie jednego przedmiotu
-//TODO: Dokumentacja - kod 400
+//TODO: 201 - 204
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -13,18 +13,17 @@ router.delete("/:id", authenticateToken, function (req, res) {
 
   if (role == process.env.ADMIN_ROLE) 
   {
-    if (req.params.id == undefined) res.sendStatus(400);
     Product.findById(req.params.id).remove(function (err, result) 
     {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(201);
+      return res.sendStatus(204);
     });
   } 
   else res.sendStatus(403);
 });
 
 //Edytowanie istniejących przedmiotów
-//TODO: Dokumentacja - kod 400
+//TODO: 201 - 204
 router.put("/:id", authenticateToken, function (req, res, next) 
 {
   const authHeader = req.headers["authorization"];
@@ -33,7 +32,6 @@ router.put("/:id", authenticateToken, function (req, res, next)
 
   if (role == process.env.ADMIN_ROLE) 
   {
-    if (req.params.id == undefined) return res.sendStatus(400);
     Product.findById(req.params.id, function (err, result) 
     {
       if (err) return res.sendStatus(500);
@@ -44,7 +42,7 @@ router.put("/:id", authenticateToken, function (req, res, next)
 
       result.save(function (err, result) {
         if (err) return res.sendStatus(500);
-        return res.sendStatus(201);
+        return res.sendStatus(204);
       });
     });
   } else return res.sendStatus(403);
@@ -58,7 +56,7 @@ router.post("/", authenticateToken, function (req, res, next) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (req.body.title == undefined || req.body.description == undefined || req.body.price == undefined || req.body.count == undefined) return res.sendStatus(400);
+  if (!req.body.title || !req.body.description || !req.body.price || !req.body.count) return res.sendStatus(400);
   if (role == process.env.ADMIN_ROLE) {
     var product = new Product({
       title: req.body.title,

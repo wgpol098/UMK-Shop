@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Address = require("../models/address");
 
-//TODO: Przetestowanie metody
+// Metoda działa
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -10,30 +10,31 @@ router.delete('/:id', authenticateToken, function(req, res, next)
     var role = decoded.role;
     if (role == process.env.ADMIN_ROLE) 
     {
-        if(req.params.id == undefined) return res.sendStatus(400);
         Address.findById(req.params.id).remove(function(err, result)
         {
             if (err) return res.sendStatus(500);
-            return res.sendStatus(201);
+            return res.sendStatus(204);
         });
     }
     else return res.sendStatus(403);
 });
 
-//TODO: Przetestowanie metody
+//Metoda działa
+//TODO: Zmienić w dokumentacji - kod błędu 201 na 204
 router.put('/:id', function(req, res, next)
 {
     Address.findById(req.params.id, function(err, result)
     {
-        result.city = req.query.city || result.city;
-        result.street = req.query.street || result.street;
-        result.zip = req.query.zip || result.zip;
-        result.country = req.query.country || result.country;
+        if (err) return res.sendStatus(500);
+        if(req.query.city) result.city = req.query.city;
+        if(req.query.street) result.street = req.query.street;
+        if(req.query.zip) result.zip = req.query.zip;
+        if(req.query.country) result.country = req.query.country;
 
         result.save(function(err, result)
         {
             if (err) return res.sendStatus(500);
-            return res.sendStatus(201);
+            return res.sendStatus(204);
         });
     });
 });
@@ -44,7 +45,7 @@ router.put('/:id', function(req, res, next)
 //TODO: Dokumentacja - kod 400
 router.post('/', function(req, res, next)
 {
-    if (req.query.city == undefined || req.query.street == undefined || req.query.zip == undefined || req.query.country == undefined) return res.sendStatus(400);
+    if (!req.query.city || !req.query.street || !req.query.zip || !req.query.country) return res.sendStatus(400);
     var address = new Address
     ({
         city: req.query.city,
