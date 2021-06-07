@@ -1,4 +1,3 @@
-//TODO: Przy usuwaniu przedmiotów w podsumowaniu jest błędna cena całkowita - trzeba znaleźć bug
 module.exports = function Cart(oldCart)
 {
     this.items = oldCart.items || {};
@@ -9,14 +8,11 @@ module.exports = function Cart(oldCart)
     this.add = function(item, id)
     {
         var storedItem = this.items[id];
-        if(!storedItem)
-        {
-            storedItem = this.items[id] = {item: item, qty:0, price: 0};
-        }
+        if(!storedItem) storedItem = this.items[id] = {item: item, qty:0, price: 0};
         storedItem.qty++;
         storedItem.price = storedItem.item.price * storedItem.qty;
         this.totalQuantity++;
-        this.totalPrice += storedItem.price;
+        this.totalPrice += storedItem.item.price;
     };
 
     //Usuwanie jednego przedmiotu
@@ -26,16 +22,19 @@ module.exports = function Cart(oldCart)
         this.items[id].price -= this.items[id].item.price;
         this.totalQuantity--;
         this.totalPrice -= this.items[id].item.price;
-
         if (this.items[id].qty <= 0) delete this.items[id];
     };
 
     //usuwanie przedmiotów
     this.removeItem = function(id)
     {
-        this.totalQuantity -= this.items[id].qty;
-        this.totalPrice -= this.items[id].price;
-        delete this.items[id];
+        if (this.items[id] != undefined)
+        {
+            console.log(this.items[id].price);
+            this.totalQuantity -= this.items[id].qty;
+            this.totalPrice -= this.items[id].price;
+            delete this.items[id];
+        }
     };
 
     this.generateArray = function()
