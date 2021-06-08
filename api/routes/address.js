@@ -50,13 +50,6 @@ router.put('/:id', function(req, res, next)
 router.post('/', function(req, res, next)
 {
     if (!req.query.city || !req.query.street || !req.query.zip || !req.query.country) return res.sendStatus(400);
-    var address = new Address
-    ({
-        city: req.query.city,
-        street: req.query.street,
-        zip: req.query.zip,
-        country: req.query.country
-    });
 
     const json = 
     {
@@ -68,6 +61,7 @@ router.post('/', function(req, res, next)
 
     Address.findOne(json, function(err, result)
     {
+        var address = new Address(json);
         if(err) return res.sendStatus(500);
         if (!result)
         {
