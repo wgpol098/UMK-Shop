@@ -22,7 +22,6 @@ router.post("/", function (req, res, next) {
   });
   user.password = user.encryptPassword(req.body.password);
 
-  //email musi być unikalny -- jest to uwzględnione w modelu
   user.save(function (err, result) {
     if (err) return res.sendStatus(500);
     return res.sendStatus(201);
@@ -173,7 +172,7 @@ router.post("/logout", authenticateToken, function (req, res, next) {
 
 //DELETE User
 //TODO: to test
-//TODO: 404
+//TODO 201 - 204
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -182,8 +181,7 @@ router.delete("/:id", authenticateToken, function (req, res) {
   if (role == process.env.ADMIN_ROLE) {
     User.findById(req.params.id).remove(function (err, result) {
       if (err) return res.sendStatus(500);
-      if (!result) return res.sendStatus(400);
-      return res.sendStatus(201);
+      return res.sendStatus(204);
     });
   } else res.sendStatus(403);
 });

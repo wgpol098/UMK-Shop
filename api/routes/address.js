@@ -20,7 +20,9 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 });
 
 //Metoda działa
-//TODO: Zmienić w dokumentacji - kod błędu 201 na 204
+// TODO: Zmienić w dokumentacji - kod błędu 201 na 204
+// TODO: Najpierw szuka adresu -- jeśli istnieje to nic nie robi
+// TOOD: Jeśli adres nie istnieje to go dodaje
 router.put('/:id', function(req, res, next)
 {
     Address.findById(req.params.id, function(err, result)
@@ -43,6 +45,8 @@ router.put('/:id', function(req, res, next)
 //TODO: Najpierw powinno sprwadzać czy dany adres istnieje
 //Jeśli istnieje to nie ma sensu dublować adresów
 //TODO: Dokumentacja - kod 400
+//Adres jest dodawany tylko jeśli istnieje
+//Bez sensu byłoby ciągłe dublowanie adresów
 router.post('/', function(req, res, next)
 {
     if (!req.query.city || !req.query.street || !req.query.zip || !req.query.country) return res.sendStatus(400);
@@ -54,10 +58,26 @@ router.post('/', function(req, res, next)
         country: req.query.country
     });
 
-    address.save(function(err, result)
+    const json = 
+    {
+        city: req.query.city,
+        street: req.query.street,
+        zip: req.query.zip,
+        country: req.query.country
+    };
+
+    Address.findOne(json, function(err, result)
     {
         if(err) return res.sendStatus(500);
-        return res.sendStatus(201);
+        if (!result)
+        {
+            address.save(function(err, result)
+            {
+                if(err) return res.sendStatus(500);
+                return res.sendStatus(201);
+            });
+        }
+        else return res.sendStatus(201);
     });
 });
 

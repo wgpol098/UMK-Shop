@@ -3,6 +3,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Order = require("../models/order");
+const Address = require("../models/address");
 
 // TODO: Do przetesotwania
 // TODO: Zrobić dokumentację
@@ -113,28 +114,73 @@ router.put("/:id", authenticateToken, function (req, res, next)
 //TODO: Zmienić dokumentację
 //TODO: Przetestować jak działa dla tych nieobowiązkowych parametrów
 //TODO: Dokumentacja - kod 400
+//TODO: Dokumentacja do poprawy
 router.post("/", authenticateToken, function (req, res, next) 
 {
-  if(!req.session.cart) return res.sendStatus(500);
+  if(!req.session.cart) return res.sendStatus(400);
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
   var userID = decoded.id;
 
-  if (!userID || !req.query.status || !req.query.payment_id || !req.query.delivery_id) return res.sendStatus(400);
-  var order = new Order({
-    user: userID,
-    date: Date.now(),
-    cart: req.session.cart,
-    status: req.query.status,
-    address: req.query.address,
-    paymentId: req.query.payment_id,
-    deliveryId: req.query.delivery_id
+  if (!userID || !req.query.status || !req.query.payment_id || !req.query.delivery_id
+    //Adres, który musi być podany
+    || !req.query.zip || !req.query.country || !req.query.street || !req.query.city ) return res.sendStatus(400);
+
+  const address = 
+  {
+    zip: req.query.zip,
+    country: req.query.country,
+    street: req.query.street,
+    city: req.query.city
+  };
+
+  Address.findOne(address, function(err, result)
+  {
+    if(err) return res.sendStatus(500);
+    if(!result)
+    {
+      var add = new Address(address);
+      console.log(add);
+      add.save(function(err, result)
+      {
+        if(err) return res.sendStatus(500)
+        console.log(add._id);
+        var order = new Order({
+          user: userID,
+          date: Date.now(),
+          cart: req.session.cart,
+          status: req.query.status,
+          address: add._id,
+          paymentId: req.query.payment_id,
+          deliveryId: req.query.delivery_id
+        });
+        
+        order.save(function (err, result) {
+          if (err) return res.sendStatus(500);
+          req.session.cart = {};
+          return res.sendStatus(201);
+        });
+      });
+    }
+    else
+    {
+      var order = new Order({
+        user: userID,
+        date: Date.now(),
+        cart: req.session.cart,
+        status: req.query.status,
+        address: result._id,
+        paymentId: req.query.payment_id,
+        deliveryId: req.query.delivery_id
+      });
+      order.save(function (err, result) {
+        if (err) return res.sendStatus(500);
+        req.session.cart = {};
+        return res.sendStatus(201);
+      });
+    }
   });
-  order.save(function (err, result) {
-    if (err) return res.sendStatus(500);
-    req.session.cart = {};
-    return res.sendStatus(201);
-  });
+
 });
 
 function authenticateToken(req, res, next) {
