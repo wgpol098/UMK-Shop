@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 export default function HeaderLayout(props) {
   const router = useRouter();
-  const [cookies, setCookie, removeCookie] = useCookies(["userToken"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   const handleLogout = async () => {
     try {

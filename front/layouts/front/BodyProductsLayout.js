@@ -19,7 +19,7 @@ export default function BodyProductsLayout(props) {
   let productsArray = [];
   props.products?.data?.length > 0 &&
     props.products?.data.map((x) => {
-      productsArray.push(<SmallProductLayout title={x.title} id={x._id} />);
+      productsArray.push(<SmallProductLayout title={x.title} id={x._id} img={x.imagePath} />);
     });
 
   console.log(props);

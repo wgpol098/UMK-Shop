@@ -16,11 +16,49 @@ export default function BodyAdminProductCreate(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target.description);
+
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products`,
-        {
+      if (e.target?.image?.files[0]) {
+        const imgData = new FormData();
+        imgData.append(
+          "image",
+          e.target.image.files[0],
+          e.target.image.files[0].name
+        );
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/image/`,
+          {
+            body: imgData,
+            headers: {
+              authorization: cookies.userToken,
+            },
+            method: "POST",
+          }
+        ).then(async (x) => {
+          await x.json().then(async (img) => {
+            await fetch(
+              `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products/`,
+              {
+                body: JSON.stringify({
+                  title: e.target.title.value,
+                  description: e.target.description.value,
+                  price: e.target.price.value,
+                  count: e.target.count.value,
+                  imagePath: img.filepath,
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                  authorization: cookies.userToken,
+                },
+                method: "POST",
+              }
+            ).then((x) => {
+              if (x?.status == 201) router.push("/admin/products");
+            });
+          });
+        });
+      } else {
+        await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products`, {
           body: JSON.stringify({
             title: e.target.title.value,
             description: e.target.description.value,
@@ -32,12 +70,11 @@ export default function BodyAdminProductCreate(props) {
             authorization: cookies.userToken,
           },
           method: "POST",
-        }
-      ).then((x) => {
-        if (x?.status == 201) router.push("/admin/products");
-      });
-
-      // const result = await res.json();
+        }).then((x) => {
+          if (x?.status == 201) router.push("/admin/products");
+        });
+      }
+      //const result = await res.json();
     } catch (err) {
       console.log(err);
     }
@@ -70,6 +107,10 @@ export default function BodyAdminProductCreate(props) {
           <Form.Group>
             <Form.Label>Ilość</Form.Label>
             <Form.Control type="number" name="count" placeholder="Ilość" />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Zdjęcie produktu</Form.Label>
+            <Form.File name="image" accept="image/*" />
           </Form.Group>
           <div className="admin-edit-form-buttons">
             <Button variant="blue-umk" type="submit">

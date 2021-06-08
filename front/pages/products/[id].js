@@ -23,10 +23,9 @@ export async function getStaticPaths() {
   const products = res1 && (await res1.json());
 
   let paths = [];
-  products.data &&
-    products?.data.map((x) => {
-      paths.push(`/products/${x._id}`);
-    });
+  products?.data?.map((x) => {
+    paths.push(`/products/${x._id}`);
+  });
 
   return {
     paths: paths,
