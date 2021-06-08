@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Order = require("../models/order");
 const Address = require("../models/address");
+const mongoose = require('mongoose');
 
 // TODO: Zrobić dokumentację
 // TODO: Dokumentacja
@@ -55,11 +56,15 @@ router.get('/', authenticateToken, function (req, res, next)
 //TODO: Do przetesowania
 router.get('/:id', function (req, res, next) 
 {
-  Order.findById(req.params.id, function (err, result) {
-    if (err) return res.sendStatus(500);
-    if (!result) return res.sendStatus(404);
-    res.send(result);
-  });
+  if(mongoose.Types.ObjectId.isValid(req.params.id))
+  {
+    Order.findById(req.params.id, function (err, result) {
+      if (err) return res.sendStatus(500);
+      if (!result) return res.sendStatus(404);
+      res.send(result);
+    });
+  }
+  else return res.sendStatus(404);
 });
 
 //Usuwanie zamówienia - tylko administrator
@@ -73,11 +78,16 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 
   if (role == process.env.ADMIN_ROLE) 
   {
-    Order.findByIdAndDelete(req.params.id, function(err, result)
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
     {
-      if (err) return res.sendStatus(500);
-      return res.sendStatus(204);
-    });
+      Order.findByIdAndDelete(req.params.id, function(err, result)
+      {
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
+        return res.sendStatus(204);
+      });
+    }
+    else return res.sendStatus(404);
   }
   else return res.sendStatus(403);
 });
@@ -88,23 +98,27 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 //TODO: 201 -204
 router.put("/:id", authenticateToken, function (req, res, next) 
 {  
-  Order.findById(req.params.id, function(err, result)
+  if(mongoose.Types.ObjectId.isValid(req.params.id))
   {
-    if (err) return res.sendStatus(500);
-
-    result.date = req.body.date || result.date;
-    result.user = req.body.user || result.user;
-    result.cart = req.body.cart || result.cart;
-    result.address = req.body.address || result.address;
-    result.paymentId = req.body.payment_id || result.paymentId;
-    result.deliveryId = req.body.delivery_id || result.deliveryId;
-
-    result.save(function(err, result)
+    Order.findById(req.params.id, function(err, result)
     {
       if (err) return res.sendStatus(500);
-      return res.sendStatus(204);
+      if (!result) return res.sendStatus(404);
+      result.date = req.body.date || result.date;
+      result.user = req.body.user || result.user;
+      result.cart = req.body.cart || result.cart;
+      result.address = req.body.address || result.address;
+      result.paymentId = req.body.payment_id || result.paymentId;
+      result.deliveryId = req.body.delivery_id || result.deliveryId;
+  
+      result.save(function(err, result)
+      {
+        if (err) return res.sendStatus(500);
+        return res.sendStatus(204);
+      });
     });
-  });
+  }
+  else return res.sendStatus(404);
 });
 
 //TODO: Do dokończenia
