@@ -33,7 +33,7 @@ router.put("/:id", authenticateToken, function (req, res, next) {
       result.description = req.body.description || result.description;
       result.price = req.body.price || result.price;
       result.count = req.body.count || result.count;
-      result.imagePath = req.body.imagePath || result;
+      result.imagePath = req.body.imagePath || result.imagePath;
 
       result.save(function (err, result) {
         if (err) return res.sendStatus(500);

@@ -19,10 +19,11 @@ export default function BodyAdminProductEdit(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //console.log(e.target.image.files[0]);
+    console.log(e.target.image.files[0]);
 
     try {
       if (e.target?.image?.files[0]) {
+        console.log("jkhk");
         const imgData = new FormData();
         imgData.append(
           "image",
