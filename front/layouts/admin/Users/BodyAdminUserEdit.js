@@ -42,9 +42,9 @@ export default function BodyAdminUserEdit(props) {
           credentials: "include",
           method: "PUT",
         }
-      );
-
-      if (res?.status == 201) router.push("/admin/users");
+      ).then((x) => {
+        if (x?.status == 204) router.push("/admin/users");
+      });
     } catch (err) {
       console.log(err);
     }

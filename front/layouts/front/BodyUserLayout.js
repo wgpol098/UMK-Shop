@@ -20,7 +20,7 @@ export default function BodyUserLayout(props) {
     else {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/profile`,
+          `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/`,
           {
             headers: {
               "Content-Type": "application/json",

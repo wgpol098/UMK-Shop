@@ -36,11 +36,11 @@ export default function BodyAdminProductEdit(props) {
           },
           method: "PUT",
         }
-      );
+      ).then((x) => {
+        if (x?.status == 204) router.push("/admin/products");
+      });
 
       //const result = await res.json();
-
-      router.push("/admin/products");
     } catch (err) {
       console.log(err);
     }

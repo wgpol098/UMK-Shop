@@ -64,7 +64,7 @@ router.put("/edit", authenticateToken, function (req, res, next) {
 
       result.save(function (err, result) {
         if (err) return res.sendStatus(500);
-        return res.sendStatus(201);
+        return res.sendStatus(204);
       });
     });
   } else {
@@ -87,7 +87,7 @@ router.put("/edit", authenticateToken, function (req, res, next) {
 
       result.save(function (err, result) {
         if (err) return res.sendStatus(500);
-        return res.sendStatus(201);
+        return res.sendStatus(204);
       });
     });
   }
@@ -116,7 +116,7 @@ router.post("/login", function (req, res, next) {
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
     const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "20m",
+      expiresIn: "120m",
     });
     res.json({ accessToken: accessToken });
   });

@@ -30,7 +30,7 @@ export default function HeaderLayout(props) {
       removeCookie("userToken");
       setTimeout(() => {
         router.push("/");
-      }, 0);
+      }, 10);
     } catch (err) {
       console.log(err);
     }

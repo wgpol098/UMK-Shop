@@ -28,6 +28,15 @@ router.post('/removefromcart', function (req, res, next) {
 });
 
 //Metoda do przetestowania
+//TODO: NEW, to test
+router.post('/removeallfromcart', function (req, res, next) {
+  var cart = new Cart(req.session.cart ? req.session.cart : {});
+  cart.removeAllItems();
+  req.session.cart = cart;
+  return res.sendStatus(201);
+});
+
+//Metoda do przetestowania
 //TODO: Dokumentacja - 400
 router.post('/removeonefromcart', function (req, res, next) {
   var productId = req.query.id;

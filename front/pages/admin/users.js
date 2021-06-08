@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 import Cookies from "cookies";
 
 export const getServerSideProps = async ({ req, res }) => {
-  const cookies = req && new Cookies(req, res);
+  const cookies = new Cookies(req, res);
   const token = cookies.get("userToken");
 
   const res1 = await fetch(
@@ -20,6 +20,7 @@ export const getServerSideProps = async ({ req, res }) => {
       method: "GET",
     }
   );
+
   const users = res1 && (await res1.json());
   return {
     props: {

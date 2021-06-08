@@ -41,9 +41,9 @@ export default function BodyAdminUserCreate(props) {
           credentials: "include",
           method: "POST",
         }
-      );
-
-      if (res?.status == 201) router.push("/admin/users");
+      ).then((x) => {
+        if (x?.status == 201) router.push("/admin/users");
+      });
     } catch (err) {
       console.log(err);
     }
@@ -58,11 +58,7 @@ export default function BodyAdminUserCreate(props) {
         <Form style={{ width: "500px" }} onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Label>Typ użytkownika</Form.Label>
-            <Form.Control
-              as="select"
-              name="role"
-              required
-            >
+            <Form.Control as="select" name="role" required>
               <option value="user">Użytkownik</option>
               <option value="admin">Admin</option>
             </Form.Control>
@@ -87,11 +83,7 @@ export default function BodyAdminUserCreate(props) {
           </Form.Group>
           <Form.Group>
             <Form.Label>Data urodzenia</Form.Label>
-            <Form.Control
-              type="date"
-              name="birthdate"
-              required
-            />
+            <Form.Control type="date" name="birthdate" required />
           </Form.Group>
           <Form.Group>
             <Form.Label>E-mail adres</Form.Label>

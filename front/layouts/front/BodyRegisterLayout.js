@@ -17,7 +17,6 @@ export default function BodyRegisterLayout(props) {
     // console.log(e.target.email.value);
     // console.log(e.target.password.value);
     e.preventDefault();
-    console.log(e.target["agreements[]"]);
 
     //TODO add addresses first!
 

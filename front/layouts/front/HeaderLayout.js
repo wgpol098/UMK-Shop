@@ -46,7 +46,7 @@ export default function HeaderLayout(props) {
       removeCookie("userToken");
       setTimeout(() => {
         location.reload();
-      }, 0);
+      }, 10);
     } catch (err) {
       console.log(err);
     }

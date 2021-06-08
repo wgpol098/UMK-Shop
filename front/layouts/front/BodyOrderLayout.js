@@ -14,7 +14,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function BodyOrderLayout(props) {
-  const [cartData, setCartData] = useState(null);
+  const [cartData, setCartData] = useState([]);
+  const [deliveryData, setDeliveryData] = useState([]);
+  const [paymentData, setPaymentData] = useState([]);
+  const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [cookie, setCookie] = useCookies(["user"]);
   const router = useRouter();
 
@@ -31,16 +34,44 @@ export default function BodyOrderLayout(props) {
     )
       .then(async (data) => await data.json())
       .then((prods) => setCartData(prods));
+    //
+    const res2 = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/delivery/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        method: "GET",
+      }
+    )
+      .then(async (data) => await data.json())
+      .then((deliveries) => setDeliveryData(deliveries));
+    //
+    const res3 = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/payment/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        method: "GET",
+      }
+    )
+      .then(async (data) => await data.json())
+      .then((payments) => setPaymentData(payments));
   }, []);
 
   console.log(cartData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const p_id = e.target.payment_id.value;
+    const d_id = e.target.delivery_id.value;
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/order?status=0`,
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/order?status=0&payment_id=${p_id}&delivery_id=${d_id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -49,9 +80,9 @@ export default function BodyOrderLayout(props) {
           credentials: "include",
           method: "POST",
         }
-      );
-
-      if (res?.status == 200) router.push("/order-success");
+      ).then((x) => {
+        if (x?.status == 201) router.push("/order-success");
+      });
     } catch (err) {
       console.log(err);
     }
@@ -103,12 +134,24 @@ export default function BodyOrderLayout(props) {
           </Col>
         </Row>
         {cartElements}
+        <Row className="justify-content-md-center cart-element">
+          <Col sm={10}>
+            <span className="cart-title">
+              Dostawa: {selectedDelivery?.name}
+            </span>
+          </Col>
+          <Col sm={2}>
+            <span className="cart-price">{selectedDelivery?.price} Zł</span>
+          </Col>
+        </Row>
         <Row className="cart-header">
           <Col sm={10}>
             <span className="cart-title">Podsumowanie: </span>
           </Col>
           <Col sm={2}>
-            <span className="cart-price">{cartData?.totalPrice} Zł</span>
+            <span className="cart-price">
+              {cartData?.totalPrice + selectedDelivery?.price} Zł
+            </span>
           </Col>
         </Row>
       </Container>
@@ -116,6 +159,34 @@ export default function BodyOrderLayout(props) {
         style={{ width: "350px", margin: "0 0 50px 0" }}
         onSubmit={handleSubmit}
       >
+        <Form.Group>
+          <Form.Label>Typ płatności</Form.Label>
+          <Form.Control as="select" name="payment_id" required>
+            {paymentData?.map((x) => (
+              <option value={x._id}>{x.description}</option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Wybierz dostawę</Form.Label>
+          <Form.Control
+            as="select"
+            name="delivery_id"
+            required
+            onChange={(e) =>
+              setSelectedDelivery(
+                deliveryData?.filter((x) => x._id == e.target.value)?.[0]
+              )
+            }
+            value={selectedDelivery?._id}
+          >
+            {deliveryData?.map((x) => (
+              <option value={x._id}>
+                {x.name} {x.price != 0 && `(${x.price} ZŁ)`}
+              </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
         <Form.Group>
           <Form.Check
             type="checkbox"

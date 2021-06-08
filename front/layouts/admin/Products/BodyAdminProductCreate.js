@@ -33,11 +33,11 @@ export default function BodyAdminProductCreate(props) {
           },
           method: "POST",
         }
-      );
+      ).then((x) => {
+        if (x?.status == 201) router.push("/admin/products");
+      });
 
-     // const result = await res.json();
-
-      router.push("/admin/");
+      // const result = await res.json();
     } catch (err) {
       console.log(err);
     }

@@ -71,6 +71,25 @@ export default function BodyCartLayout(props) {
     }
   };
 
+  const handleFlush = async (e, key) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/removeallfromcart`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          method: "POST",
+        }
+      );
+      location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   //console.log(props); //czy pobiera /carts?
   //console.log(Object.entries(cartData?.items));
 
@@ -149,6 +168,11 @@ export default function BodyCartLayout(props) {
               <Col sm={2}>
                 <span className="cart-price">{cartData.totalPrice} Zł</span>
               </Col>
+            </Row>
+            <Row className="justify-content-md-end">
+              <Button className="btn btn-yellow-umk" onClick={handleFlush}>
+                Wyczyszcz koszyk
+              </Button>
             </Row>
           </Container>
           <Button className="btn btn-blue-umk" href="/order">
