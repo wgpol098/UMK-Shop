@@ -5,7 +5,6 @@ const router = express.Router();
 const Order = require("../models/order");
 const Address = require("../models/address");
 
-// TODO: Do przetesotwania
 // TODO: Zrobić dokumentację
 // TODO: Dokumentacja
 //TODO: 404
@@ -14,18 +13,17 @@ router.get('/', authenticateToken, function (req, res, next)
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
   
-  console.log(decoded.role);
   var all = req.query.all;
   var page = parseInt(req.query.page, 10) || 0;
   var limit = parseInt(req.query.limit, 10) || 10;
   
   if (!all || all == "F")
   {
-    Order.countDocuments({user: decoded._id}, function(err, count)
+    Order.countDocuments({user: decoded.id}, function(err, count)
     {
       if(err) return res.sendStatus(500);
       
-      Order.find({user: decoded._id}).skip(page * limit).limit(limit).exec(function(err, result)
+      Order.find({user: decoded.id}).skip(page * limit).limit(limit).exec(function(err, result)
       {
         if (err) return res.sendStatus(500);
         if (!result) return res.sendStatus(404);
@@ -37,7 +35,7 @@ router.get('/', authenticateToken, function (req, res, next)
   {
     if (decoded.role == process.env.ADMIN_ROLE)
     {
-      Order.countDocuments({user: decoded._id}, function(err, count)
+      Order.countDocuments({}, function(err, count)
       {
         if(err) return res.sendStatus(500);
         
