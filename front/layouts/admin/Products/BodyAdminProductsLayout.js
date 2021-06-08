@@ -1,5 +1,4 @@
-import { Button, Table, Form, FormControl } from "react-bootstrap";
-import Image from "next/image";
+import { Button, Table, Form, FormControl, Image } from "react-bootstrap";
 import Pagination from "rc-pagination";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -40,10 +39,15 @@ export default function BodyAdminProductsLayout(props) {
         <tr>
           <td>{x?._id}</td>
           <td>{x?.title}</td>
-          <td>{x?.image}</td>
+          <td>
+            <Image src={x?.imagePath} width={100} />
+          </td>
           <td>
             <div style={{ display: "flex", justifyContent: "space-around" }}>
-              <Button className="btn-blue-umk" href={`/admin/products/${x._id}`}>
+              <Button
+                className="btn-blue-umk"
+                href={`/admin/products/${x._id}`}
+              >
                 Edytuj
               </Button>
               <Button
