@@ -7,7 +7,7 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 describe('/GET products', () => {
-    it('Powinno zwrócić wszystkie produkty - kod 200', (done) => {
+    it('Powinno zwrócić wszystkie produkty podzielone na pages  - kod 200', (done) => {
       chai.request(server)
           .get('/products')
           .end((err, res) => {
@@ -16,6 +16,59 @@ describe('/GET products', () => {
             done();
           });
     });
+});
+
+//DONE
+describe('/POST products', () => {
+  var product = {};
+  it('Nie powinno wykonać post - kod 401 - brak uprawnień', (done) => {
+    chai.request(server)
+        .post('/products')
+        .send(product)
+        .end((err, res) => {
+              res.should.have.status(401);
+          done();
+        });
+  });
+
+  it('Nie powinno wykonać post - kod 400 - bad request', (done) => {
+    chai.request(server).post('/user/login').send({email: 'admin', password: 'admin'}).end((err, res) => {
+      const token = res.body.accessToken;
+      res.should.have.status(200);
+      chai.request(server)
+        .post('/products')
+        .set('authorization',token)
+        .send(product)
+        .end((err, res) => {
+              res.should.have.status(400);
+          done();
+        });
+    });
+  });
+
+  var product1 = 
+  {
+    title: 'nowy produkt',
+    description: 'opis nowego produktu',
+    price: 123,
+    count: 300
+  };
+
+  it('Nie powinno wykonać post - kod 201 - poprawnie dodano produkt do bazy danych', (done) => {
+    chai.request(server).post('/user/login').send({email: 'admin', password: 'admin'}).end((err, res) => {
+      const token = res.body.accessToken;
+      res.should.have.status(200);
+      chai.request(server)
+        .post('/products')
+        .set('authorization',token)
+        .send(product1)
+        .end((err, res) => 
+        {
+          res.should.have.status(201);
+          done();
+        });
+    });
+  });
 });
 
 describe('/GET user', () => {
