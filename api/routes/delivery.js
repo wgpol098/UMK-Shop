@@ -4,7 +4,7 @@ const Delivery = require("../models/delivery");
 
 //Przetestowane
 //TODO: Do zrobienia dokumentacja
-//TODO: Dokumentacja - kod 400, 201 - 204
+//TODO: Dokumentacja - 201 - 204
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -13,7 +13,6 @@ router.put('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE) 
     {
-        if (req.params.id == undefined) return res.sendStatus(400);
         Delivery.findById(req.params.id, function(err, result)
         {
             if (err) return res.sendStatus(500);
@@ -34,7 +33,7 @@ router.put('/:id', authenticateToken, function(req, res, next)
 
 //Przetestowane
 //TODO: Zrobić dokumentację
-//TODO: Dokumentacja - kod 400, 201 - 204
+//TODO: Dokumentacja - 201 - 204
 router.delete('/:id', function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -43,7 +42,6 @@ router.delete('/:id', function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE) 
     {
-        if (req.params.id == undefined) return res.sendStatus(400);
         Delivery.findById(req.params.id).remove(function(err, result)
         {
             if (err) return res.sendStatus(500);
@@ -58,7 +56,8 @@ router.get('/', function(req, res, next)
 {
     Delivery.find(function(err, result)
     {
-        if(err) return res.sendStatus(500);
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
         res.send(result);
     })
 });

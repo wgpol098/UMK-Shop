@@ -6,6 +6,7 @@ const Product = require("../models/product");
 
 //Usuwanie jednego przedmiotu
 //TODO: 201 - 204
+//TODO: 404
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -14,6 +15,7 @@ router.delete("/:id", authenticateToken, function (req, res) {
   if (role == process.env.ADMIN_ROLE) {
     Product.findById(req.params.id).remove(function (err, result) {
       if (err) return res.sendStatus(500);
+      if (!result) return res.sendStatus(404);
       return res.sendStatus(204);
     });
   } else res.sendStatus(403);
@@ -75,14 +77,17 @@ router.post("/", authenticateToken, function (req, res, next) {
 });
 
 //Pobieranie jedngo przedmiotu
+//TODO: Dokumentacja - dodano 404
 router.get("/:id", function (req, res) {
   Product.findById(req.params.id, function (err, result) {
     if (err) return res.sendStatus(500);
+    if(!result) return res.sendStatus(404);
     res.send(result);
   });
 });
 
 //Pobieranie listy produktów
+//TODO: Dokumentacja - dodano 404
 router.get("/", function (req, res, next) {
   var filter = req.query.filter;
   var page = parseInt(req.query.page, 10) || 0;
@@ -97,6 +102,7 @@ router.get("/", function (req, res, next) {
         .limit(limit)
         .exec(function (err, result) {
           if (err) return res.sendStatus(500);
+          if(!result) return res.sendStatus(404);
           return res.send({ data: result, total: count });
         });
     } else {
@@ -105,7 +111,7 @@ router.get("/", function (req, res, next) {
         .limit(limit)
         .exec(function (err, result) {
           if (err) return res.sendStatus(500);
-          result.total = count;
+          if (!result) return res.sendStatus(404);
           res.send({ data: result, total: count });
         });
     }

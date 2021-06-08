@@ -6,24 +6,52 @@ const Order = require("../models/order");
 
 // TODO: Do przetesotwania
 // TODO: Zrobić dokumentację
+// TODO: Dokumentacja
+//TODO: 404
 router.get('/', authenticateToken, function (req, res, next) 
 {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
   
+  console.log(decoded.role);
+  var all = req.query.all;
   var page = parseInt(req.query.page, 10) || 0;
   var limit = parseInt(req.query.limit, 10) || 10;
   
-  Order.countDocuments({user: decoded._id}, function(err, count)
+  if (!all || all == "F")
   {
-    if(err) return res.sendStatus(500);
-    
-    Order.find({user: decoded._id}).skip(page * limit).limit(limit).exec(function(err, result)
+    Order.countDocuments({user: decoded._id}, function(err, count)
     {
-      if (err) return res.sendStatus(500);
-      res.send({data: result, total: count});
+      if(err) return res.sendStatus(500);
+      
+      Order.find({user: decoded._id}).skip(page * limit).limit(limit).exec(function(err, result)
+      {
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
+        res.send({data: result, total: count});
+      });
     });
-  });
+  }
+  else if (all == "T")
+  {
+    if (decoded.role == process.env.ADMIN_ROLE)
+    {
+      Order.countDocuments({user: decoded._id}, function(err, count)
+      {
+        if(err) return res.sendStatus(500);
+        
+        Order.find().skip(page * limit).limit(limit).exec(function(err, result)
+        {
+          if (err) return res.sendStatus(500);
+          if (!result) return res.sendStatus(404);
+          res.send({data: result, total: count});
+        });
+      });
+    }
+    else return res.sendStatus(403);
+  }
+  else return res.sendStatus(500);
+
 });
 
 //TODO: Do przetesowania
@@ -31,6 +59,7 @@ router.get('/:id', function (req, res, next)
 {
   Order.findById(req.params.id, function (err, result) {
     if (err) return res.sendStatus(500);
+    if (!result) return res.sendStatus(404);
     res.send(result);
   });
 });

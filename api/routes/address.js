@@ -63,11 +63,13 @@ router.post('/', function(req, res, next)
 
 //Pobieranie wszystkich adresów - do przetesowania
 //TODO: Filtrowanie m.in po user id
+//TODO: 404
 router.get('/', function(req, res, next)
 {
     Address.find(function(err, result)
     {
-        if(err) return res.sendStatus(500);
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
         res.send(result);
     });
 });
@@ -77,7 +79,8 @@ router.get('/:id', function(req, res, next)
 {
     Address.findById(req.params.id, function(err, result)
     {
-        if(err) return res.sendStatus(500);
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
         res.send(result);
     });
 });

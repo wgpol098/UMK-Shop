@@ -124,6 +124,7 @@ router.post("/login", function (req, res, next) {
 
 //Metoda zwracająca informacje o userze albo userach jeśli jesteś administratorem
 //Dostępna jedynie dla administarora
+//TODO: 404
 router.get("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
@@ -131,12 +132,14 @@ router.get("/", authenticateToken, function (req, res, next) {
   if (all == undefined || all == "F") {
     User.find({ email: decoded.email }, function (err, user) {
       if (err) return res.sendStatus(500);
+      if(!user) return res.SendStatus(404);
       res.send(user);
     });
   } else if (all == "T") {
     if (decoded.role == process.env.ADMIN_ROLE) {
       User.find(function (err, result) {
         if (err) return res.sendStatus(500);
+        if (!user) return res.sendStatus(404);
         res.send(result);
       });
     } else return res.sendStatus(403);
@@ -144,12 +147,14 @@ router.get("/", authenticateToken, function (req, res, next) {
 });
 
 //GET user/:id
+//TODO: 404
 router.get("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
   if (decoded.role == process.env.ADMIN_ROLE) {
     User.findById(req.params.id, function (err, result) {
       if (err) return res.sendStatus(500);
+      if (!result) return res.sendStatus(404);
       res.send(result);
     });
   } else return res.sendStatus(403);
@@ -168,6 +173,7 @@ router.post("/logout", authenticateToken, function (req, res, next) {
 
 //DELETE User
 //TODO: to test
+//TODO: 404
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -176,6 +182,7 @@ router.delete("/:id", authenticateToken, function (req, res) {
   if (role == process.env.ADMIN_ROLE) {
     User.findById(req.params.id).remove(function (err, result) {
       if (err) return res.sendStatus(500);
+      if (!result) return res.sendStatus(400);
       return res.sendStatus(201);
     });
   } else res.sendStatus(403);

@@ -46,12 +46,13 @@ router.put('/:id', authenticateToken, function(req, res, next)
     else return res.sendStatus(403);
 });
 
-//Do przetestowania
+//Metoda działa
 router.get('/', function(req, res, next)
 {
     Payment.find(function(err, result)
     {
-        if(err) return res.sendStatus(500);
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
         res.send(result);
     });
 });
