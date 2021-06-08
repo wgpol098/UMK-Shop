@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Address = require("../models/address");
+const mongoose = require('mongoose');
+const jwt = require("jsonwebtoken");
 
 // Metoda działa
 router.delete('/:id', authenticateToken, function(req, res, next)
@@ -10,11 +12,16 @@ router.delete('/:id', authenticateToken, function(req, res, next)
     var role = decoded.role;
     if (role == process.env.ADMIN_ROLE) 
     {
-        Address.findById(req.params.id).remove(function(err, result)
+        if(mongoose.Types.ObjectId.isValid(req.params.id))
         {
-            if (err) return res.sendStatus(500);
-            return res.sendStatus(204);
-        });
+            Address.findByIdAndDelete(req.params.id, function(err, result)
+            {
+                if (err) return res.sendStatus(500);
+                if (!result) return res.sendStatus(404);
+                return res.sendStatus(204);
+            });
+        }
+        else return res.sendStatus(404);
     }
     else return res.sendStatus(403);
 });
@@ -25,20 +32,25 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 // TOOD: Jeśli adres nie istnieje to go dodaje
 router.put('/:id', function(req, res, next)
 {
-    Address.findById(req.params.id, function(err, result)
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
     {
-        if (err) return res.sendStatus(500);
-        if(req.query.city) result.city = req.query.city;
-        if(req.query.street) result.street = req.query.street;
-        if(req.query.zip) result.zip = req.query.zip;
-        if(req.query.country) result.country = req.query.country;
-
-        result.save(function(err, result)
+        Address.findById(req.params.id, function(err, result)
         {
             if (err) return res.sendStatus(500);
-            return res.sendStatus(204);
+            if (!result) return res.sendStatus(404);
+            if(req.query.city) result.city = req.query.city;
+            if(req.query.street) result.street = req.query.street;
+            if(req.query.zip) result.zip = req.query.zip;
+            if(req.query.country) result.country = req.query.country;
+    
+            result.save(function(err, result)
+            {
+                if (err) return res.sendStatus(500);
+                return res.sendStatus(204);
+            });
         });
-    });
+    }
+    else return res.sendStatus(404);
 });
 
 //Dodawanie adresu - do przetestowania
@@ -89,14 +101,23 @@ router.get('/', function(req, res, next)
 });
 
 //Pobieranie adresu o danym id - do przetesowania
+//TODO: 404
 router.get('/:id', function(req, res, next)
 {
-    Address.findById(req.params.id, function(err, result)
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
     {
-        if (err) return res.sendStatus(500);
-        if (!result) return res.sendStatus(404);
-        res.send(result);
-    });
+        Address.findById(req.params.id, function(err, result)
+        {
+            if (err) 
+            {
+                console.log(err);
+                return res.sendStatus(500);
+            }
+            if (!result) return res.sendStatus(404);
+            res.send(result);
+        });
+    }
+    else res.sendStatus(404);
 });
 
 function authenticateToken(req, res, next) 

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Payment = require('../models/payment');
+const mongoose = require('mongoose');
+const jwt = require("jsonwebtoken");
 
 //TODO: Przetestować metody
 //TODO: 201 - 204
@@ -12,11 +14,16 @@ router.delete('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
-        Payment.findById(req.params.id).remove(function(err, result)
+        if(mongoose.Types.ObjectId.isValid(req.params.id))
         {
-            if (err) return res.sendStatus(500);
-            return res.sendStatus(204);
-        });
+            Payment.findByIdAndDelete(req.params.id, function(err, result)
+            {
+                if (err) return res.sendStatus(500);
+                if (!result) return res.sendStatus(404);
+                return res.sendStatus(204);
+            });
+        }
+        else return res.sendStatus(404);
     }
     else res.sendStatus(403);
 });
@@ -31,17 +38,21 @@ router.put('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE)
     {
-        Payment.findById(req.params.id, function(err, result)
+        if(mongoose.Types.ObjectId.isValid(req.params.id))
         {
-            if (err) return res.sendStatus(500);
-            
-            result.description = req.query.description || result.description;
-            result.save(function(err, result)
+            Payment.findById(req.params.id, function(err, result)
             {
                 if (err) return res.sendStatus(500);
-                return res.sendStatus(204);
+                if (!result) return res.sendStatus(404);
+                result.description = req.query.description || result.description;
+                result.save(function(err, result)
+                {
+                    if (err) return res.sendStatus(500);
+                    return res.sendStatus(204);
+                });
             });
-        });
+        }
+        else return res.sendStatus(404);
     }
     else return res.sendStatus(403);
 });

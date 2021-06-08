@@ -4,6 +4,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcrypt-nodejs");
+const mongoose = require('mongoose');
 
 //Rejestraca nowego usera -- zwykłego śmiertelnika
 router.post("/", function (req, res, next) {
@@ -97,12 +98,12 @@ router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  if (email == undefined || password == undefined) return res.sendStatus(500);
+  if (!email || !password) return res.sendStatus(400);
 
   //Email w bazie danych jest unikalny
   User.findOne({ email: email }, function (err, result) {
     if (err) return res.sendStatus(500);
-    if (result == null) return res.sendStatus(500);
+    if (!result) return res.sendStatus(404);
     if (!result.validPassword(password)) return res.sendStatus(500);
 
     const userModel = {
@@ -111,7 +112,6 @@ router.post("/login", function (req, res, next) {
       role: result.role,
     };
 
-    console.log(userModel);
     //Np. tak można wygenerować tokeny
     //console.log(require('crypto').randomBytes(64).toString('hex'));
     const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, {
@@ -147,27 +147,23 @@ router.get("/", authenticateToken, function (req, res, next) {
 
 //GET user/:id
 //TODO: 404
-router.get("/:id", authenticateToken, function (req, res, next) {
+router.get("/:id", authenticateToken, function (req, res, next) 
+{
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
-  if (decoded.role == process.env.ADMIN_ROLE) {
-    User.findById(req.params.id, function (err, result) {
-      if (err) return res.sendStatus(500);
-      if (!result) return res.sendStatus(404);
-      res.send(result);
-    });
-  } else return res.sendStatus(403);
-});
-
-//Wylogowywanie -- ale ono coś słabo działa - wystarczy czyścić ciasteczka usera
-//Albo dodawać token do blacklisty
-//TODO: Opisać w dokumentacji
-router.post("/logout", authenticateToken, function (req, res, next) {
-  const authHeader = req.headers["authorization"];
-  console.log(authHeader);
-  jwt.destroy(authHeader);
-  console.log("dziala");
-  return res.sendStatus(200);
+  if (decoded.role == process.env.ADMIN_ROLE) 
+  {
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
+    {
+      User.findById(req.params.id, function (err, result) {
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
+        res.send(result);
+      });
+    }
+    else return res.sendStatus(404);
+  } 
+  else return res.sendStatus(403);
 });
 
 //DELETE User
@@ -178,12 +174,20 @@ router.delete("/:id", authenticateToken, function (req, res) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) {
-    User.findById(req.params.id).remove(function (err, result) {
-      if (err) return res.sendStatus(500);
-      return res.sendStatus(204);
-    });
-  } else res.sendStatus(403);
+  if (role == process.env.ADMIN_ROLE) 
+  {
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
+    {
+      User.findById(req.params.id).remove(function (err, result) 
+      {
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
+        return res.sendStatus(204);
+      });
+    }
+    else return res.sendStatus(404);
+  } 
+  else res.sendStatus(403);
 });
 
 function authenticateToken(req, res, next) {

@@ -50,7 +50,6 @@ router.get('/', authenticateToken, function (req, res, next)
     else return res.sendStatus(403);
   }
   else return res.sendStatus(500);
-
 });
 
 //TODO: Do przetesowania
@@ -74,7 +73,7 @@ router.delete('/:id', authenticateToken, function(req, res, next)
 
   if (role == process.env.ADMIN_ROLE) 
   {
-    Order.findById(req.params.id).remove(function(err, result)
+    Order.findByIdAndDelete(req.params.id, function(err, result)
     {
       if (err) return res.sendStatus(500);
       return res.sendStatus(204);
@@ -178,7 +177,6 @@ router.post("/", authenticateToken, function (req, res, next)
       });
     }
   });
-
 });
 
 function authenticateToken(req, res, next) {
