@@ -4,18 +4,22 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const bcrypt = require("bcrypt-nodejs");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 //Rejestraca nowego usera -- zwykłego śmiertelnika
 router.post("/", function (req, res, next) {
-  const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
+  let role = null;
+  try {
+    const authHeader = req.headers["authorization"];
+    let decoded = jwt.decode(authHeader);
+    role = decoded?.role;
+  } catch (err) {}
 
   var user = new User({
     email: req.body.email,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    role: decoded.role == process.env.ADMIN_ROLE ? req.body.role : "user",
+    role: role == process.env.ADMIN_ROLE ? req.body.role : "user",
     birthdate: req.body.birthdate,
     phone_number: req.body.phone_number,
     shipping_address_id: req.body.shipping_address_id,
@@ -23,7 +27,10 @@ router.post("/", function (req, res, next) {
   });
   user.password = user.encryptPassword(req.body.password);
 
+  console.log(user);
+
   user.save(function (err, result) {
+    console.log(err);
     if (err) return res.sendStatus(500);
     return res.sendStatus(201);
   });
@@ -131,14 +138,14 @@ router.get("/", authenticateToken, function (req, res, next) {
   if (all == undefined || all == "F") {
     User.find({ email: decoded.email }, function (err, user) {
       if (err) return res.sendStatus(500);
-      if(!user) return res.SendStatus(404);
+      if (!user) return res.SendStatus(404);
       res.send(user);
     });
   } else if (all == "T") {
     if (decoded.role == process.env.ADMIN_ROLE) {
       User.find(function (err, result) {
         if (err) return res.sendStatus(500);
-        if (!user) return res.sendStatus(404);
+        if (!result) return res.sendStatus(404);
         res.send(result);
       });
     } else return res.sendStatus(403);
@@ -147,23 +154,18 @@ router.get("/", authenticateToken, function (req, res, next) {
 
 //GET user/:id
 //TODO: 404
-router.get("/:id", authenticateToken, function (req, res, next) 
-{
+router.get("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
-  if (decoded.role == process.env.ADMIN_ROLE) 
-  {
-    if(mongoose.Types.ObjectId.isValid(req.params.id))
-    {
+  if (decoded.role == process.env.ADMIN_ROLE) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
       User.findById(req.params.id, function (err, result) {
         if (err) return res.sendStatus(500);
         if (!result) return res.sendStatus(404);
         res.send(result);
       });
-    }
-    else return res.sendStatus(404);
-  } 
-  else return res.sendStatus(403);
+    } else return res.sendStatus(404);
+  } else return res.sendStatus(403);
 });
 
 //DELETE User
@@ -174,20 +176,15 @@ router.delete("/:id", authenticateToken, function (req, res) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) 
-  {
-    if(mongoose.Types.ObjectId.isValid(req.params.id))
-    {
-      User.findById(req.params.id).remove(function (err, result) 
-      {
+  if (role == process.env.ADMIN_ROLE) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      User.findById(req.params.id).remove(function (err, result) {
         if (err) return res.sendStatus(500);
         if (!result) return res.sendStatus(404);
         return res.sendStatus(204);
       });
-    }
-    else return res.sendStatus(404);
-  } 
-  else res.sendStatus(403);
+    } else return res.sendStatus(404);
+  } else res.sendStatus(403);
 });
 
 function authenticateToken(req, res, next) {
