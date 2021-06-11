@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Delivery = require("../models/delivery");
+const mongoose = require('mongoose');
+const jwt = require("jsonwebtoken");
 
-//Przetestowane
 //TODO: Do zrobienia dokumentacja
-//TODO: Dokumentacja - kod 400, 201 - 204
+//TODO: Dokumentacja - 201 - 204
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -13,28 +14,29 @@ router.put('/:id', authenticateToken, function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE) 
     {
-        if (req.params.id == undefined) return res.sendStatus(400);
-        Delivery.findById(req.params.id, function(err, result)
+        if(mongoose.Types.ObjectId.isValid(req.params.id))
         {
-            if (err) return res.sendStatus(500);
-    
-            result.name = req.query.name || result.name;
-            result.description = req.query.description || result.description;
-            result.price = req.query.price || result.price;
-
-            result.save(function(err, result)
+            Delivery.findById(req.params.id, function(err, result)
             {
                 if (err) return res.sendStatus(500);
-                return res.sendStatus(204);
+                if (!result) return res.sendStatus(404);
+                result.name = req.query.name || result.name;
+                result.description = req.query.description || result.description;
+                result.price = req.query.price || result.price;
+                result.save(function(err, result)
+                {
+                    if (err) return res.sendStatus(500);
+                    return res.sendStatus(204);
+                });
             });
-        });
+        }
+        else return res.sendStatus(404);
     }
     else return res.sendStatus(403);
 });
 
-//Przetestowane
 //TODO: Zrobić dokumentację
-//TODO: Dokumentacja - kod 400, 201 - 204
+//TODO: Dokumentacja - 201 - 204
 router.delete('/:id', function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -43,12 +45,16 @@ router.delete('/:id', function(req, res, next)
   
     if (role == process.env.ADMIN_ROLE) 
     {
-        if (req.params.id == undefined) return res.sendStatus(400);
-        Delivery.findById(req.params.id).remove(function(err, result)
+        if(mongoose.Types.ObjectId.isValid(req.params.id))
         {
-            if (err) return res.sendStatus(500);
-            return res.sendStatus(204);
-        });
+            Delivery.findByIdAndDelete(req.params.id, function(err, result)
+            {
+                if (err) return res.sendStatus(500);
+                if (!result) return res.sendStatus(404);
+                return res.sendStatus(204);
+            });
+        }
+        else return res.sendStatus(400);
     }
     else return res.sendStatus(403);
 });
@@ -58,12 +64,12 @@ router.get('/', function(req, res, next)
 {
     Delivery.find(function(err, result)
     {
-        if(err) return res.sendStatus(500);
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
         res.send(result);
     })
 });
 
-//TODO: Do przetestowania
 //TODO: Zmiana w dokumentacji
 //TODO: Dokumentacja - kod 400
 router.post('/', authenticateToken, function(req, res, next)

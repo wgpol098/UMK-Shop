@@ -3,6 +3,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Product = require("../models/product");
+const mongoose = require('mongoose');
 
 //Usuwanie jednego przedmiotu
 //TODO: 201 - 204
@@ -11,12 +12,20 @@ router.delete("/:id", authenticateToken, function (req, res) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) {
-    Product.findById(req.params.id).remove(function (err, result) {
-      if (err) return res.sendStatus(500);
-      return res.sendStatus(204);
-    });
-  } else res.sendStatus(403);
+  if (role == process.env.ADMIN_ROLE) 
+  {
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
+    {
+      Product.findByIdAndDelete(req.params.id, function (err, result) 
+      {
+        if (err) return res.sendStatus(500);
+        if (!result) return res.sendStatus(404);
+        return res.sendStatus(204);
+      });
+    }
+    else return res.sendStatus(404);
+  } 
+  else res.sendStatus(403);
 });
 
 //Edytowanie istniejących przedmiotów
@@ -26,21 +35,29 @@ router.put("/:id", authenticateToken, function (req, res, next) {
   var decoded = jwt.decode(authHeader);
   var role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) {
-    Product.findById(req.params.id, function (err, result) {
-      if (err) return res.sendStatus(500);
-      result.title = req.body.title || result.title;
-      result.description = req.body.description || result.description;
-      result.price = req.body.price || result.price;
-      result.count = req.body.count || result.count;
-      result.imagePath = req.body.imagePath || result.imagePath;
-
-      result.save(function (err, result) {
+  if (role == process.env.ADMIN_ROLE) 
+  {
+    if(mongoose.Types.ObjectId.isValid(req.params.id))
+    {
+      Product.findById(req.params.id, function (err, result) 
+      {
         if (err) return res.sendStatus(500);
-        return res.sendStatus(204);
+        if (!result) return res.sendStatus(404);
+        result.title = req.body.title || result.title;
+        result.description = req.body.description || result.description;
+        result.price = req.body.price || result.price;
+        result.count = req.body.count || result.count;
+        result.imagePath = req.body.imagePath || result;
+  
+        result.save(function (err, result) {
+          if (err) return res.sendStatus(500);
+          return res.sendStatus(204);
+        });
       });
-    });
-  } else return res.sendStatus(403);
+    }
+    else return res.sendStatus(404);
+  } 
+  else return res.sendStatus(403);
 });
 
 //Dodawanie nowych przedmiotów
@@ -75,14 +92,22 @@ router.post("/", authenticateToken, function (req, res, next) {
 });
 
 //Pobieranie jedngo przedmiotu
-router.get("/:id", function (req, res) {
-  Product.findById(req.params.id, function (err, result) {
-    if (err) return res.sendStatus(500);
-    res.send(result);
-  });
+//TODO: Dokumentacja - dodano 404
+router.get("/:id", function (req, res) 
+{
+  if(mongoose.Types.ObjectId.isValid(req.params.id))
+  {
+    Product.findById(req.params.id, function (err, result) {
+      if (err) return res.sendStatus(500);
+      if (!result) return res.sendStatus(404);
+      res.send(result);
+    });
+  }
+  else return res.sendStatus(404);
 });
 
 //Pobieranie listy produktów
+//TODO: Dokumentacja - dodano 404
 router.get("/", function (req, res, next) {
   var filter = req.query.filter;
   var page = parseInt(req.query.page, 10) || 0;
@@ -97,6 +122,7 @@ router.get("/", function (req, res, next) {
         .limit(limit)
         .exec(function (err, result) {
           if (err) return res.sendStatus(500);
+          if(!result) return res.sendStatus(404);
           return res.send({ data: result, total: count });
         });
     } else {
@@ -105,7 +131,7 @@ router.get("/", function (req, res, next) {
         .limit(limit)
         .exec(function (err, result) {
           if (err) return res.sendStatus(500);
-          result.total = count;
+          if (!result) return res.sendStatus(404);
           res.send({ data: result, total: count });
         });
     }
