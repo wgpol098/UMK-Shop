@@ -37,7 +37,7 @@ router.put('/:id', authenticateToken, function(req, res, next)
 
 //TODO: Zrobić dokumentację
 //TODO: Dokumentacja - 201 - 204
-router.delete('/:id', function(req, res, next)
+router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
     var decoded = jwt.decode(authHeader);
