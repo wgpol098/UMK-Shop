@@ -36,10 +36,10 @@ router.put("/:id", function (req, res, next) {
 
       result.save(function (err, result) {
         if (err) return res.sendStatus(500);
-        return res.status(204).send(result);
+        return res.status(200).send(result);
       });
     });
-  } else return res.status(204).send(result);
+  } else return res.status(200).send(result);
 });
 
 //Dodawanie adresu - do przetestowania

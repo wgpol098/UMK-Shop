@@ -117,7 +117,7 @@ export default function BodyUserLayout(props) {
                   method: "PUT",
                 }
               ).then((x) => {
-                if (x.status == 204) router.push("/user");
+                if (x.status == 200) router.push("/user");
               });
             });
         });

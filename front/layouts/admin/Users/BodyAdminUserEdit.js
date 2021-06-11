@@ -69,41 +69,13 @@ export default function BodyAdminUserEdit(props) {
                   method: "PUT",
                 }
               ).then((x) => {
-                if (x.status == 204) router.push("/admin/users");
+                if (x.status == 200) router.push("/admin/users");
               });
             });
         });
     } catch (err) {
       console.log(err);
     }
-
-    //   try {
-    //     const res = await fetch(
-    //       `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/edit?edit=T`,
-    //       {
-    //         body: JSON.stringify({
-    //           email: e.target.email.value,
-    //           password: e.target.password.value,
-    //           first_name: e.target.FirstName.value,
-    //           last_name: e.target.LastName.value,
-    //           phone_number: e.target.phone_number.value,
-    //           birthdate: e.target.birthdate.value,
-    //           role: e.target.role.value,
-    //         }),
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           authorization: cookies.userToken,
-    //         },
-    //         credentials: "include",
-    //         method: "PUT",
-    //       }
-    //     ).then((x) => {
-    //       if (x?.status == 204) router.push("/admin/users");
-    //     });
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // };
   };
 
   return (
