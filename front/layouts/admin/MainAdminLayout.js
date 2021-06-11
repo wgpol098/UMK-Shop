@@ -6,6 +6,8 @@ import BodyAdminDashboardLayout from "./BodyAdminDashboardLayout";
 import BodyAdminUsersLayout from "./Users/BodyAdminUsersLayout";
 import BodyAdminUserEdit from "./Users/BodyAdminUserEdit";
 import BodyAdminUserCreate from "./Users/BodyAdminUserCreate";
+import BodyAdminOrdersLayout from "./Orders/BodyAdminOrdersLayout";
+import BodyAdminOrderEdit from "./Orders/BodyAdminOrderEdit";
 
 import Head from "next/head";
 import { useEffect } from "react";
@@ -27,6 +29,10 @@ function renderBody(props) {
       return <BodyAdminUserEdit {...props} />;
     case 2.2:
       return <BodyAdminUserCreate {...props} />;
+    case 3:
+      return <BodyAdminOrdersLayout {...props} />;
+    case 3.1:
+      return <BodyAdminOrderEdit {...props} />;
     default:
       return <BodyAdminDashboardLayout {...props} />;
   }

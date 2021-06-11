@@ -18,7 +18,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
     },
     method: "GET",
   })
-    .then(async (data) => await data.json())
+    .then(async (data) => data.status != 404 && (await data.json()))
     .then(async (_userData) => {
       //setUserData(_userData[0]);
       dataObj = _userData;
@@ -33,7 +33,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
           method: "GET",
         }
       )
-        .then(async (data1) => await data1.json())
+        .then(async (data1) => data1.status != 404 && (await data1.json()))
         .then((adr1) => Object.assign(dataObj, { shipping: adr1 }))
         .then(async () => {
           await fetch(
@@ -46,7 +46,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
               method: "GET",
             }
           )
-            .then(async (data2) => await data2.json())
+            .then(async (data2) => data2.status != 404 && (await data2.json()))
             .then((adr2) => Object.assign(dataObj, { invoice: adr2 }));
         });
     });
