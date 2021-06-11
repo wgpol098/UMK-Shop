@@ -110,6 +110,8 @@ router.put("/:id", authenticateToken, function (req, res, next)
       result.address = req.body.address || result.address;
       result.paymentId = req.body.payment_id || result.paymentId;
       result.deliveryId = req.body.delivery_id || result.deliveryId;
+      result.status = req.body.status || result.status;
+      
   
       result.save(function(err, result)
       {

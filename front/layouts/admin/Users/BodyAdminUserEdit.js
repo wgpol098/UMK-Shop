@@ -20,31 +20,59 @@ export default function BodyAdminUserEdit(props) {
     // console.log(e.target.password.value);
     e.preventDefault();
 
-    //TODO add addresses first!
-
+    let adr1 = null;
+    let adr2 = null;
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/edit?edit=T`,
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address/${user.shipping_address_id}?city=${e.target.city1.value}&street=${e.target.street1.value}&zip=${e.target.zip1.value}&country=${e.target.country1.value}`,
         {
-          body: JSON.stringify({
-            email: e.target.email.value,
-            password: e.target.password.value,
-            first_name: e.target.FirstName.value,
-            last_name: e.target.LastName.value,
-            phone_number: e.target.phone_number.value,
-            birthdate: e.target.birthdate.value,
-            role: e.target.role.value,
-          }),
           headers: {
             "Content-Type": "application/json",
             authorization: cookies.userToken,
           },
-          credentials: "include",
           method: "PUT",
         }
-      ).then((x) => {
-        if (x?.status == 204) router.push("/admin/users");
-      });
+      )
+        .then(async (data1) => data1)
+        .then(async (addres1) => {
+          adr1 = addres1._id;
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address/${user.invoice_address_id}?city=${e.target.city2.value}&street=${e.target.street2.value}&zip=${e.target.zip2.value}&country=${e.target.country2.value}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                authorization: cookies.userToken,
+              },
+              method: "PUT",
+            }
+          )
+            .then(async (data2) => data2)
+            .then(async (addres2) => {
+              adr2 = addres2._id;
+              await fetch(
+                `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/edit`,
+                {
+                  body: JSON.stringify({
+                    email: e.target.email.value,
+                    first_name: e.target.first_name.value,
+                    last_name: e.target.last_name.value,
+                    birthdate: e.target.birthdate.value,
+                    phone_number: e.target.phone_number.value,
+                    password: e.target.password.value,
+                    invoice_address_id: adr1,
+                    shipping_address_id: adr2,
+                  }),
+                  headers: {
+                    "Content-Type": "application/json",
+                    authorization: cookies.userToken,
+                  },
+                  method: "PUT",
+                }
+              ).then((x) => {
+                if (x.status == 200) router.push("/admin/users");
+              });
+            });
+        });
     } catch (err) {
       console.log(err);
     }
@@ -57,6 +85,9 @@ export default function BodyAdminUserEdit(props) {
       </div>
       <div className="admin-edit-form">
         <Form style={{ width: "500px" }} onSubmit={handleSubmit}>
+          <div className="login-title" style={{ fontSize: 24 }}>
+            Dane ogólne
+          </div>
           <Form.Group>
             <Form.Label>Typ użytkownika</Form.Label>
             <Form.Control
@@ -73,20 +104,20 @@ export default function BodyAdminUserEdit(props) {
             <Form.Label>Imię</Form.Label>
             <Form.Control
               type="text"
-              name="FirstName"
+              name="first_name"
               placeholder="Imię"
-              defaultValue={user.first_name}
-              //required
+              defaultValue={user?.first_name}
+              required
             />
           </Form.Group>
           <Form.Group>
             <Form.Label>Nazwisko</Form.Label>
             <Form.Control
               type="text"
-              name="LastName"
+              name="last_name"
               placeholder="Nazwisko"
-              defaultValue={user.last_name}
-              //required
+              defaultValue={user?.last_name}
+              required
             />
           </Form.Group>
           <Form.Group>
@@ -94,8 +125,8 @@ export default function BodyAdminUserEdit(props) {
             <Form.Control
               type="date"
               name="birthdate"
-              defaultValue={user.birthdate}
-              //required
+              defaultValue={user?.birthdate}
+              required
             />
           </Form.Group>
           <Form.Group>
@@ -104,8 +135,8 @@ export default function BodyAdminUserEdit(props) {
               type="email"
               name="email"
               placeholder="E-mail"
-              defaultValue={user.email}
-              //required
+              defaultValue={user?.email}
+              required
             />
           </Form.Group>
           <Form.Group>
@@ -114,28 +145,104 @@ export default function BodyAdminUserEdit(props) {
               type="tel"
               name="phone_number"
               placeholder="Nr. telefonu"
-              defaultValue={user.phone_number}
-              //required
+              defaultValue={user?.phone_number}
+              required
+            />
+          </Form.Group>
+
+          <div className="login-title" style={{ fontSize: 24 }}>
+            Adres do korespondencji
+          </div>
+
+          <Form.Group>
+            <Form.Label>Miasto</Form.Label>
+            <Form.Control
+              type="text"
+              name="city1"
+              placeholder="Miasto"
+              required
+              defaultValue={user?.invoice?.city}
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Adres do korespondencji</Form.Label>
+            <Form.Label>Ulica</Form.Label>
             <Form.Control
               type="text"
-              //name="address1"
-              placeholder="Adres do korespondencji"
-              //required
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Adres do wysyłki</Form.Label>
-            <Form.Control
-              type="text"
-              //name="address2"
+              name="street1"
               placeholder="Adres do wysyłki"
-              //required
+              required
+              defaultValue={user?.invoice?.street}
             />
           </Form.Group>
+          <Form.Group>
+            <Form.Label>ZIP kod</Form.Label>
+            <Form.Control
+              type="text"
+              name="zip1"
+              placeholder="ZIP"
+              required
+              defaultValue={user?.invoice?.zip}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Państwo</Form.Label>
+            <Form.Control
+              type="text"
+              name="country1"
+              placeholder="Państwo"
+              required
+              defaultValue={user?.invoice?.country}
+            />
+          </Form.Group>
+
+          <div className="login-title" style={{ fontSize: 24 }}>
+            Adres dostawy
+          </div>
+
+          <Form.Group>
+            <Form.Label>Miasto</Form.Label>
+            <Form.Control
+              type="text"
+              name="city2"
+              placeholder="Miasto"
+              required
+              defaultValue={user?.shipping?.city}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Ulica</Form.Label>
+            <Form.Control
+              type="text"
+              name="street2"
+              placeholder="Adres do wysyłki"
+              required
+              defaultValue={user?.shipping?.street}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>ZIP kod</Form.Label>
+            <Form.Control
+              type="text"
+              name="zip2"
+              placeholder="ZIP"
+              required
+              defaultValue={user?.shipping?.zip}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Państwo</Form.Label>
+            <Form.Control
+              type="text"
+              name="country2"
+              placeholder="Państwo"
+              required
+              defaultValue={user?.shipping?.country}
+            />
+          </Form.Group>
+
+          <div className="login-title" style={{ fontSize: 24 }}>
+            Hasło
+          </div>
           <Form.Group>
             <Form.Label>Hasło</Form.Label>
             <Form.Control

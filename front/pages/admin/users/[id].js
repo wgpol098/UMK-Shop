@@ -10,22 +10,50 @@ export const getServerSideProps = async ({ req, res, query }) => {
   const cookies = new Cookies(req, res);
   const token = cookies.get("userToken");
 
-  const res1 = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/${id}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        authorization: token,
-      },
-      credentials: "include",
-      method: "GET",
-    }
-  );
-  const user = res1 && (await res1.json());
+  let dataObj = {};
+  await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      authorization: token,
+    },
+    method: "GET",
+  })
+    .then(async (data) => data.status != 404 && (await data.json()))
+    .then(async (_userData) => {
+      //setUserData(_userData[0]);
+      dataObj = _userData;
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address/${_userData.shipping_address_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: token,
+          },
+          credentials: "include",
+          method: "GET",
+        }
+      )
+        .then(async (data1) => data1.status != 404 && (await data1.json()))
+        .then((adr1) => Object.assign(dataObj, { shipping: adr1 }))
+        .then(async () => {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address/${_userData.invoice_address_id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                authorization: token,
+              },
+              method: "GET",
+            }
+          )
+            .then(async (data2) => data2.status != 404 && (await data2.json()))
+            .then((adr2) => Object.assign(dataObj, { invoice: adr2 }));
+        });
+    });
 
   return {
     props: {
-      user: user,
+      user: dataObj,
     },
   };
 };

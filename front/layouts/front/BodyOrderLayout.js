@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function BodyOrderLayout(props) {
+  const [userData, setUserData] = useState({});
   const [cartData, setCartData] = useState([]);
   const [deliveryData, setDeliveryData] = useState([]);
   const [paymentData, setPaymentData] = useState([]);
@@ -60,6 +61,52 @@ export default function BodyOrderLayout(props) {
     )
       .then(async (data) => await data.json())
       .then((payments) => setPaymentData(payments));
+
+    try {
+      let dataObj = {};
+      await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: cookie.userToken,
+        },
+        method: "GET",
+      })
+        .then(async (data) => await data.json())
+        .then(async (_userData) => {
+          //setUserData(_userData[0]);
+          dataObj = _userData[0];
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address/${_userData[0].shipping_address_id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                authorization: cookie.userToken,
+              },
+              method: "GET",
+            }
+          )
+            .then(async (data1) => await data1.json())
+            .then((adr1) => Object.assign(dataObj, { shipping: adr1 }))
+            .then(async () => {
+              await fetch(
+                `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address/${_userData[0].invoice_address_id}`,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    authorization: cookie.userToken,
+                  },
+                  method: "GET",
+                }
+              )
+                .then(async (data2) => await data2.json())
+                .then((adr2) =>
+                  setUserData(Object.assign(dataObj, { invoice: adr2 }))
+                );
+            });
+        });
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   console.log(cartData);
@@ -68,10 +115,14 @@ export default function BodyOrderLayout(props) {
     e.preventDefault();
     const p_id = e.target.payment_id.value;
     const d_id = e.target.delivery_id.value;
+    const city = e.target.city.value;
+    const street = e.target.street.value;
+    const zip = e.target.zip.value;
+    const country = e.target.country.value;
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/order?status=0&payment_id=${p_id}&delivery_id=${d_id}`,
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/order?status=0&payment_id=${p_id}&delivery_id=${d_id}&city=${city}&street=${street}&zip=${zip}&country=${country}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -141,7 +192,9 @@ export default function BodyOrderLayout(props) {
             </span>
           </Col>
           <Col sm={2}>
-            <span className="cart-price">{selectedDelivery?.price} Zł</span>
+            <span className="cart-price">
+              {selectedDelivery?.price ? selectedDelivery?.price : "-"} Zł
+            </span>
           </Col>
         </Row>
         <Row className="cart-header">
@@ -150,7 +203,10 @@ export default function BodyOrderLayout(props) {
           </Col>
           <Col sm={2}>
             <span className="cart-price">
-              {cartData?.totalPrice + selectedDelivery?.price} Zł
+              {selectedDelivery?.price
+                ? cartData?.totalPrice + selectedDelivery?.price
+                : cartData?.totalPrice}{" "}
+              Zł
             </span>
           </Col>
         </Row>
@@ -159,6 +215,52 @@ export default function BodyOrderLayout(props) {
         style={{ width: "350px", margin: "0 0 50px 0" }}
         onSubmit={handleSubmit}
       >
+        <div className="login-title" style={{ fontSize: 24 }}>
+          Adres dostawy
+        </div>
+        <Form.Group>
+          <Form.Label>Miasto</Form.Label>
+          <Form.Control
+            type="text"
+            name="city"
+            placeholder="Miasto"
+            required
+            defaultValue={userData?.invoice?.city}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Ulica</Form.Label>
+          <Form.Control
+            type="text"
+            name="street"
+            placeholder="Adres do wysyłki"
+            required
+            defaultValue={userData?.invoice?.street}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>ZIP kod</Form.Label>
+          <Form.Control
+            type="text"
+            name="zip"
+            placeholder="ZIP"
+            required
+            defaultValue={userData?.invoice?.zip}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Państwo</Form.Label>
+          <Form.Control
+            type="text"
+            name="country"
+            placeholder="Państwo"
+            required
+            defaultValue={userData?.invoice?.country}
+          />
+        </Form.Group>
+        <div className="login-title" style={{ fontSize: 24 }}>
+          Typy dostawy
+        </div>
         <Form.Group>
           <Form.Label>Typ płatności</Form.Label>
           <Form.Control as="select" name="payment_id" required>

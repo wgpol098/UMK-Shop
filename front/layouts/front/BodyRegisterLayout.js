@@ -14,33 +14,55 @@ export default function BodyRegisterLayout(props) {
   const router = useRouter();
 
   const handleSubmit = async (e) => {
-    // console.log(e.target.email.value);
-    // console.log(e.target.password.value);
     e.preventDefault();
-
-    //TODO add addresses first!
+    let adr1 = null;
+    let adr2 = null;
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/register`,
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address?city=${e.target.city1.value}&street=${e.target.street1.value}&zip=${e.target.zip1.value}&country=${e.target.country1.value}`,
         {
-          body: JSON.stringify({
-            email: e.target.email.value,
-            password: e.target.password.value,
-            first_name: e.target.FirstName.value,
-            last_name: e.target.LastName.value,
-            phone_number: e.target.phone_number.value,
-            birthdate: e.target.birthdate.value,
-          }),
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
           method: "POST",
         }
-      );
-
-      if (res?.status == 200) router.push("/login");
+      )
+        .then(async (data1) => await data1.json())
+        .then(async (addres1) => {
+          adr1 = addres1._id;
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/address?city=${e.target.city2.value}&street=${e.target.street2.value}&zip=${e.target.zip2.value}&country=${e.target.country2.value}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              method: "POST",
+            }
+          )
+            .then(async (data2) => await data2.json())
+            .then(async (addres2) => {
+              adr2 = addres2._id;
+              await fetch(`${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/`, {
+                body: JSON.stringify({
+                  email: e.target.email.value,
+                  first_name: e.target.first_name.value,
+                  last_name: e.target.last_name.value,
+                  birthdate: e.target.birthdate.value,
+                  phone_number: e.target.phone_number.value,
+                  password: e.target.password.value,
+                  invoice_address_id: adr1,
+                  shipping_address_id: adr2,
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                method: "POST",
+              }).then((x) => {
+                if (x.status == 201) router.push("/user");
+              });
+            });
+        });
     } catch (err) {
       console.log(err);
     }
@@ -60,31 +82,30 @@ export default function BodyRegisterLayout(props) {
         style={{ width: "350px", margin: "0 0 50px 0" }}
         onSubmit={handleSubmit}
       >
+        <div className="login-title" style={{ fontSize: 24 }}>
+          Dane ogólne
+        </div>
         <Form.Group>
           <Form.Label>Imię</Form.Label>
           <Form.Control
             type="text"
-            name="FirstName"
+            name="first_name"
             placeholder="Imię"
-            //required
+            required
           />
         </Form.Group>
         <Form.Group>
           <Form.Label>Nazwisko</Form.Label>
           <Form.Control
             type="text"
-            name="LastName"
+            name="last_name"
             placeholder="Nazwisko"
-            //required
+            required
           />
         </Form.Group>
         <Form.Group>
           <Form.Label>Data urodzenia</Form.Label>
-          <Form.Control
-            type="date"
-            name="birthdate"
-            //required
-          />
+          <Form.Control type="date" name="birthdate" required />
         </Form.Group>
         <Form.Group>
           <Form.Label>E-mail adres</Form.Label>
@@ -92,7 +113,7 @@ export default function BodyRegisterLayout(props) {
             type="email"
             name="email"
             placeholder="E-mail"
-            //required
+            required
           />
         </Form.Group>
         <Form.Group>
@@ -101,27 +122,84 @@ export default function BodyRegisterLayout(props) {
             type="tel"
             name="phone_number"
             placeholder="Nr. telefonu"
-            //required
+            required
+          />
+        </Form.Group>
+        <div className="login-title" style={{ fontSize: 24 }}>
+          Adres do korespondencji
+        </div>
+
+        <Form.Group>
+          <Form.Label>Miasto</Form.Label>
+          <Form.Control
+            type="text"
+            name="city1"
+            placeholder="Miasto"
+            required
           />
         </Form.Group>
         <Form.Group>
-          <Form.Label>Adres do korespondencji</Form.Label>
+          <Form.Label>Ulica</Form.Label>
           <Form.Control
             type="text"
-            //name="address1"
-            placeholder="Adres do korespondencji"
-            //required
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Adres do wysyłki</Form.Label>
-          <Form.Control
-            type="text"
-            //name="address2"
+            name="street1"
             placeholder="Adres do wysyłki"
-            //required
+            required
           />
         </Form.Group>
+        <Form.Group>
+          <Form.Label>ZIP kod</Form.Label>
+          <Form.Control type="text" name="zip1" placeholder="ZIP" required />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Państwo</Form.Label>
+          <Form.Control
+            type="text"
+            name="country1"
+            placeholder="Państwo"
+            required
+          />
+        </Form.Group>
+
+        <div className="login-title" style={{ fontSize: 24 }}>
+          Adres dostawy
+        </div>
+
+        <Form.Group>
+          <Form.Label>Miasto</Form.Label>
+          <Form.Control
+            type="text"
+            name="city2"
+            placeholder="Miasto"
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Ulica</Form.Label>
+          <Form.Control
+            type="text"
+            name="street2"
+            placeholder="Adres do wysyłki"
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>ZIP kod</Form.Label>
+          <Form.Control type="text" name="zip2" placeholder="ZIP" required />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Państwo</Form.Label>
+          <Form.Control
+            type="text"
+            name="country2"
+            placeholder="Państwo"
+            required
+          />
+        </Form.Group>
+
+        <div className="login-title" style={{ fontSize: 24 }}>
+          Hasło
+        </div>
         <Form.Group>
           <Form.Label>Hasło</Form.Label>
           <Form.Control
