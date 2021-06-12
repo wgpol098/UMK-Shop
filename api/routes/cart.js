@@ -17,7 +17,7 @@ router.post('/addtocart', function (req, res, next) {
 });
 
 router.post('/removefromcart', function (req, res, next) {
-  var productId = req.query.id;
+  const productId = req.query.id;
   if (!productId) return res.sendStatus(400);
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   cart.removeItem(productId);
@@ -33,7 +33,7 @@ router.post('/removeallfromcart', function (req, res, next) {
 });
 
 router.post('/removeonefromcart', function (req, res, next) {
-  var productId = req.query.id;
+  const productId = req.query.id;
   if (!productId) return res.sendStatus(400);
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   cart.reduce(productId);

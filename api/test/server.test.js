@@ -1,4 +1,3 @@
-//Require the dev-dependencies
 const { expect } = require('chai');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -8,7 +7,6 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-//TODO: TEST Z FILTREM
 describe('/GET products', () => {
     it('Powinno zwrócić pierwszą stronę z 10 produktami  - kod 200', (done) => {
       chai.request(server)
@@ -105,7 +103,6 @@ describe('/PUT products', () =>
         });
   });
 
-  //TODO: Ta metoda coś nie działa - do przetestowania
   it('Powinno wykonać PUT - kod 204', (done) => {
   chai.request(server).post('/user/login').send({email: 'admin', password: 'admin'}).end((err, res) => {
     res.should.have.status(200);
@@ -126,9 +123,9 @@ describe('/PUT products', () =>
                 res.should.have.status(204);
                 done();
               });
+      });
     });
   });
-});
 });
 
 
@@ -182,7 +179,6 @@ describe('/DELETE products', () =>
 
 
 //---------------------------USER
-//TODO: TESTY
 
 describe('/GET user', () => {
   it('Powinno zwrócić błąd 401, gdy jesteśmy niezalogowani', (done) => {
@@ -199,12 +195,30 @@ describe('/POST user', () =>
 {
   it('Nie powinno dodać usera do bazy - błędne dane', (done) => 
   {
-    done();
+    chai.request(server).post('/user').end((err, res) =>
+    {
+      res.should.have.status(400);
+      done();
+    });
   });
 
   it('Powinno dodać usera do bazy', (done) =>
   {
-    done();
+    const user =
+    {
+      email: 'emaasdil',
+      password: 'haselko',
+      first_name: 'pierwsze imie',
+      last_name: 'drugie imie',
+      role: 'user',
+      birthdate: '2000-01-01',
+      phone_number: '123123123'
+    };
+    chai.request(server).post('/user').send(user).end((err, res) =>
+    {
+      res.should.have.status(201);
+      done();
+    });
   });
 });
 
@@ -212,12 +226,25 @@ describe('/PUT user/edit', () =>
 {
   it('Nie powinno edytować usera - brak uprawnień', (done) =>
   {
-    done();
+    chai.request(server).put('/user/edit').end((err, res) =>
+    {
+      res.should.have.status(401);
+      done();
+    });
   });
 
   it('Powinno edytować usera - kod 204', (done) =>
   {
-    done();
+    chai.request(server).post('/user/login').send({email: 'admin', password: 'admin'}).end((err, res) => {
+      res.should.have.status(200);
+      const token = res.body.accessToken;
+
+      chai.request(server).put('/user/edit').set('authorization',token).end((err, res) =>
+      {
+        res.should.have.status(204);
+        done();
+      });
+    });
   });
 });
 
@@ -225,25 +252,80 @@ describe('/POST user/login', () =>
 {
   it('Nie powinno zalogowac - user nie istnieje', (done) =>
   {
-    done();
+    const user =
+    {
+      email: 'emaill',
+      password: 'haslo'
+    };
+    chai.request(server).post('/user/login').send(user).end((err, res) =>
+    {
+      res.should.have.status(404);
+      done();
+    });
   });
 
   it('Powinno zalogowac usera - kod 200', (done) =>
   {
-    done();
+    const user = 
+    {
+      email: 'admin',
+      password: 'admin'
+    };
+    chai.request(server).post('/user/login').send(user).end((err, res) =>
+    {
+      res.should.have.status(200);
+      done();
+    });
   });
 });
 
 describe('DELETE user', () =>
 {
-  it('Nie powinno usunac usera - brak uprawnien', (done) =>
+  it('Nie powinno usunąć usera - brak uprawień', (done) =>
   {
-    done();
+    chai.request(server).post('/user/login').send({email: 'admin', password: 'admin'}).end((err, res) => {
+      res.should.have.status(200);
+      const token = res.body.accessToken;
+
+      chai.request(server).get('/user?all=T').set('authorization', token).end((err, res) =>
+      {
+        console.log(res.body);
+
+        var id;
+        if(res.body[0].email != 'admin') id = res.body[0]._id;
+        else id = res.body[1]._id;
+
+        chai.request(server).delete('/user/' + id).end((err, res) =>
+        {
+          res.should.have.status(401);
+          done();
+        });
+      });
+    });
   });
 
   it('Powinno usunąć usera - kod 204', (done) =>
   {
-    done();
+    chai.request(server).post('/user/login').send({email: 'admin', password: 'admin'}).end((err, res) => {
+      res.should.have.status(200);
+      const token = res.body.accessToken;
+      res.should.have.status(200);
+
+      chai.request(server).get('/user?all=T').set('authorization', token).end((err, res) =>
+      {
+        console.log(res.body);
+
+        var id;
+        if(res.body[0].email != 'admin') id = res.body[0]._id;
+        else id = res.body[1]._id;
+
+        chai.request(server).delete('/user/' + id).set('authorization',token).end((err, res) =>
+        {
+          res.should.have.status(204);
+          done();
+        });
+      });
+    });
   });
 });
 
@@ -460,7 +542,7 @@ describe('/POST order', () =>
   });
 });
 
-//TODO: Do dokończenia jak będę miał dane do przetestowania
+//TODO: Zadziała jak będzie działać POST
 describe('/DELETE order', () =>
 {
   it('Nie powinno usunąć zamówienie - brak uprawnień', (done) => 
@@ -469,12 +551,17 @@ describe('/DELETE order', () =>
       res.should.have.status(200);
       const token = res.body.accessToken;
 
-      chai.request(server).get('/order').end((err, res) => 
+      chai.request(server).get('/order').set('authorization', token).end((err, res) => 
       {
         res.should.have.status(200);
         
         const order = res.body[0]._id;
-        done();
+
+        chai.request(server).delete('/order' + order).end((err, res) =>
+        {
+          res.should.have.status(400);
+          done();
+        });
       });
     });
   });
@@ -667,12 +754,11 @@ describe('/POST address', () =>
     });
   });
 
-  //TODO: Ustalić co tu jest źle i zrobić assercje otrzymanych danych bo zostało to zmienione
   it('Powinno dodać adres - kod 204', (done) =>
   {
-    chai.request(server).post('/address' + "?city=Warszawa&zip=123123street=sienkiewicza&country=polska").end((err, res) => 
+    chai.request(server).post('/address' + "?city=Warszawa&zip=123123&street=sienkiewicza&country=polska").end((err, res) => 
     {
-      res.should.have.status(204);
+      res.should.have.status(201);
       done();
     });
   });

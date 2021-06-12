@@ -6,8 +6,8 @@ const jwt = require("jsonwebtoken");
 
 router.delete("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var role = decoded.role;
+  const decoded = jwt.decode(authHeader);
+  const role = decoded.role;
   if (role == process.env.ADMIN_ROLE) {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
       Address.findByIdAndDelete(req.params.id, function (err, result) {
@@ -34,7 +34,7 @@ router.put("/:id", function (req, res, next) {
         return res.status(200).send(result);
       });
     });
-  } else return res.status(200).send(result);
+  } else return res.status(200);
 });
 
 router.post("/", function (req, res, next) {

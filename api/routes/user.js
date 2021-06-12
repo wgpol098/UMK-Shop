@@ -7,12 +7,16 @@ const bcrypt = require("bcrypt-nodejs");
 const mongoose = require("mongoose");
 
 router.post("/", function (req, res, next) {
-  let role = null;
-  try {
-    const authHeader = req.headers["authorization"];
-    let decoded = jwt.decode(authHeader);
-    role = decoded?.role;
-  } catch (err) {}
+  var role = null;
+  const authHeader = req.headers["authorization"];
+  if(authHeader)
+  {
+    const decoded = jwt.decode(authHeader);
+    role = decoded.role;
+  }
+
+  if(!req.body.email || !req.body.first_name || !req.body.last_name || !req.body.birthdate || !req.body.phone_number ||
+   !req.body.password) return res.sendStatus(400);
 
   var user = new User({
     email: req.body.email,
@@ -20,10 +24,11 @@ router.post("/", function (req, res, next) {
     last_name: req.body.last_name,
     role: role == process.env.ADMIN_ROLE ? req.body.role : "user",
     birthdate: req.body.birthdate,
-    phone_number: req.body.phone_number,
-    shipping_address_id: req.body.shipping_address_id,
-    invoice_address_id: req.body.invoice_address_id,
+    phone_number: req.body.phone_number
   });
+
+  if(req.body.shipping_address_id) user.shipping_address_id = req.body.shipping_address_id;
+  if(req.body.invoice_address_id) user.invoice_address_id = req.body.invoice_address_id;
   user.password = user.encryptPassword(req.body.password);
 
   user.save(function (err, result) {
@@ -34,12 +39,12 @@ router.post("/", function (req, res, next) {
 
 router.put("/edit", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var email = decoded.email;
+  const decoded = jwt.decode(authHeader);
+  const email = decoded.email;
 
   const edit = req.query.edit;
 
-  let new_password = req.body.password
+  const new_password = req.body.password
     ? bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(5), null)
     : null;
 

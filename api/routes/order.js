@@ -11,9 +11,9 @@ router.get('/', authenticateToken, function (req, res, next)
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
   
-  var all = req.query.all;
-  var page = parseInt(req.query.page, 10) || 0;
-  var limit = parseInt(req.query.limit, 10) || 10;
+  const all = req.query.all;
+  const page = parseInt(req.query.page, 10) || 0;
+  const limit = parseInt(req.query.limit, 10) || 10;
   
   if (!all || all == "F")
   {
@@ -116,8 +116,8 @@ router.post("/", authenticateToken, function (req, res, next)
 {
   if(!req.session.cart) return res.sendStatus(400);
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var userID = decoded.id;
+  const decoded = jwt.decode(authHeader);
+  const userID = decoded.id;
 
   if (!userID || !req.query.status || !req.query.payment_id || !req.query.delivery_id
     //Adres, który musi być podany

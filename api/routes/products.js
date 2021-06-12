@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var role = decoded.role;
+  const decoded = jwt.decode(authHeader);
+  const role = decoded.role;
 
   if (role == process.env.ADMIN_ROLE) 
   {
@@ -28,8 +28,8 @@ router.delete("/:id", authenticateToken, function (req, res) {
 
 router.put("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var role = decoded.role;
+  const decoded = jwt.decode(authHeader);
+  const role = decoded.role;
 
   if (role == process.env.ADMIN_ROLE) 
   {
@@ -58,8 +58,8 @@ router.put("/:id", authenticateToken, function (req, res, next) {
 
 router.post("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var role = decoded.role;
+  const decoded = jwt.decode(authHeader);
+  const role = decoded.role;
 
   if (
     !req.body.title ||
@@ -98,9 +98,9 @@ router.get("/:id", function (req, res)
 });
 
 router.get("/", function (req, res, next) {
-  var filter = req.query.filter;
-  var page = parseInt(req.query.page, 10) || 0;
-  var limit = parseInt(req.query.limit, 10) || 10;
+  const filter = req.query.filter;
+  const page = parseInt(req.query.page, 10) || 0;
+  const limit = parseInt(req.query.limit, 10) || 10;
 
   Product.countDocuments({}, function (err, count) {
     if (err) return res.sendStatus(500);
