@@ -1,6 +1,7 @@
 # Sklep internetowy UMK
 ### Definicja problemu
-Obecnie produkty Uniwersytetu Mikołaja Kopernika (dalej UMK) dostępne są jedynie w sklepie stacjonarnym przy rektoracie.<br />
+Obecnie produkty Uniwersytetu Mikołaja Kopernika (dalej UMK) można obejrzeć na stronie: <a> https://www.umk.pl/uslugi/materialy/indyw/ </a>. <br> 
+Zakupy są możliwe jedynie w sklepie stacjonarnym przy rektoracie.<br />
 W dobie pandemii COVID-19 dostęp do nich był bardzo ograniczony, a przez pewien czas - niemożliwy, szczególnie dla osób mieszkających poza obrębem Torunia.<br />
 Mimo sytuacji pandemicznej obecnej w kraju, zainteresowanie wspomnianymi wyżej produktami nie zmalało.<br /> Pojawiło się więc zapotrzebowanie na uruchomienie innego kanału sprzedaży.
 
@@ -36,10 +37,8 @@ W backend'zie projektu ten model został utworzony za pomocą pakietu [`jsonwebt
 ---
 
 ### Testowanie
-Każda metoda API została przetestowana pod kątem zależnym od zastosowania.
-- ...
-
----
+Każda metoda API została przetestowana pod kątem zależnym od zastosowania. <br>
+Uruchomienie testów odbywa się poprzez wpisanie komendy `npm test` w folderze `/api`.
 
 ### Instrukcja uruchomienia
 
@@ -49,8 +48,15 @@ Każda metoda API została przetestowana pod kątem zależnym od zastosowania.
 
 #### Do tego również została użyta baza danych [`mongodb`](https://www.mongodb.com/). Przed uruchomianiem powyższych projektów musimy skonfigurować<br /> bazę danych:
 - zainstalować mongodb - [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/);
-- wpisać do zmiennej środowiskowej (`.env`) link do uruchomionej bazy danych `DB_LINK`<br />
+- wpisać do zmiennej środowiskowej w folderze `/api` (`.env`) link do uruchomionej bazy danych `DB_LINK`<br />
 (przykład: `DB_LINK=mongodb://localhost:27017/umkshop`).
+
+#### Inicjowanie danych
+W celu dodania przykładowych danych do bazy danych należy uruchomić odpowiednie pliki z folderu `/api/seed`
+- `address-seeder.js`
+- `delivery-seeder.js`
+- `payment-seeder.js`
+- `user-seeder.js`
 
 #### Najpierw musimy uruchomić backend:
 - wejść do folderu `/api`;
