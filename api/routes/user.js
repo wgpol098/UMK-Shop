@@ -9,11 +9,15 @@ const mongoose = require("mongoose");
 //Rejestraca nowego usera -- zwykłego śmiertelnika
 router.post("/", function (req, res, next) {
   let role = null;
-  try {
     const authHeader = req.headers["authorization"];
-    let decoded = jwt.decode(authHeader);
-    role = decoded?.role;
-  } catch (err) {}
+    if(authHeader)
+    {
+      let decoded = jwt.decode(authHeader);
+      role = decoded.role;
+    }
+
+    if(!req.body.email || !req.body.first_name || !req.body.last_name || !req.body.birthdate || !req.body.phone_number ||
+     !req.body.password) return res.sendStatus(400);
 
   var user = new User({
     email: req.body.email,
@@ -21,10 +25,11 @@ router.post("/", function (req, res, next) {
     last_name: req.body.last_name,
     role: role == process.env.ADMIN_ROLE ? req.body.role : "user",
     birthdate: req.body.birthdate,
-    phone_number: req.body.phone_number,
-    shipping_address_id: req.body.shipping_address_id,
-    invoice_address_id: req.body.invoice_address_id,
+    phone_number: req.body.phone_number
   });
+
+  if(req.body.shipping_address_id) user.shipping_address_id = req.body.shipping_address_id;
+  if(req.body.invoice_address_id) user.invoice_address_id = req.body.invoice_address_id;
   user.password = user.encryptPassword(req.body.password);
 
   console.log(user);
