@@ -3,7 +3,7 @@ const router = express.Router();
 const Product = require("../models/product");
 const Cart = require("../models/cart");
 
-//TODO: Dokumentacja - 400
+
 router.post('/addtocart', function (req, res, next) {
   const productId = req.query.id;
   if (!productId) return res.sendStatus(400);
@@ -16,8 +16,6 @@ router.post('/addtocart', function (req, res, next) {
   });
 });
 
-//Metoda do przetestowania
-//TODO: Dokumentacja - 400
 router.post('/removefromcart', function (req, res, next) {
   var productId = req.query.id;
   if (!productId) return res.sendStatus(400);
@@ -27,8 +25,6 @@ router.post('/removefromcart', function (req, res, next) {
   return res.sendStatus(201);
 });
 
-//Metoda do przetestowania
-//TODO: NEW, to test
 router.post('/removeallfromcart', function (req, res, next) {
   var cart = new Cart(req.session.cart ? req.session.cart : {});
   cart.removeAllItems();
@@ -36,8 +32,6 @@ router.post('/removeallfromcart', function (req, res, next) {
   return res.sendStatus(201);
 });
 
-//Metoda do przetestowania
-//TODO: Dokumentacja - 400
 router.post('/removeonefromcart', function (req, res, next) {
   var productId = req.query.id;
   if (!productId) return res.sendStatus(400);

@@ -15,15 +15,11 @@ export default function BodyAdminProductEdit(props) {
   const router = useRouter();
   const product = props.product;
 
-  console.log(product);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target.image.files[0]);
 
     try {
       if (e.target?.image?.files[0]) {
-        console.log("jkhk");
         const imgData = new FormData();
         imgData.append(
           "image",
@@ -85,7 +81,7 @@ export default function BodyAdminProductEdit(props) {
       }
       //const result = await res.json();
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

@@ -26,7 +26,7 @@ export default function BodyAdminProductsLayout(props) {
         );
         location.reload();
       } catch (err) {
-        console.log(err);
+       
       }
     }
   };
@@ -71,7 +71,6 @@ export default function BodyAdminProductsLayout(props) {
   };
 
   const handleOnPageChange = (page) => {
-    console.log(page - 1);
     if (titleFilter !== "")
       router.push(`/admin/products?page=${page - 1}&title=${titleFilter}`);
     else router.push(`/admin/products?page=${page - 1}`);

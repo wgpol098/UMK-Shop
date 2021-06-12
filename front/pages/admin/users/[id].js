@@ -61,15 +61,12 @@ export const getServerSideProps = async ({ req, res, query }) => {
 export default function User({ user, token }) {
   const [cookies] = useCookies("user");
   const router = useRouter();
-  console.log(token);
-
-  console.log(cookies.userToken);
 
   let decoded = null;
   try {
     decoded = jwt_decode(cookies.userToken);
   } catch (err) {
-    console.log(err);
+   
   }
 
   let isLoggedAdmin = decoded?.role == "admin" ? true : false;

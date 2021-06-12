@@ -15,8 +15,6 @@ export default function BodyAdminOrderEdit(props) {
   const router = useRouter();
   const order = props.order;
 
-  console.log(order);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -36,7 +34,7 @@ export default function BodyAdminOrderEdit(props) {
         if (x?.status == 204) router.push("/admin/orders");
       });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

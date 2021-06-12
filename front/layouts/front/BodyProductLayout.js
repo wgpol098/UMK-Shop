@@ -9,14 +9,10 @@ export default function BodyProductLayout(props) {
   const handleAddToBasket = async (e) => {
     e.preventDefault();
 
-    //console.log(product._id);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/cart/addtocart?id=${product._id}`,
         {
-          // body: JSON.stringify({
-          //   id: product._id,
-          // }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -26,7 +22,7 @@ export default function BodyProductLayout(props) {
       );
       setAdded(true);
     } catch (err) {
-      console.log(err);
+     
       setAdded(false);
     }
   };

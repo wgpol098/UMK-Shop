@@ -64,7 +64,7 @@ export default function BodyRegisterLayout(props) {
             });
         });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

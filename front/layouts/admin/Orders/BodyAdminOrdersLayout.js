@@ -25,7 +25,7 @@ export default function BodyAdminOrdersLayout(props) {
         );
         location.reload();
       } catch (err) {
-        console.log(err);
+       
       }
     }
   };

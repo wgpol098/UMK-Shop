@@ -48,7 +48,7 @@ export default function BodyCartLayout(props) {
       );
       location.reload();
     } catch (err) {
-      console.log(err);
+     
     }
   };
 
@@ -67,7 +67,7 @@ export default function BodyCartLayout(props) {
       );
       location.reload();
     } catch (err) {
-      console.log(err);
+     
     }
   };
 
@@ -86,20 +86,14 @@ export default function BodyCartLayout(props) {
       );
       location.reload();
     } catch (err) {
-      console.log(err);
+     
     }
   };
-
-  //console.log(props); //czy pobiera /carts?
-  //console.log(Object.entries(cartData?.items));
-
-  console.log(cartData);
 
   let cartElements = [];
 
   if (cartData?.items && Object.keys(cartData.items).length !== 0) {
     Object.entries(cartData.items).forEach(([key, value]) => {
-      console.log(key, value);
       cartElements.push(
         <Row className="justify-content-md-center cart-element">
           <Col sm={6}>

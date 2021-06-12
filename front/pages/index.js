@@ -15,7 +15,6 @@ export async function getStaticProps() {
 }
 
 export default function Index({ products }) {
-  console.log(products);
   return (
     <>
       <MainLayout type={0} products={products} />

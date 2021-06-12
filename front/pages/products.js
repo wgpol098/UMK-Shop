@@ -1,7 +1,6 @@
 import MainLayout from "../layouts/front/MainLayout";
 
 export const getServerSideProps = async ({ query: { page = 0, title } }) => {
-  console.log(title);
   const filter = title
     ? JSON.stringify({ title: { $regex: `.*${title}.*`, $options: "i" } })
     : "{}";

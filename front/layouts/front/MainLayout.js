@@ -18,10 +18,6 @@ import jwt_decode from "jwt-decode";
 
 function renderBody(props) {
   switch (props.type) {
-    // case -1:
-    //   return <BodyLoading />;
-    // case 404:
-    //   return <BodyNotFound />;
     case 0:
       return <BodyIndexLayout {...props} />;
     case 1:
@@ -47,17 +43,13 @@ function renderBody(props) {
 
 export default function MainLayout(props) {
   const [cookies] = useCookies("user");
-  console.log(cookies.userToken);
 
   let decoded = null;
 
   try {
     if (cookies.userToken) decoded = jwt_decode(cookies.userToken);
   } catch (err) {
-    console.log(err);
   }
-
-  console.log(decoded);
 
   let isLoggedAdmin = decoded?.role == "admin" ? true : false;
 

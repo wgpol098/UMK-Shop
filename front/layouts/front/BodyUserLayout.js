@@ -61,8 +61,9 @@ export default function BodyUserLayout(props) {
               });
           });
       } catch (err) {
-        console.log(err);
+       
       }
+      setUserData(dataObj);
     }
   }, []);
 
@@ -122,7 +123,7 @@ export default function BodyUserLayout(props) {
             });
         });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 
