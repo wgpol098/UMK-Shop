@@ -7,8 +7,8 @@ const jwt = require("jsonwebtoken");
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
-    var decoded = jwt.decode(authHeader);
-    var role = decoded.role;
+    const decoded = jwt.decode(authHeader);
+    const role = decoded.role;
   
     if (role == process.env.ADMIN_ROLE) 
     {
@@ -36,8 +36,8 @@ router.put('/:id', authenticateToken, function(req, res, next)
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
-    var decoded = jwt.decode(authHeader);
-    var role = decoded.role;
+    const decoded = jwt.decode(authHeader);
+    const role = decoded.role;
   
     if (role == process.env.ADMIN_ROLE) 
     {
@@ -68,8 +68,8 @@ router.get('/', function(req, res, next)
 router.post('/', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
-    var decoded = jwt.decode(authHeader);
-    var role = decoded.role;
+    const decoded = jwt.decode(authHeader);
+    const role = decoded.role;
   
     if (role == process.env.ADMIN_ROLE) 
     {

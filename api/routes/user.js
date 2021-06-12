@@ -7,16 +7,16 @@ const bcrypt = require("bcrypt-nodejs");
 const mongoose = require("mongoose");
 
 router.post("/", function (req, res, next) {
-  let role = null;
-    const authHeader = req.headers["authorization"];
-    if(authHeader)
-    {
-      let decoded = jwt.decode(authHeader);
-      role = decoded.role;
-    }
+  var role = null;
+  const authHeader = req.headers["authorization"];
+  if(authHeader)
+  {
+    const decoded = jwt.decode(authHeader);
+    role = decoded.role;
+  }
 
-    if(!req.body.email || !req.body.first_name || !req.body.last_name || !req.body.birthdate || !req.body.phone_number ||
-     !req.body.password) return res.sendStatus(400);
+  if(!req.body.email || !req.body.first_name || !req.body.last_name || !req.body.birthdate || !req.body.phone_number ||
+   !req.body.password) return res.sendStatus(400);
 
   var user = new User({
     email: req.body.email,
@@ -39,12 +39,12 @@ router.post("/", function (req, res, next) {
 
 router.put("/edit", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
-  var decoded = jwt.decode(authHeader);
-  var email = decoded.email;
+  const decoded = jwt.decode(authHeader);
+  const email = decoded.email;
 
   const edit = req.query.edit;
 
-  let new_password = req.body.password
+  const new_password = req.body.password
     ? bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(5), null)
     : null;
 
