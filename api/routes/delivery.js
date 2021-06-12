@@ -33,7 +33,7 @@ router.put('/:id', authenticateToken, function(req, res, next)
     else return res.sendStatus(403);
 });
 
-router.delete('/:id', function(req, res, next)
+router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
     var decoded = jwt.decode(authHeader);

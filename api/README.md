@@ -13,12 +13,6 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Błąd wewnętrzny serwera.
-
 ---
 ### PUT - Metoda odpowiedzialna za modyfikowanie danych o produkcie.
 
@@ -37,12 +31,6 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera.
-
 ---
 ### POST - Metoda odpowiedzialna za dodawanie nowego produktu.
 
@@ -59,12 +47,6 @@ Wymagane uprawnienia:
 
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
-
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera.
 
 ---
 ### GET - Metoda odpowiedzialna za pobieranie informacji o produktach.
@@ -86,16 +68,12 @@ Zwracane wartości:
 - price - cena przedmiotu
 - count - ilość sztuk na magazynie
 
-Kody błędów:
-- 200 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
-
 ---
 ## /user
 ### POST - Metoda odpowiedzialna za dodawanie nowego usera do bazy danych.
 
 Wymagane uprawnienia:
-- Metoda nie wymaga żadnych uprawnień
+- Metoda nie wymaga żadnych uprawnień, za wyjątkiem ustawienia roli użytkonika - jest potrzebne uprawienie administartora.
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
@@ -106,21 +84,19 @@ Wymagane uprawnienia:
 | phone_number | wymagany | Numer telefonu nowego usera |
 | shipping_address_id | opcjonalny | Domyślny adres dostawy nowego usera |
 | invoice_address_id | opcjonalny | Domyślny adres do faktury nowego usera |
+| role | opcjonalny (tylko dla administratora) | Rola użytkownika, domyślnie "user", dla ustawienia tego parametra potrzebne są uprawienia administartora |
 
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
-
-### PUT - Metoda odpowiedzialna za modyfikowanie danych o userze.
+### PUT /edit - Metoda odpowiedzialna za modyfikowanie danych o userze.
 
 Wymagane uprawnienia:
 - Authorization Token bądź rola administratora
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
+| edit | opcjonalny (tylko dla administratora) | Domyślnie metoda pozwala na edycję zalogowanego użytkownika, parameter `?edit=T` pozwala administatorowi na edycję innych użytkoników |
 | email | opcjonalny | Email nowego usera |
 | first_name | opcjonalny | Imię nowego usera |
 | last_name | opcjonalny | Nazwisko nowego usera |
@@ -128,13 +104,10 @@ Wymagane uprawnienia:
 | phone_number | opcjonalny | Numer telefonu nowego usera |
 | shipping_address_id | opcjonalny | Domyślny adres dostawy nowego usera |
 | invoice_address_id | opcjonalny | Domyślny adres do faktury nowego usera |
+| role | opcjonalny (tylko dla administratora) | Rola użytkownika, dla ustawienia tego parametra potrzebne są uprawienia administartora |
 
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
-
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
 
 ### GET - Metoda odpowiedzialna za pobieranie danych o userze.
 
@@ -144,25 +117,47 @@ Wymagane uprawnienia:
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
 | all | opcjonalny (tylko dla administratora) | Przyjmuje wartości T/F. T - true jeśli ma zwrócić tablicę wszystkich użytkowników |
+| id | opcjonalny (tylko dla administratora) | Id użytkownika dla którego powinny zostać zwrócone dane |
 
 Zwracane wartości:
-email - email użytkownika
-first_name - imię użytkownika
-last_name - nazwisko użytkownika
-birthdate - data urodzenia użytkownika
-phone_number - numer telefonu użytkownika
-shipping_address_id - domyślny adres dostawy użytkownika
-invoice_address_id - domyślny adres do faktury użytkownika
+- email - email użytkownika
+- first_name - imię użytkownika
+- last_name - nazwisko użytkownika
+- birthdate - data urodzenia użytkownika
+- phone_number - numer telefonu użytkownika
+- shipping_address_id - domyślny adres dostawy użytkownika
+- invoice_address_id - domyślny adres do faktury użytkownika
 
-Kody błędów:
-- 200 - Działanie zakończone sukcesem.
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera.
+### POST /login - Metoda odpowiedzialna za logowanie usera.
 
-## /cart - Dane o koszyku nie są przechowywane w bazie danych. Koszyk jest stworzony na sesję. Wymagane jest przekazywanie ciasteczek na serwer w celu identyfikacji danej sesji i danego koszyka.
+Wymagane uprawnienia:
+- Brak wymagań
 
-### POST/addtocart - Metoda odpowiedzialna za dodawanie produktów do koszyka.
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| email | wymagany | Email użytkownika |
+| password | wymagany | Hasło użytkownika |
+
+Zwracane wartości:
+accessToken - JWT token użytkownika (120 minut)
+
+### DELETE - Metoda usuwająca usera z bazy danych.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+|  id  | wymagany  |  Id usera |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+## /cart
+### Dane o koszyku nie są przechowywane w bazie danych. Koszyk jest stworzony na sesję. <br/>Wymagane jest przekazywanie ciasteczek na serwer w celu identyfikacji danej sesji i danego koszyka.
+
+### POST /addtocart - Metoda odpowiedzialna za dodawanie produktów do koszyka.
 
 Wymagane uprawnienia:
 - Metoda nie wymaga żadnych uprawnień.
@@ -174,24 +169,12 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
-
 ### GET - Metoda odpowiedzialna za pobieranie koszyka dla danej sesji.
 
 Wymagane uprawnienia:
 - Metoda nie wymaga żadnych uprawnień
 
-## Trzeba wywołać i przetestować
-Zwracane wartości:
-- 
-
-Kody błędów:
-- 200 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
-
-### POST/removefromcart - Metoda odpowiedzialna za usuwanie danego przedmiotu z koszyka.
+### POST /removefromcart - Metoda odpowiedzialna za usuwanie danego przedmiotu z koszyka.
 
 Wymagane uprawnienia:
 - Metoda nie wymaga żadnych uprawnień
@@ -203,11 +186,7 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
-
-### POST/removeonefromcart - Metoda odpowiedzialna za usuwanie jednej sztuki przedmiotu z koszyka.
+### POST /removeonefromcart - Metoda odpowiedzialna za usuwanie jednej sztuki przedmiotu z koszyka.
 
 Wymagane uprawnienia:
 - Metoda nie wymaga żadnych uprawnień
@@ -219,11 +198,13 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
+### POST /removeallfromcart - Metoda odpowiedzialna za wszytskich przedmiotów z koszyka.
 
---ZROBIONE
+Wymagane uprawnienia:
+- Metoda nie wymaga żadnych uprawnień
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości.
 
 ## /order
 ### GET - Metoda odpowiedzialna za pobieranie informacji o zamówieniach.
@@ -233,14 +214,21 @@ Wymagane uprawnienia:
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
-| id | opcjonalny | Id zamówienia. Jeśli argument nie zostanie podany to zostanie zwrócona lista wszystkich zamówień |
+| id | wymagany | Id zamówienia |
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
-| userID | wymagany | Id usera z bazy danych dla którego zostanie dodane zamówienie |
-| status | wymagany | Id statusu zamówienia |
+| all | opcjonalny (tylko dla administratora) | Przyjmuje wartości T/F. T - true jeśli ma zwrócić tablicę wszystkich zamówień, F lub brak - zwraca zamówienia tylko dla zalogowanego użytkownika |
 
-- PUT
+Zwracane wartości:
+- date - data składania zamówienia
+- user - id użytkownika
+- cart - obiekt z zawartością koszyka
+- address - id adresu
+- paymentId - id metody płatności
+- status - status zamówienia
+- deliveryID - id metody dostawy
+
 ### POST - metoda odpowiedzialna za dodawanie zamówienia do bazy danych.
 
 Wymagane uprawnienia:
@@ -248,20 +236,53 @@ Wymagane uprawnienia:
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
+| userID | wymagany | Id użytkownika |
 | status | wymagany | Status zamówienia |
+| payment_id | wymagany | Id metody płatności |
+| delivery_id | wymagany | Id metody dostawy |
+| zip | wymagany | Kod pocztowy dla dostawy |
+| country | wymagany | Państwo dla dostawy |
+| street | wymagany | Ulica dla dostawy |
+| city | wymagany | Miasto dla dostawy |
 
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości.
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera.
+### PUT - metoda odpowiedzialna za edycję zamówienia w bazie danych.
+
+Wymagane uprawnienia:
+- Authorization Token
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id użytkownika |
+| status | opcjonalny | Status zamówienia |
+| payment_id | opcjonalny | Id metody płatności |
+| delivery_id | opcjonalny | Id metody dostawy |
+| zip | opcjonalny | Kod pocztowy dla dostawy |
+| country | opcjonalny | Państwo dla dostawy |
+| street | opcjonalny | Ulica dla dostawy |
+| city | opcjonalny | Miasto dla dostawy |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości.
+
+### DELETE - Metoda odpowiedzialna za usuwanie zamówienia z bazy danych.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id usuwanego zamówienia |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
 
 ## /address
 
-#### PUT - Metoda odpowiedzialna za update adresów.
+### PUT - Metoda odpowiedzialna za update adresów.
 
 Wymagane uprawnienia:
 - Metoda nie wymaga żadnych uprawnień
@@ -269,16 +290,19 @@ Wymagane uprawnienia:
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
 | id | wymagany | Id edytowanego adresu |
+| city | opcjonalny | Miasto |
+| zip | opcjonalny | Kod podcztowy miasta |
+| street | opcjonalny | Ulica i numer domu/mieszkania |
+| country | opcjonalny | Kraj |
 
 Zwracane wartości:
-- Metoda nie zwraca żadnych wartości
-
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
+- city - Miasto
+- street - Ulica i numer domu/mieszkania
+- zip - Kod pocztowy miasta
+- country - Kraj
 
 ---
-#### DELETE - Metoda odpowiedzialna za usuwanie adresu z bazy danych.
+### DELETE - Metoda odpowiedzialna za usuwanie adresu z bazy danych.
 
 Wymagane uprawnienia:
 - Authorization Token
@@ -290,12 +314,6 @@ Wymagane uprawnienia:
 
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
-
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera.
 
 ---
 ### POST - Metoda odpowiedzialna za dodawanie adresu do bazy danych. 
@@ -311,11 +329,10 @@ Wymagane uprawnienia:
 | country | wymagany | Kraj |
 
 Zwracane wartości:
-- Metoda nie zwraca żadnych wartości
-
-Kody błędów:
-- 201 - Działanie zakończone sukcesem.
-- 500 - Wewnętrzny błąd serwera.
+- city - Miasto
+- street - Ulica i numer domu/mieszkania
+- zip - Kod pocztowy miasta
+- country - Kraj
 
 ### GET - Metoda odpowiedzialna za pobieranie adresów.
 
@@ -332,10 +349,6 @@ Zwracane wartości:
 - zip - Kod pocztowy miasta
 - country - Kraj
 
-Kody błędów:
-- 200 - Działanie zakończone sukcesem
-- 500 - Wewnętrzny błąd serwera
-
 ## /payment
 ### GET - Metoda zwracająca dane o dostępnych płatnościach.
 
@@ -344,10 +357,6 @@ Wymagane uprawnienia:
 
 Zwracane wartości:
 - description - Opis sposobu płatności
-
-Kody błędów:
-- 200 - Działanie zakończone sukcesem
-- 500 - Wewnętrzny błąd serwera
 
 ---
 ### POST - Metoda dodająca nowe płatności do bazy danych.
@@ -363,12 +372,6 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera
-
 ---
 ### PUT - Metoda odpowiedzialna za aktualizację danych o metodzie płatności.
 
@@ -379,16 +382,10 @@ Wymagane uprawnienia:
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
 | id | wymagany | Id sposobu płatności |
-| description | wymagany | Opis sposobu płatności |
+| description | opcjonalny | Opis sposobu płatności |
 
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
-
-Kody błędów:
-- 201 - Działanie zakończone sukcesem
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera
 
 ---
 ### DELETE - Metoda służąca do usuwania metody płatności.
@@ -404,13 +401,8 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem
-- 401 - Brak `authorization` w sekcji Header żądania.
-- 403 - Nieprawidłowy, bądż przedawniony token lub brak uprawnień administratora.
-- 500 - Wewnętrzny błąd serwera
-
 ## /delivery
+
 ### GET - Metoda odpowiedzialna za pobieranie wszystkich możliwych opcji dostaw w sklepie.
 
 Wymagane uprawnienia:
@@ -421,15 +413,11 @@ Zwracane wartości:
 - description - opis sposobu dostawy
 - price - cena dostawy
 
-Kody błędów:
-- 200 - Działanie zakończone sukcesem
-- 500 - Wewnętrzny błąd serwera
-
 ### POST - Metoda odpowiedzialna za dodawanie nowych opcji dostaw.
 
-## A POWINNA
 Wymagane uprawnienia:
-- Metoda nie wymaga żadnych uprawnień
+- Authorization Token
+- User musi mieć rolę administratora
 
 |  Parametr  |  Wymagane  |  Opis  |
 |---|---|---|
@@ -440,6 +428,46 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - Metoda nie zwraca żadnych wartości
 
-Kody błędów:
-- 201 - Działanie zakończone sukcesem
-- 500 - Wewnętrzny błąd serwera
+### PUT - Metoda odpowiedzialna za edycję opcji dostaw.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id opcji dostawy |
+| name | opcjonalny | Nazwa dostawy |
+| description | opcjonalny | Opis sposobu dostawy |
+| price | opcjonalny | Cena dostawy |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+### DELETE - Metoda odpowiedzialna za usuwanie opcji dostaw.
+
+Wymagane uprawnienia:
+- Authorization Token
+- User musi mieć rolę administratora
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| id | wymagany | Id opcji dostawy |
+
+Zwracane wartości:
+- Metoda nie zwraca żadnych wartości
+
+## /image
+
+### POST - Metoda odpowiedzialna za zdjęcia (pliku zdjęcia) do repozytorium.
+#### Wymaga definicji zmiennej środowiskowej `IMAGES_PATH`, która określa ścieżkę do repozytorium plików.
+
+Wymagane uprawnienia:
+- Metoda nie wymaga żadnych uprawnień
+
+|  Parametr  |  Wymagane  |  Opis  |
+|---|---|---|
+| image | wymagany | Plik zdjęcia |
+
+Zwracane wartości:
+- filePath - ścieżka do dodanego zdjęcia (pliku) w repozytorium
