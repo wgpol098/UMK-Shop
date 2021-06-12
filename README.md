@@ -1,70 +1,119 @@
-# REST API
+# Sklep internetowy UMK
+### Definicja problemu
+Obecnie produkty Uniwersytetu Mikołaja Kopernika (dalej UMK) dostępne są jedynie w sklepie stacjonarnym przy rektoracie.<br />
+W dobie pandemii COVID-19 dostęp do nich był bardzo ograniczony, a przez pewien czas - niemożliwy, szczególnie dla osób mieszkających poza obrębem Torunia.<br />
+Mimo sytuacji pandemicznej obecnej w kraju, zainteresowanie wspomnianymi wyżej produktami nie zmalało.<br /> Pojawiło się więc zapotrzebowanie na uruchomienie innego kanału sprzedaży.
+
+---
+
 ### Cel projektu
-Zbudowanie REST API na potrzeby społeczności akademickiej UMK. Metody API mają
-być tak dobrane, aby umożliwiały dostęp do danych publicznych oraz
-prywatnych. API składa się z implementacji serwera wraz z bazą danych
-[MongoDB](https://mongodb.github.io/node-mongodb-native/) i [testów
-jednostkowych](https://en.wikipedia.org/wiki/List_of_unit_testing_frameworks#JavaScript)
-np. Mocha, Jasmine, Jest itp. Do tych testów należy dołączyć testy żądań HTTP
-np. za pomocą pakietu _supertest_.
+Głównym celem  jest rozwiązanie problemu dostępności produktów sygnowanych logiem UMK.<br />
+Takim rozwiązaniem jest sklep internetowy, dostępny dla wszystkich. Aby stworzyć wyżej wspomniany sklep  internetowy,<br />
+potrzebne jest zaprojektowanie odpowiedniego serwisu API oraz utworzenie frontend'u strony internetowej na bazie `node.js` .
 
-REST API ma być oparte o protokół HTTP, czyli podczas projektowania API kierujemy się
-następującymi zasadami: 
-1. Metody API są oparte o podstawowe [żądania
-HTTP](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods):
-GET, PUT/PATCH, POST i DELETE. 
-2. Żądania HTTP to czasowniki i określają czynności, jakie wykonujemy na zasobach 
-3. Adresy URL naszych zasobów składają się z rzeczowników w l.m., które stanowią klasę
-pewnych obiektów. W każdej takiej klasie możemy zdefiniować adres URL, do tych
-obiektów poprzez identyfikator id. Dzięki temu można łatwo zorientować się, do
-czego służą te metody. API ma być przyjazne użytkownikowi. 
-	- GET /resources 
-    - GET /users
-	- GET /resources/:id
-    - GET /users/:id
+#### API
+Celem API jest obsługa i zarządzanie użytkownikami, produktami, adresami, zamówieniami, koszykiem, oraz<br /> metodami płatności i dostaw. Ono ma w łatwy, a również biezpieczny sposób pośredniczyć między bazą danych `mongodb` a frontend'em strony internetowej.
 
+#### Frontend
+Celem frontend'u jest udostępnianie użytkownikowi funkcjonalności strony internetowej, w tym:
+- przęgląd dostępnych produktów;
+- składanie zamówienia;
+- infromacja kontaktowa.
 
-4. Do określenia stanu działania metody API wykorzystujemy [kody
-odpowiedzi HTTP](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes).  
+W przypadku admina (ewentualnie - menedżera sprzedaż sklepu) dostęp do:
+- dodawania/edycji produktów;
+- zarządzania kontami użytkowników;
+- obsługa zamówień.
 
-5. W [nagłówkach HTTP](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)
-   przesyłamy informacje o autoryzacji, typie zawartości (JSON) itp. Korzystamy
-   ze [standardowych nagłówków](https://www.iana.org/assignments/message-headers/message-headers.xml)
-
-
-6. Filtracja i sortowanie do wybranych metod za pomocą parametrów w URL - [query
-   string
-   params](https://nodejs.org/en/knowledge/HTTP/clients/how-to-access-query-string-parameters/)
-
-7. Pozostałe zalecenia znajdziecie tutaj: https://www.restapitutorial.com/lessons/restquicktips.html
-
+---
 
 ### Autoryzacja
-Metody API mają być na różnym poziomie dostępu. Do zasobów prywatnych jest wymagana
+Metody API dostępne są różnym poziomie. Do zasobów prywatnych jest wymagana
 autoryzacja. Model autoryzacji jest oparty na [JSON Web
-Token](https://en.wikipedia.org/wiki/JSON_Web_Token), [RFC5719](https://tools.ietf.org/html/rfc7519)
+Token](https://en.wikipedia.org/wiki/JSON_Web_Token), [RFC5719](https://tools.ietf.org/html/rfc7519)<br />
+W backend'zie projektu ten model został utworzony za pomocą pakietu [`jsonwebtoken`](https://yarnpkg.com/package/jsonwebtoken).
 
+---
 
 ### Testowanie
-Każda metoda API ma być przetestowana pod kątem zależnym od zastosowania.
+Każda metoda API została przetestowana pod kątem zależnym od zastosowania.
+- ...
 
-### Dokumentacja
-Wraz z implementacją API dostarczacie dokumentacje np. podobną do tej: [developer.twitter](https://developer.twitter.com/en/docs/accounts-and-users/create-manage-lists/api-reference)
+---
 
+### Instrukcja uruchomienia
 
-### Szablon
-Pliki z kodem, które mają pomóc zacząć budowanie aplikacji, są dostępne w
-repozytorium.
+#### Projekt został podzielony na 2 części: backend (API) - folder `/api`, oraz frontend - folder `/front`.<br /> Więc de facto skłąda się z dwoch podrzędnych projektów, którzy mają swoje pakiety i narzędzia:
+- backend - 'czysty' `node.js`; 
+- frontend - [`next.js`](https://nextjs.org/).
 
-### Rezultat projektu i ocenianie
-API ma być gotowym produktem. To znaczy, że zaspokaja jakąś konkretną potrzebę
-społeczności akademickiej UMK, jest niezawodne oraz przyjazne w obsłudze. To
-jest projekt na ocenę, na którą składa się:
-1. Definicja problemu: trafne zdefiniowanie użytkownika końcowego i jego potrzeb.
-2. Rozwiązanie problemu: trafne rozwiązanie techniczne (pomysł na API, REST-owy styl
-   wykonania i niezawodność).
-3. Oryginalne rozwiązanie techniczne, w tym napisanie aplikacji w czystym
-   Node.js. Im mniej zewnętrznych bibliotek tym lepiej. 
-4. Systematyczność w pracy i terminowość. 
+#### Do tego również została użyta baza danych [`mongodb`](https://www.mongodb.com/). Przed uruchomianiem powyższych projektów musimy skonfigurować<br /> bazę danych:
+- zainstalować mongodb - [link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/);
+- wpisać do zmiennej środowiskowej (`.env`) link do uruchomionej bazy danych `DB_LINK`<br />
+(przykład: `DB_LINK=mongodb://localhost:27017/umkshop`).
+
+#### Najpierw musimy uruchomić backend:
+- wejść do folderu `/api`;
+- uzupełnić zmienną środowiskową (`.env`) zmiennymi `ACCESS_TOKEN_SECRET`, `REFRESH_TOKEN_SECRET`, `ADMIN_ROLE`, `FRONT_ENTRYPOINT`, `IMAGES_PATH` <br />
+przykładowy plik `.env` dla backendu: 
+```
+ACCESS_TOKEN_SECRET=2094cd170c06aee264d4df09c1199a1c7fcb92c171db145b7fc4cba0cfe27f28549ce1664a06188dfddb1c207273eb94492658da0dc909a982ba96d9b93d4ac8 
+REFRESH_TOKEN_SECRET=464a6c87a3317036256c9de2837733c246d04a90e94162e48599a21783e9c3ef14cb331387b504208f49eed5c49f92ae4a08191a04e8a3b9eedff8f2bca4cd8c
+ADMIN_ROLE=admin
+FRONT_ENTRYPOINT=http://localhost:3015
+IMAGES_PATH=../front/public/img/
+DB_LINK=mongodb://localhost:27017/umkshop
+```
+- wykonać polecenie `yarn install` żeby zainstalować wymagane pakiety;
+- uruchomić: `yarn start`, API zostanie uruchomione na `localhost:3010`.
+
+#### Po tym możemy uruchomić frontend:
+- wejść do folderu `/front`;
+- uzupełnić zmienną środowiskową (`.env`) zmiennymi `NEXT_PUBLIC_API_ENTRYPOINT` oraz `NEXT_PUBLIC_ADMIN_ROLE` przykładowy plik `.env` dla frontendu: 
+```
+NEXT_PUBLIC_API_ENTRYPOINT=http://localhost:3010
+NEXT_PUBLIC_ADMIN_ROLE=admin
+```
+- wykonać polecenie `yarn install` żeby zainstalować wymagane pakiety;
+- skompilować wersję producyjną: `yarn build`;
+- uruchomić: `yarn start`, front zostanie uruchomiony na `localhost:3015`;
+- ewentualnie: `yarn dev` - nie potrzebuje poprzedniej kompilacji, i zwykle jest używane do debugging'u i rozwoju.
+
+---
+
+### Użyte pakiety
+
+#### API
+    "bcrypt-nodejs": "^0.0.3",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-session": "^1.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^9.0.0",
+    "mongoose": "^5.12.13",
+    "morgan": "^1.10.0"
+
+#### Frontend
+    "bootstrap": "4.6.0",
+    "cookie": "^0.4.1",
+    "cookies": "^0.8.0",
+    "jwt-decode": "^3.1.2",
+    "next": "^10.0.0",
+    "rc-pagination": "^3.1.6",
+    "react": "17.0.1",
+    "react-bootstrap": "^1.6.0",
+    "react-bootstrap-icons": "^1.5.0",
+    "react-cookie": "^4.0.3",
+    "react-dom": "17.0.1"
+
+---
+
+### Dokumentacja API
+[Link do dokumentacji metod API](https://github.com/BKotja/MP-2021-NODEJS-API/blob/master/api/README.md)
 
 
