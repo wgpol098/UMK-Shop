@@ -358,10 +358,6 @@ Wymagane uprawnienia:
 Zwracane wartości:
 - description - Opis sposobu płatności
 
-Kody błędów:
-- 200 - Działanie zakończone sukcesem
-- 500 - Wewnętrzny błąd serwera
-
 ---
 ### POST - Metoda dodająca nowe płatności do bazy danych.
 
