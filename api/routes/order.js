@@ -4,93 +4,76 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Order = require("../models/order");
 const Address = require("../models/address");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-router.get('/', authenticateToken, function (req, res, next) 
-{
+router.get("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
-  
+
   const all = req.query.all;
   const page = parseInt(req.query.page, 10) || 0;
   const limit = parseInt(req.query.limit, 10) || 10;
-  
-  if (!all || all == "F")
-  {
-    Order.countDocuments({user: decoded.id}, function(err, count)
-    {
-      if(err) return res.sendStatus(500);
-      
-      Order.find({user: decoded.id}).skip(page * limit).limit(limit).exec(function(err, result)
-      {
-        if (err) return res.sendStatus(500);
-        if (!result) return res.sendStatus(404);
-        res.send({data: result, total: count});
-      });
-    });
-  }
-  else if (all == "T")
-  {
-    if (decoded.role == process.env.ADMIN_ROLE)
-    {
-      Order.countDocuments({}, function(err, count)
-      {
-        if(err) return res.sendStatus(500);
-        
-        Order.find().skip(page * limit).limit(limit).exec(function(err, result)
-        {
+
+  if (!all || all == "F") {
+    Order.countDocuments({ user: decoded.id }, function (err, count) {
+      if (err) return res.sendStatus(500);
+
+      Order.find({ user: decoded.id })
+        .skip(page * limit)
+        .limit(limit)
+        .exec(function (err, result) {
           if (err) return res.sendStatus(500);
           if (!result) return res.sendStatus(404);
-          res.send({data: result, total: count});
+          res.send({ data: result, total: count });
         });
+    });
+  } else if (all == "T") {
+    if (decoded.role == process.env.ADMIN_ROLE) {
+      Order.countDocuments({}, function (err, count) {
+        if (err) return res.sendStatus(500);
+
+        Order.find()
+          .skip(page * limit)
+          .limit(limit)
+          .exec(function (err, result) {
+            if (err) return res.sendStatus(500);
+            if (!result) return res.sendStatus(404);
+            res.send({ data: result, total: count });
+          });
       });
-    }
-    else return res.sendStatus(403);
-  }
-  else return res.sendStatus(500);
+    } else return res.sendStatus(403);
+  } else return res.sendStatus(500);
 });
 
-router.get('/:id', function (req, res, next) 
-{
-  if(mongoose.Types.ObjectId.isValid(req.params.id))
-  {
+router.get("/:id", function (req, res, next) {
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     Order.findById(req.params.id, function (err, result) {
       if (err) return res.sendStatus(500);
       if (!result) return res.sendStatus(404);
       res.send(result);
     });
-  }
-  else return res.sendStatus(404);
+  } else return res.sendStatus(404);
 });
 
-router.delete('/:id', authenticateToken, function(req, res, next)
-{
+router.delete("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
   const role = decoded.role;
 
-  if (role == process.env.ADMIN_ROLE) 
-  {
-    if(mongoose.Types.ObjectId.isValid(req.params.id))
-    {
-      Order.findByIdAndDelete(req.params.id, function(err, result)
-      {
+  if (role == process.env.ADMIN_ROLE) {
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      Order.findByIdAndDelete(req.params.id, function (err, result) {
         if (err) return res.sendStatus(500);
         if (!result) return res.sendStatus(404);
         return res.sendStatus(204);
       });
-    }
-    else return res.sendStatus(404);
-  }
-  else return res.sendStatus(403);
+    } else return res.sendStatus(404);
+  } else return res.sendStatus(403);
 });
 
-router.put("/:id", authenticateToken, function (req, res, next) 
-{  
-  if(mongoose.Types.ObjectId.isValid(req.params.id))
-  {
-    Order.findById(req.params.id, function(err, result)
-    {
+router.put("/:id", authenticateToken, function (req, res, next) {
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+    Order.findById(req.params.id, function (err, result) {
       if (err) return res.sendStatus(500);
       if (!result) return res.sendStatus(404);
       result.date = req.body.date || result.date;
@@ -100,46 +83,47 @@ router.put("/:id", authenticateToken, function (req, res, next)
       result.paymentId = req.body.payment_id || result.paymentId;
       result.deliveryId = req.body.delivery_id || result.deliveryId;
       result.status = req.body.status || result.status;
-      
-  
-      result.save(function(err, result)
-      {
+
+      result.save(function (err, result) {
         if (err) return res.sendStatus(500);
         return res.sendStatus(204);
       });
     });
-  }
-  else return res.sendStatus(404);
+  } else return res.sendStatus(404);
 });
 
-router.post("/", authenticateToken, function (req, res, next) 
-{
-  if(!req.session.cart) return res.sendStatus(400);
+router.post("/", authenticateToken, function (req, res, next) {
+  if (!req.session.cart) req.session.cart = { empty: "empty" };
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
   const userID = decoded.id;
 
-  if (!userID || !req.query.status || !req.query.payment_id || !req.query.delivery_id
+  if (
+    !userID ||
+    !req.query.status ||
+    !req.query.payment_id ||
+    !req.query.delivery_id ||
     //Adres, który musi być podany
-    || !req.query.zip || !req.query.country || !req.query.street || !req.query.city ) return res.sendStatus(400);
+    !req.query.zip ||
+    !req.query.country ||
+    !req.query.street ||
+    !req.query.city
+  )
+    return res.sendStatus(400);
 
-  const address = 
-  {
+  const address = {
     zip: req.query.zip,
     country: req.query.country,
     street: req.query.street,
-    city: req.query.city
+    city: req.query.city,
   };
 
-  Address.findOne(address, function(err, result)
-  {
-    if(err) return res.sendStatus(500);
-    if(!result)
-    {
+  Address.findOne(address, function (err, result) {
+    if (err) return res.sendStatus(500);
+    if (!result) {
       var add = new Address(address);
-      add.save(function(err, result)
-      {
-        if(err) return res.sendStatus(500)
+      add.save(function (err, result) {
+        if (err) return res.sendStatus(500);
         var order = new Order({
           user: userID,
           date: Date.now(),
@@ -147,18 +131,16 @@ router.post("/", authenticateToken, function (req, res, next)
           status: req.query.status,
           address: add._id,
           paymentId: req.query.payment_id,
-          deliveryId: req.query.delivery_id
+          deliveryId: req.query.delivery_id,
         });
-        
+
         order.save(function (err, result) {
           if (err) return res.sendStatus(500);
           req.session.cart = {};
           return res.sendStatus(201);
         });
       });
-    }
-    else
-    {
+    } else {
       var order = new Order({
         user: userID,
         date: Date.now(),
@@ -166,7 +148,7 @@ router.post("/", authenticateToken, function (req, res, next)
         status: req.query.status,
         address: result._id,
         paymentId: req.query.payment_id,
-        deliveryId: req.query.delivery_id
+        deliveryId: req.query.delivery_id,
       });
       order.save(function (err, result) {
         if (err) return res.sendStatus(500);
