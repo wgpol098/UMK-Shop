@@ -17,9 +17,6 @@ export default function BodyOrderSuccessLayout(props) {
   const [cookie, setCookie] = useCookies(["user"]);
   const router = useRouter();
 
-  //console.log(props); //czy pobiera /carts?
-  //console.log(Object.entries(cartData?.items));
-
   return (
     <div
       style={{

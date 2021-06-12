@@ -5,8 +5,6 @@ const router = express.Router();
 const Product = require("../models/product");
 const mongoose = require('mongoose');
 
-//Usuwanie jednego przedmiotu
-//TODO: 201 - 204
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -28,8 +26,6 @@ router.delete("/:id", authenticateToken, function (req, res) {
   else res.sendStatus(403);
 });
 
-//Edytowanie istniejących przedmiotów
-//TODO: 201 - 204
 router.put("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -60,9 +56,6 @@ router.put("/:id", authenticateToken, function (req, res, next) {
   else return res.sendStatus(403);
 });
 
-//Dodawanie nowych przedmiotów
-//Wymagana jest rola admina
-//TODO: Dokuemntacja - kod 400
 router.post("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -91,8 +84,6 @@ router.post("/", authenticateToken, function (req, res, next) {
   } else return res.sendStatus(403);
 });
 
-//Pobieranie jedngo przedmiotu
-//TODO: Dokumentacja - dodano 404
 router.get("/:id", function (req, res) 
 {
   if(mongoose.Types.ObjectId.isValid(req.params.id))
@@ -106,8 +97,6 @@ router.get("/:id", function (req, res)
   else return res.sendStatus(404);
 });
 
-//Pobieranie listy produktów
-//TODO: Dokumentacja - dodano 404
 router.get("/", function (req, res, next) {
   var filter = req.query.filter;
   var page = parseInt(req.query.page, 10) || 0;
@@ -141,7 +130,6 @@ router.get("/", function (req, res, next) {
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   if (authHeader == undefined) return res.sendStatus(401);
-  console.log(authHeader);
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;

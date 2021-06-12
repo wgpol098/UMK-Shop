@@ -6,9 +6,6 @@ const Order = require("../models/order");
 const Address = require("../models/address");
 const mongoose = require('mongoose');
 
-// TODO: Zrobić dokumentację
-// TODO: Dokumentacja
-//TODO: 404
 router.get('/', authenticateToken, function (req, res, next) 
 {
   const authHeader = req.headers["authorization"];
@@ -53,7 +50,6 @@ router.get('/', authenticateToken, function (req, res, next)
   else return res.sendStatus(500);
 });
 
-//TODO: Do przetesowania
 router.get('/:id', function (req, res, next) 
 {
   if(mongoose.Types.ObjectId.isValid(req.params.id))
@@ -67,9 +63,6 @@ router.get('/:id', function (req, res, next)
   else return res.sendStatus(404);
 });
 
-//Usuwanie zamówienia - tylko administrator
-//TODO: Zrobić do tego dokumentację
-//TODO: 201 - 204
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
   const authHeader = req.headers["authorization"];
@@ -92,10 +85,6 @@ router.delete('/:id', authenticateToken, function(req, res, next)
   else return res.sendStatus(403);
 });
 
-//Update zamówień
-//TODO: Ustalić co może admin a co zwykłu user
-//TODO: Zrobić dokumentację
-//TODO: 201 -204
 router.put("/:id", authenticateToken, function (req, res, next) 
 {  
   if(mongoose.Types.ObjectId.isValid(req.params.id))
@@ -123,11 +112,6 @@ router.put("/:id", authenticateToken, function (req, res, next)
   else return res.sendStatus(404);
 });
 
-//TODO: Do dokończenia
-//TODO: Zmienić dokumentację
-//TODO: Przetestować jak działa dla tych nieobowiązkowych parametrów
-//TODO: Dokumentacja - kod 400
-//TODO: Dokumentacja do poprawy
 router.post("/", authenticateToken, function (req, res, next) 
 {
   if(!req.session.cart) return res.sendStatus(400);
@@ -153,11 +137,9 @@ router.post("/", authenticateToken, function (req, res, next)
     if(!result)
     {
       var add = new Address(address);
-      console.log(add);
       add.save(function(err, result)
       {
         if(err) return res.sendStatus(500)
-        console.log(add._id);
         var order = new Order({
           user: userID,
           date: Date.now(),

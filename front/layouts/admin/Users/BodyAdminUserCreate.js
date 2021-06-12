@@ -66,7 +66,7 @@ export default function BodyAdminUserCreate(props) {
             });
         });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

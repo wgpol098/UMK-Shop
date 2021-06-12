@@ -22,14 +22,13 @@ export async function getServerSideProps(context) {
 export default function Order({ order }) {
   const [cookies] = useCookies("user");
   const router = useRouter();
-  console.log(cookies.userToken);
 
   let decoded = null;
 
   try {
     decoded = jwt_decode(cookies.userToken);
   } catch (err) {
-    console.log(err);
+   
   }
 
   let isLoggedAdmin = decoded?.role == "admin" ? true : false;

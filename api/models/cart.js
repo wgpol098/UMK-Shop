@@ -28,7 +28,6 @@ module.exports = function Cart(oldCart) {
   //usuwanie przedmiotów
   this.removeItem = function (id) {
     if (this.items[id] != undefined) {
-      console.log(this.items[id].price);
       this.totalQuantity -= this.items[id].qty;
       this.totalPrice -= this.items[id].price;
       delete this.items[id];

@@ -32,14 +32,13 @@ export const getServerSideProps = async ({ req, res, query: { page = 0 } }) => {
 export default function Orders({ orders }) {
   const [cookies] = useCookies("user");
   const router = useRouter();
-  console.log(cookies.userToken);
 
   let decoded = null;
 
   try {
     decoded = jwt_decode(cookies.userToken);
   } catch (err) {
-    console.log(err);
+   
   }
 
   let isLoggedAdmin = decoded?.role == "admin" ? true : false;
@@ -48,6 +47,5 @@ export default function Orders({ orders }) {
     if (!isLoggedAdmin) router.push("/");
   });
 
-  console.log(orders);
   return isLoggedAdmin ? <MainAdminLayout type={3} orders={orders} /> : null;
 }

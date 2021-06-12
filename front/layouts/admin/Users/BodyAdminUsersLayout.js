@@ -8,8 +8,6 @@ export default function BodyAdminProductsLayout(props) {
   const [cookie, setCookie] = useCookies(["user"]);
   const router = useRouter();
 
-  console.log(props);
-
   const handleDelete = async (e) => {
     e.preventDefault();
     if (e.target.id) {
@@ -27,7 +25,7 @@ export default function BodyAdminProductsLayout(props) {
         );
         location.reload();
       } catch (err) {
-        console.log(err);
+       
       }
     }
   };

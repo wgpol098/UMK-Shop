@@ -15,8 +15,6 @@ export default function BodyIndexLayout(props) {
       productsArray.push(<SmallProductLayout title={x.title} id={x._id} img={x.imagePath} />);
     });
 
-  //console.log(props);
-
   return (
     <div>
       <div

@@ -14,8 +14,6 @@ export default function BodyLoginLayout(props) {
   const router = useRouter();
 
   const handleSubmit = async (e) => {
-    console.log(e.target.email.value);
-    console.log(e.target.password.value);
     e.preventDefault();
 
     try {
@@ -34,17 +32,16 @@ export default function BodyLoginLayout(props) {
       );
 
       const result = await res.json();
-      console.log(result);
 
       setCookie("userToken", result.accessToken, {
         path: "/",
-        maxAge: 3600 * 24, // Expires after 24h
+        maxAge: 3600 * 24,
         sameSite: true,
       });
 
       router.push("/");
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

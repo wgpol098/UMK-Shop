@@ -4,8 +4,6 @@ const Payment = require('../models/payment');
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken");
 
-//TODO: Przetestować metody
-//TODO: 201 - 204
 router.delete('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -28,8 +26,6 @@ router.delete('/:id', authenticateToken, function(req, res, next)
     else res.sendStatus(403);
 });
 
-//TODO: Przetestowanie metody
-//TODO: 201 - 204
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -57,7 +53,6 @@ router.put('/:id', authenticateToken, function(req, res, next)
     else return res.sendStatus(403);
 });
 
-//Metoda działa
 router.get('/', function(req, res, next)
 {
     Payment.find(function(err, result)
@@ -68,9 +63,6 @@ router.get('/', function(req, res, next)
     });
 });
 
-//Do przetestowania
-//TODO: Metoda do przetestowania
-//TODO: Dokumentacja - kod 400
 router.post('/', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -98,7 +90,6 @@ function authenticateToken(req, res, next)
 {
   const authHeader = req.headers["authorization"];
   if (authHeader == undefined) return res.sendStatus(401);
-  console.log(authHeader);
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => 
   {
     if (err) return res.sendStatus(403);

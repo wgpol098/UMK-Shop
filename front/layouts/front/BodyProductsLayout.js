@@ -22,8 +22,6 @@ export default function BodyProductsLayout(props) {
       productsArray.push(<SmallProductLayout title={x.title} id={x._id} img={x.imagePath} />);
     });
 
-  console.log(props);
-
   const handleOnSubmit = (e) => {
     e.preventDefault();
     const title = e.target.title.value;
@@ -32,9 +30,6 @@ export default function BodyProductsLayout(props) {
   };
 
   const handleOnPageChange = (page) => {
-    //e.preventDefault();
-    console.log(page - 1);
-    // const page = e.target.getAttribute("page");
     if (titleFilter !== "")
       router.push(`/products?page=${page - 1}&title=${titleFilter}`);
     else router.push(`/products?page=${page - 1}`);

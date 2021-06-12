@@ -16,39 +16,19 @@ export async function getServerSideProps(context) {
     props: {
       product: product,
     },
-    //revalidate: 10,
   };
 }
-
-// export async function getStaticPaths() {
-//   const res1 = await fetch(
-//     `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/products`
-//   );
-//   const products = res1 && (await res1.json());
-
-//   let paths = [];
-//   products &&
-//     products.map((x) => {
-//       paths.push(`/admin/products/${x._id}`);
-//     });
-
-//   return {
-//     paths: paths,
-//     fallback: true,
-//   };
-// }
 
 export default function Product({ product }) {
   const [cookies] = useCookies("user");
   const router = useRouter();
-  console.log(cookies.userToken);
 
   let decoded = null;
 
   try {
     decoded = jwt_decode(cookies.userToken);
   } catch (err) {
-    console.log(err);
+   
   }
 
   let isLoggedAdmin = decoded?.role == "admin" ? true : false;

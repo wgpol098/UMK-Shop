@@ -4,7 +4,6 @@ const Address = require("../models/address");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-// Metoda działa
 router.delete("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -20,10 +19,6 @@ router.delete("/:id", authenticateToken, function (req, res, next) {
   } else return res.sendStatus(403);
 });
 
-//Metoda działa
-// TODO: Zmienić w dokumentacji - kod błędu 201 na 204
-// TODO: Najpierw szuka adresu -- jeśli istnieje to nic nie robi
-// TOOD: Jeśli adres nie istnieje to go dodaje
 router.put("/:id", function (req, res, next) {
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     Address.findById(req.params.id, function (err, result) {
@@ -42,12 +37,6 @@ router.put("/:id", function (req, res, next) {
   } else return res.status(200).send(result);
 });
 
-//Dodawanie adresu - do przetestowania
-//TODO: Najpierw powinno sprwadzać czy dany adres istnieje
-//Jeśli istnieje to nie ma sensu dublować adresów
-//TODO: Dokumentacja - kod 400
-//Adres jest dodawany tylko jeśli istnieje
-//Bez sensu byłoby ciągłe dublowanie adresów
 router.post("/", function (req, res, next) {
   if (
     !req.query.city ||
@@ -78,9 +67,6 @@ router.post("/", function (req, res, next) {
   });
 });
 
-//Pobieranie wszystkich adresów - do przetesowania
-//TODO: Filtrowanie m.in po user id
-//TODO: 404
 router.get("/", function (req, res, next) {
   Address.find(function (err, result) {
     if (err) return res.sendStatus(500);
@@ -89,13 +75,10 @@ router.get("/", function (req, res, next) {
   });
 });
 
-//Pobieranie adresu o danym id - do przetesowania
-//TODO: 404
 router.get("/:id", function (req, res, next) {
   if (mongoose.Types.ObjectId.isValid(req.params.id)) {
     Address.findById(req.params.id, function (err, result) {
       if (err) {
-        console.log(err);
         return res.sendStatus(500);
       }
       if (!result) return res.sendStatus(404);
@@ -107,7 +90,6 @@ router.get("/:id", function (req, res, next) {
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   if (authHeader == undefined) return res.sendStatus(401);
-  console.log(authHeader);
   jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;

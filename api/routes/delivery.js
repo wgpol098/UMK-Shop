@@ -4,8 +4,6 @@ const Delivery = require("../models/delivery");
 const mongoose = require('mongoose');
 const jwt = require("jsonwebtoken");
 
-//TODO: Do zrobienia dokumentacja
-//TODO: Dokumentacja - 201 - 204
 router.put('/:id', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -35,8 +33,6 @@ router.put('/:id', authenticateToken, function(req, res, next)
     else return res.sendStatus(403);
 });
 
-//TODO: Zrobić dokumentację
-//TODO: Dokumentacja - 201 - 204
 router.delete('/:id', function(req, res, next)
 {
     const authHeader = req.headers["authorization"];
@@ -59,7 +55,6 @@ router.delete('/:id', function(req, res, next)
     else return res.sendStatus(403);
 });
 
-//Przetestowane
 router.get('/', function(req, res, next)
 {
     Delivery.find(function(err, result)
@@ -70,8 +65,6 @@ router.get('/', function(req, res, next)
     })
 });
 
-//TODO: Zmiana w dokumentacji
-//TODO: Dokumentacja - kod 400
 router.post('/', authenticateToken, function(req, res, next)
 {
     const authHeader = req.headers["authorization"];

@@ -16,23 +16,12 @@ export default function HeaderLayout(props) {
 
   const handleLogout = async () => {
     try {
-      // const res = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/logout`,
-      //   {
-      //     body: JSON.stringify({}),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       authorization: cookies.userToken,
-      //     },
-      //     method: "POST",
-      //   }
-      // );
       removeCookie("userToken");
       setTimeout(() => {
         router.push("/");
       }, 10);
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

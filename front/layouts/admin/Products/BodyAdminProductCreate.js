@@ -76,7 +76,7 @@ export default function BodyAdminProductCreate(props) {
       }
       //const result = await res.json();
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

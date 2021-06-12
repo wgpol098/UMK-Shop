@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-//Metoda odpowiedzialna za dodawanie zdjęcia
-//TODO: Do przetestowania
-//TODO: Zrobić dokumentację
 router.post("/", function (req, res, next) {
   const random = Math.random().toString(36).substring(2, 10);
   const savePath =

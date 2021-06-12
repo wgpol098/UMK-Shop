@@ -105,11 +105,9 @@ export default function BodyOrderLayout(props) {
             });
         });
     } catch (err) {
-      console.log(err);
+     
     }
   }, []);
-
-  console.log(cartData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -135,7 +133,7 @@ export default function BodyOrderLayout(props) {
         if (x?.status == 201) router.push("/order-success");
       });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 
@@ -143,7 +141,6 @@ export default function BodyOrderLayout(props) {
 
   if (cartData?.items && Object.keys(cartData.items).length !== 0) {
     Object.entries(cartData.items).forEach(([key, value]) => {
-      console.log(key, value);
       cartElements.push(
         <Row className="justify-content-md-center cart-element">
           <Col sm={8}>

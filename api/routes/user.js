@@ -6,7 +6,6 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt-nodejs");
 const mongoose = require("mongoose");
 
-//Rejestraca nowego usera -- zwykłego śmiertelnika
 router.post("/", function (req, res, next) {
   let role = null;
   try {
@@ -27,19 +26,12 @@ router.post("/", function (req, res, next) {
   });
   user.password = user.encryptPassword(req.body.password);
 
-  console.log(user);
-
   user.save(function (err, result) {
-    console.log(err);
     if (err) return res.sendStatus(500);
     return res.sendStatus(201);
   });
 });
 
-//PUT user
-//TODO: to test
-//TODO: Dodanie możliwości, żeby administrator również mógł modyfikować te dane
-//TODO: Tylko user z hasłem powinien posiadać dostęp do swoich danych, a nie na podstawie emaila
 router.put("/edit", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);
@@ -100,18 +92,16 @@ router.put("/edit", authenticateToken, function (req, res, next) {
   }
 });
 
-//TODO: Opisać w dokumentacji
 router.post("/login", function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
   if (!email || !password) return res.sendStatus(400);
 
-  //Email w bazie danych jest unikalny
   User.findOne({ email: email }, function (err, result) {
     if (err) return res.sendStatus(500);
     if (!result) return res.sendStatus(404);
-    if (!result.validPassword(password)) return res.sendStatus(500);
+    if (!result.validPassword(password)) return res.sendStatus(401);
 
     const userModel = {
       email: email,
@@ -119,8 +109,6 @@ router.post("/login", function (req, res, next) {
       role: result.role,
     };
 
-    //Np. tak można wygenerować tokeny
-    //console.log(require('crypto').randomBytes(64).toString('hex'));
     const accessToken = jwt.sign(userModel, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: "120m",
     });
@@ -128,9 +116,6 @@ router.post("/login", function (req, res, next) {
   });
 });
 
-//Metoda zwracająca informacje o userze albo userach jeśli jesteś administratorem
-//Dostępna jedynie dla administarora
-//TODO: 404
 router.get("/", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
@@ -152,8 +137,6 @@ router.get("/", authenticateToken, function (req, res, next) {
   } else return res.sendStatus(500);
 });
 
-//GET user/:id
-//TODO: 404
 router.get("/:id", authenticateToken, function (req, res, next) {
   const authHeader = req.headers["authorization"];
   const decoded = jwt.decode(authHeader);
@@ -168,9 +151,6 @@ router.get("/:id", authenticateToken, function (req, res, next) {
   } else return res.sendStatus(403);
 });
 
-//DELETE User
-//TODO: to test
-//TODO 201 - 204
 router.delete("/:id", authenticateToken, function (req, res) {
   const authHeader = req.headers["authorization"];
   var decoded = jwt.decode(authHeader);

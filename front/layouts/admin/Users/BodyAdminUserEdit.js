@@ -16,8 +16,6 @@ export default function BodyAdminUserEdit(props) {
   const user = props.user;
 
   const handleSubmit = async (e) => {
-    // console.log(e.target.email.value);
-    // console.log(e.target.password.value);
     e.preventDefault();
 
     let adr1 = null;
@@ -74,7 +72,7 @@ export default function BodyAdminUserEdit(props) {
             });
         });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

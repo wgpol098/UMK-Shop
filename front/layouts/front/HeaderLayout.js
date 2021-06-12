@@ -29,26 +29,14 @@ export default function HeaderLayout(props) {
       .then((prods) => setCartEmpty(prods?.totalQuantity > 0 ? false : true));
   });
 
-  console.log(cartEmpty);
-
   const handleLogout = async () => {
     try {
-      // const res = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_ENTRYPOINT}/user/logout`,
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       authorization: cookies.userToken,
-      //     },
-      //     method: "POST",
-      //   }
-      // );
       removeCookie("userToken");
       setTimeout(() => {
         location.reload();
       }, 10);
     } catch (err) {
-      console.log(err);
+     
     }
   };
 

@@ -61,7 +61,7 @@ export default function BodyUserLayout(props) {
               });
           });
       } catch (err) {
-        console.log(err);
+       
       }
     }
   }, []);
@@ -122,7 +122,7 @@ export default function BodyUserLayout(props) {
             });
         });
     } catch (err) {
-      console.log(err);
+     
     }
   };
 
