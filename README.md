@@ -1,7 +1,6 @@
 # Sklep internetowy UMK
 ### Definicja problemu
-Obecnie produkty Uniwersytetu Mikołaja Kopernika (dalej UMK) można obejrzeć na stronie: <a> https://www.umk.pl/uslugi/materialy/indyw/ </a>. <br> 
-Zakupy są możliwe jedynie w sklepie stacjonarnym przy rektoracie.<br />
+Obecnie katalog produktów Uniwersytetu Mikołaja Kopernika (dalej UMK) można obejrzeć na stronie: <a> https://www.umk.pl/uslugi/materialy/indyw/ </a>, ale zakupy są możliwe jedynie w sklepie stacjonarnym przy rektoracie.<br />
 W dobie pandemii COVID-19 dostęp do nich był bardzo ograniczony, a przez pewien czas - niemożliwy, szczególnie dla osób mieszkających poza obrębem Torunia.<br />
 Mimo sytuacji pandemicznej obecnej w kraju, zainteresowanie wspomnianymi wyżej produktami nie zmalało.<br /> Pojawiło się więc zapotrzebowanie na uruchomienie innego kanału sprzedaży.
 
@@ -39,6 +38,8 @@ W backend'zie projektu ten model został utworzony za pomocą pakietu [`jsonwebt
 ### Testowanie
 Każda metoda API została przetestowana pod kątem zależnym od zastosowania. <br>
 Uruchomienie testów odbywa się poprzez wpisanie komendy `npm test` w folderze `/api`.
+
+---
 
 ### Instrukcja uruchomienia
 
