@@ -8,7 +8,7 @@ Mimo sytuacji pandemicznej obecnej w kraju, zainteresowanie wspomnianymi wyżej 
 
 ### Cel projektu
 Głównym celem  jest rozwiązanie problemu dostępności produktów sygnowanych logiem UMK.<br />
-Takim rozwiązaniem jest sklep internetowy, dostępny dla wszystkich. Aby stworzyć wyżej wspomniany sklep  internetowy,<br />
+Takim rozwiązaniem jest sklep internetowy, dostępny dla wszystkich. Aby stworzyć wyżej wspomniany sklep  internetowy,
 potrzebne jest zaprojektowanie odpowiedniego serwisu API oraz utworzenie frontend'u strony internetowej na bazie `node.js` .
 
 #### API
@@ -24,6 +24,28 @@ W przypadku admina (ewentualnie - menedżera sprzedaż sklepu) dostęp do:
 - dodawania/edycji produktów;
 - zarządzania kontami użytkowników;
 - obsługa zamówień.
+
+---
+
+### Frontend
+
+#### Strona główna:
+![index_page](/screenshots/index_page.png)
+
+#### Strona produktów z filtrowaniem po nazwie:
+![products_page](/screenshots/products_page.png)
+
+#### Strona składania zamówienia:
+![order_page](/screenshots/order_page.png)
+
+#### Strona listy produktów w panelu admina:
+![products_admin_page](/screenshots/products_admin_page.png)
+
+#### Strona edycji produktu w panelu admina:
+![products_edit_admin_page](/screenshots/products_edit_admin_page.png)
+
+#### Wynik działania [`Google Lighthouse`](https://developers.google.com/web/tools/lighthouse):
+![lighthouse](/screenshots/lighthouse.png)
 
 ---
 
@@ -53,7 +75,7 @@ Uruchomienie testów odbywa się poprzez wpisanie komendy `npm test` w folderze 
 (przykład: `DB_LINK=mongodb://localhost:27017/umkshop`).
 
 #### Inicjowanie danych
-W celu dodania przykładowych danych do bazy danych należy uruchomić odpowiednie pliki z folderu `/api/seed`
+W celu dodania przykładowych danych do bazy danych należy uruchomić (`node <nazwa pliku seeder'a>`) odpowiednie pliki z folderu `/api/seed`:
 - `address-seeder.js`
 - `delivery-seeder.js`
 - `payment-seeder.js`
